@@ -19,10 +19,16 @@
             android:icon="@drawable/ic_create_trip"
             android:title="Create Trip" />
 
+        <item
+            android:id="@+id/nav_message"
+            android:icon="@drawable/ic_message"
+            android:title="Message" />
+
 
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Sub Menu"
+        >
         <menu>
             <item
                 android:id="@+id/nav_group"
@@ -32,6 +38,16 @@
                 android:id="@+id/nav_community"
                 android:icon="@drawable/ic_community"
                 android:title="Community" />
+
+            <item
+                android:id="@+id/nav_share_app"
+                android:icon="@drawable/ic_community"
+                android:title="Share App" />
+
+            <item
+                android:id="@+id/nav_rate_us"
+                android:icon="@drawable/ic_community"
+                android:title="Rate Us" />
         </menu>
     </item>
 

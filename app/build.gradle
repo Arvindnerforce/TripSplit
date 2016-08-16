@@ -18,6 +18,11 @@ android {
         }
     }
     sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/drawable'] } }
+
+    repositories {
+
+        maven { url "https://jitpack.io" }
+    }
 }
 
 dependencies {
@@ -26,4 +31,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'com.balysv:material-ripple:1.0.2'
     compile 'com.android.support:design:24.1.1'
+    compile 'com.hedgehog.ratingbar:app:1.1.2'
+    compile 'com.github.techery:properratingbar:0.0.5'
+    compile 'com.github.whinc:ratingbar:1.1.1'
+    compile 'com.android.support:support-v4:24.1.1'
 }
