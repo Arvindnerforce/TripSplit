@@ -6,16 +6,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.netforceinfotech.tripsplit.Profile.ProfileActivity;
+import com.netforceinfotech.tripsplit.posttrip.PostTripActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     Button sign_button;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
 
         sign_button = (Button) findViewById(R.id.sign_button);
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
-                Intent i = new Intent(MainActivity.this, HomeActivity.class);
+                Intent i = new Intent(LoginActivity.this, PostTripActivity.class);
 
                 startActivity(i);
             }
