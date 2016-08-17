@@ -1,5 +1,6 @@
 package com.netforceinfotech.tripsplit.Home;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
@@ -13,17 +14,20 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.netforceinfotech.tripsplit.Profile.PagerAdapter;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
+import com.netforceinfotech.tripsplit.posttrip.PostTripActivity;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
 
     CoordinatorLayout coordinatorLayout;
     WrapContentViewPager viewPager;
-
+    ImageView post_trip,search_trip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -32,7 +36,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_post_trip);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
 
         setSupportActionBar(toolbar);
 
@@ -45,6 +48,37 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         setupTab();
+
+        setuplayout();
+    }
+
+    private void setuplayout() {
+
+        post_trip = (ImageView) findViewById(R.id.post_trip_image);
+
+        search_trip = (ImageView) findViewById(R.id.search_split_image);
+
+
+        post_trip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent i = new Intent(HomeActivity.this, PostTripActivity.class);
+
+                startActivity(i);
+            }
+        });
+
+
+        search_trip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent i = new Intent(HomeActivity.this, PostTripActivity.class);
+
+                startActivity(i);
+            }
+        });
     }
 
 

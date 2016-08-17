@@ -47,6 +47,7 @@
                 android:weightSum="100">
 
                 <ImageView
+                    android:id="@+id/post_trip_image"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -56,6 +57,7 @@
                     android:src="@drawable/ic_post_trip" />
 
                 <ImageView
+                    android:id="@+id/search_split_image"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
