@@ -44,7 +44,8 @@ public class FlightFragment extends Fragment
     }
 
 
-    private void setupRecyclerView(View view) {
+    private void setupRecyclerView(View view)
+    {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         recyclerView.setNestedScrollingEnabled(false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
