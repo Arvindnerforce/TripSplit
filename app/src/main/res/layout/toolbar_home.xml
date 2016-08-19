@@ -3,7 +3,7 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorPrimaryTransparent"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     app:theme="@style/AppTheme.AppBarOverlay"
     >
@@ -11,39 +11,25 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         >
 
-        <LinearLayout
-            android:gravity="center_horizontal"
-            android:id="@+id/linearlayout1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="-20dp"
 
-            >
-        <ImageView
-            android:padding="10dp"
-            android:background="@color/colorPrimary"
+
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_splittrip_textlogo"
 
-            />
-        </LinearLayout>
-     <!--   <Button
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="LOGOUT"
             android:layout_alignParentRight="true"
-             android:layout_marginTop="5dp"
-            android:background="@color/colorPrimary"
+            android:layout_marginRight="20dp"
+            android:text="LOGOUT"
             android:textColor="@color/white"
             android:textSize="18dp"
+            android:padding="5dp"
+            android:background="@color/colorPrimaryTransparent"
             android:textAllCaps="true"
+            android:layout_marginTop="5dp"
             />
--->
+
     </RelativeLayout>
 
 </android.support.v7.widget.Toolbar>

@@ -11,7 +11,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         >
 
         <LinearLayout
@@ -22,28 +21,31 @@
             android:layout_marginLeft="-20dp"
 
             >
-        <ImageView
-            android:padding="10dp"
-            android:background="@color/colorPrimary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_splittrip_textlogo"
-
-            />
+            <ImageView
+                android:padding="10dp"
+                android:background="@color/colorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_splittrip_textlogo"
+                 android:layout_marginRight="30dp"
+                />
         </LinearLayout>
-     <!--   <Button
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="LOGOUT"
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+             android:src="@drawable/ic_home"
             android:layout_alignParentRight="true"
-             android:layout_marginTop="5dp"
+            android:layout_marginRight="20dp"
             android:background="@color/colorPrimary"
             android:textColor="@color/white"
             android:textSize="18dp"
+            android:padding="5dp"
             android:textAllCaps="true"
+            android:layout_marginTop="5dp"
             />
--->
+
     </RelativeLayout>
 
 </android.support.v7.widget.Toolbar>
