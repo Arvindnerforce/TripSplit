@@ -1,30 +1,29 @@
 package com.netforceinfotech.tripsplit.Home;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.support.design.widget.CoordinatorLayout;
+
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
+
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.view.WindowManager;
+
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.netforceinfotech.tripsplit.NavigationView.MessageFragment;
-import com.netforceinfotech.tripsplit.Profile.PagerAdapter;
+import com.netforceinfotech.tripsplit.NavigationView.Message.MessageFragment;
+
 import com.netforceinfotech.tripsplit.R;
-import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
+
 import com.netforceinfotech.tripsplit.posttrip.PostTripActivity;
 
 public class HomeActivity extends AppCompatActivity
@@ -45,10 +44,13 @@ public class HomeActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_home2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -90,6 +92,7 @@ public class HomeActivity extends AppCompatActivity
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerClosed(View v) {
+
                 super.onDrawerClosed(v);
             }
 
@@ -99,23 +102,28 @@ public class HomeActivity extends AppCompatActivity
             }
 
         };
+
         drawer.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
-
+        setupDashboardFragment();
 
     }
 
     private void setupDashboardFragment()
     {
-        homeFragment = new HomeFragment();
+        if (homeFragment == null)
+        {
+            homeFragment = new HomeFragment();
+        }
+
         tagName = homeFragment.getClass().getName();
         replaceFragment(homeFragment, tagName);
+
     }
 
     private void setupMessageFragment()
     {
-
         messageFragment = new MessageFragment();
         tagName = messageFragment.getClass().getName();
         replaceFragment(messageFragment, tagName);
@@ -138,7 +146,6 @@ public class HomeActivity extends AppCompatActivity
 
         search_trip = (ImageView) findViewById(R.id.search_split_image);
 
-
         post_trip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,7 +155,6 @@ public class HomeActivity extends AppCompatActivity
                 startActivity(i);
             }
         });
-
 
         search_trip.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,22 +166,6 @@ public class HomeActivity extends AppCompatActivity
             }
         });
     }
-    @Override
-    public void onBackPressed()
-    {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START))
-        {
-            drawer.closeDrawer(GravityCompat.START);
-        }
-        else
-        {
-            super.onBackPressed();
-        }
-    }
-
-
-
 
 
 

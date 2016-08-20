@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.NavigationView;
+package com.netforceinfotech.tripsplit.NavigationView.Message;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.balysv.materialripple.MaterialRippleLayout;
 import com.netforceinfotech.tripsplit.R;
 
 
@@ -44,12 +43,16 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
 
-        View view = inflater.inflate(R.layout.rowhighestrank, parent, false);
+        View view = inflater.inflate(R.layout.row_message, parent, false);
         RichestHolder viewHolder = new RichestHolder(view);
-        for (int i = 0; i < itemList.size(); i++) {
-            if (i == 0) {
+        for (int i = 0; i < itemList.size(); i++)
+        {
+            if (i == 0)
+            {
                 booleanGames.add(true);
-            } else {
+            }
+            else
+            {
                 booleanGames.add(false);
             }
             Log.i("looppp", "" + i);
@@ -79,12 +82,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
 
-    public class RichestHolder extends RecyclerView.ViewHolder {
+    public class RichestHolder extends RecyclerView.ViewHolder
+    {
 
 
         TextView textViewTitle, textViewCategory, textViewPros;
 
-        MaterialRippleLayout materialRippleLayout;
+
         View view;
 
 
@@ -93,7 +97,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             //implementing onClickListener
             view = itemView;
 
-            materialRippleLayout = (MaterialRippleLayout) itemView.findViewById(R.id.ripple);
 
         }
     }
