@@ -1,7 +1,6 @@
-package com.netforceinfotech.tripsplit.NavigationView.Message;
+package com.netforceinfotech.tripsplit.NavigationView.Message.writemessage;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,29 +9,28 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.netforceinfotech.tripsplit.NavigationView.Message.writemessage.WriteMessageActivity;
+import com.netforceinfotech.tripsplit.NavigationView.Message.MessageFragmentData;
 import com.netforceinfotech.tripsplit.R;
-
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by John on 7/25/2016.
+ * Created by John on 8/22/2016.
  */
-public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class WriteAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
 
     private static final int SIMPLE_TYPE = 0;
     private static final int IMAGE_TYPE = 1;
     private final LayoutInflater inflater;
-    private List<MessageFragmentData> itemList;
+    private List<WriteData> itemList;
     private Context context;
     ArrayList<Boolean> booleanGames = new ArrayList<>();
 
     private ItemClickListener clickListener;
 
-    public MessageAdapter(Context context, List<MessageFragmentData> itemList)
+    public WriteAdapter(Context context, List<WriteData> itemList)
     {
         this.itemList = itemList;
         this.context = context;
@@ -45,7 +43,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
 
-        View view = inflater.inflate(R.layout.row_message, parent, false);
+        View view = inflater.inflate(R.layout.row_writemessage, parent, false);
         RichestHolder viewHolder = new RichestHolder(view);
 
         return viewHolder;
@@ -70,7 +68,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return 12;
 //        return itemList.size();
     }
-
     public void setClickListener(ItemClickListener itemClickListener) {
         this.clickListener = itemClickListener;
     }
@@ -93,11 +90,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
 
-        public void onClick(View view)
-        {
-            Intent intent =  new Intent(context, WriteMessageActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
+        public void onClick(View view) {
+            if (clickListener != null) clickListener.onClick(view, getAdapterPosition());
         }
 
     }

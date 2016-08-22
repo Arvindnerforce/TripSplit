@@ -1,33 +1,37 @@
 package com.netforceinfotech.tripsplit.Search;
 
-import android.icu.util.Calendar;
+import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
+import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import com.netforceinfotech.tripsplit.NavigationView.Message.MessageAdapter;
-import com.netforceinfotech.tripsplit.NavigationView.Message.MessageFragmentData;
+import com.wdullaer.materialdatetimepicker.Utils;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import com.netforceinfotech.tripsplit.R;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;
-import com.shehabic.droppy.animations.DroppyFadeInAnimation;
 
-import com.android.datetimepicker.date.DatePickerDialog;
-import com.android.datetimepicker.time.RadialPickerLayout;
-import com.android.datetimepicker.time.TimePickerDialog;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements View.OnClickListener,  TimePickerDialog.OnTimeSetListener,DatePickerDialog.OnDateSetListener
+{
 
     private Calendar calendar;
     SearchData searchdata;
@@ -36,7 +40,7 @@ public class SearchActivity extends AppCompatActivity {
     SearchAdapter adapter;
     Button sort_button;
     ArrayList<SearchData> highestDatas = new ArrayList<SearchData>();
-
+    TextView date_txt;
 
 
     @Override
@@ -48,7 +52,7 @@ public class SearchActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         sort_button = (Button) findViewById(R.id.sortbutton);
-
+        Calendar now;
         setSupportActionBar(toolbar);
 
         setupRecyclerView();
@@ -80,6 +84,8 @@ public class SearchActivity extends AppCompatActivity {
     {
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
 
+        date_txt = (TextView) findViewById(R.id.date_text);
+
         layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
 
         recyclerView.setLayoutManager(layoutManager);
@@ -88,15 +94,15 @@ public class SearchActivity extends AppCompatActivity {
         setupFinsihedDatas();
         adapter.notifyDataSetChanged();
 
+        date_txt.setOnClickListener(this);
+
     }
 
     private void setupFinsihedDatas()
     {
-        try
-        {
+        try {
             highestDatas.clear();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
 
         }
         highestDatas.add(new SearchData("Tea", "imageurl"));
@@ -133,32 +139,57 @@ public class SearchActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btnDatePicker:
-                DatePickerDialog.newInstance(SearchActivity.this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show(getFragmentManager(), "datePicker");
-                break;
-            case R.id.btnTimePicker:
-                TimePickerDialog.newInstance(this, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show(getFragmentManager(), "timePicker");
-                break;
+   public void  onClick(View view)
+{
+
+    switch (view.getId())
+    {
+        case R.id.date_text:
+
+            Calendar now = Calendar.getInstance();
+            DatePickerDialog dpd = DatePickerDialog.newInstance(
+                    SearchActivity.this,
+                    now.get(Calendar.YEAR),
+                    now.get(Calendar.MONTH),
+                    now.get(Calendar.DAY_OF_MONTH)
+            );
+            dpd.show(getFragmentManager(), "Datepickerdialog");
+
+
+        break;
+
+    }
+
+
+}
+
+    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+        String hourString = hourOfDay < 10 ? "0"+hourOfDay : ""+hourOfDay;
+        String minuteString = minute < 10 ? "0"+minute : ""+minute;
+        String secondString = second < 10 ? "0"+second : ""+second;
+        String time = "You picked the following time: "+hourString+"h"+minuteString+"m"+secondString+"s";
+        date_txt.setText(time);
+    }
+
+
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth)
+    {
+        String date = "You picked the following date: "+dayOfMonth+"/"+(++monthOfYear)+"/"+year;
+        Date date2 = new Date();
+        SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            date2 = date_format.parse(year+"-"+monthOfYear+"-"+dayOfMonth);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-    }
 
+        System.out.println("date======" + date2.toString());
 
-    public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
-        calendar.set(year, monthOfYear, dayOfMonth);
-        update();
-    }
+        String day_txt = date2.toString().substring(0,3);
 
+        String month_txt = date2.toString().substring(4, 7);
+        date_txt.setText(day_txt + " " + dayOfMonth +" "+month_txt);
 
-    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
-        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        calendar.set(Calendar.MINUTE, minute);
-        update();
-    }
-    private void update() {
-        /*lblDate.setText(dateFormat.format(calendar.getTime()));
-        lblTime.setText(timeFormat.format(calendar.getTime()));*/
     }
 
 }

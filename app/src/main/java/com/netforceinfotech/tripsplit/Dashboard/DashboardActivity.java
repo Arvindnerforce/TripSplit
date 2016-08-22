@@ -16,12 +16,15 @@ import com.netforceinfotech.tripsplit.NavigationView.Message.MessageFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.Search.SearchActivity;
 
-public class DashboardActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity
+{
 
     //Defining Variables
     private Toolbar toolbar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

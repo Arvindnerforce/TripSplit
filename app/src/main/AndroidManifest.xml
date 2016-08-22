@@ -23,7 +23,8 @@
             android:name=".Home.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Dashboard.DashboardActivity" />
-        <activity android:name=".Search.SearchActivity"></activity>
+        <activity android:name=".Search.SearchActivity" />
+        <activity android:name=".NavigationView.Message.writemessage.WriteMessageActivity"></activity>
     </application>
 
 </manifest>

@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.netforceinfotech.tripsplit.NavigationView.Message.writemessage.WriteAdapter;
 import com.netforceinfotech.tripsplit.R;
 
 import java.util.ArrayList;
@@ -83,6 +84,15 @@ public class MessageFragment extends Fragment
         recyclerView.setAdapter(adapter);
         setupFinsihedDatas();
         adapter.notifyDataSetChanged();
+
+
+    }
+
+
+
+    public void onClick(View view, int position) {
+        // The onClick implementation of the RecyclerView item click
+
     }
 
     private void setupFinsihedDatas()

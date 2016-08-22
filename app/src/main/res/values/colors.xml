@@ -5,7 +5,8 @@
     <color name="colorPrimaryDark">#b4312b</color>
     <color name="colorAccent">#FF4081</color>
     <color name="black">#000000</color>
-    <color name="view_background">#b2b2b2</color>
+    <color name="view_background">#E6E7E9</color>
+    <color name="background">#FFF2EFEF</color>
     <color name="flight_view_background">#9E9E9E</color>
     <color name="grey">#d1cece</color>
     <color name="grey_transparent">#daaba8a8</color>
