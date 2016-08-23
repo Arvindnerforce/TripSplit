@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.NavigationView;
+package com.netforceinfotech.tripsplit.NavigationView.Message;
 
 /**1
  * Created by asdf on 7/21/2016.

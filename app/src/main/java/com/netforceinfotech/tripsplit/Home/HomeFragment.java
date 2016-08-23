@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.netforceinfotech.tripsplit.R;
@@ -25,9 +28,30 @@ public class HomeFragment extends Fragment {
 
         View view= inflater.inflate(R.layout.activity_home_content, container, false);
 
+        setuptoolbar(view);
+
         setuplayout(view);
 
         return view;
+    }
+
+    private void setuptoolbar(View view)
+    {
+
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+
+        FrameLayout home = (FrameLayout) getActivity().findViewById(R.id.homebutton);
+
+        ImageView icon = (ImageView) getActivity().findViewById(R.id.image_appicon);
+
+        FrameLayout logout = (FrameLayout) getActivity().findViewById(R.id.logoutbutton);
+
+        home.setVisibility(View.INVISIBLE);
+        icon.setVisibility(View.INVISIBLE);
+        logout.setVisibility(View.VISIBLE);
+
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryTransparent));
+
     }
 
     public void setuplayout(View v)

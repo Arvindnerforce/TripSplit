@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
+import com.netforceinfotech.tripsplit.Dashboard.DashboardActivity;
 import com.netforceinfotech.tripsplit.Home.HomeActivity;
 
 public class LoginActivity extends AppCompatActivity {
@@ -31,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
-                Intent i = new Intent(LoginActivity.this, HomeActivity.class);
+                Intent i = new Intent(LoginActivity.this, DashboardActivity.class);
 
                 startActivity(i);
             }

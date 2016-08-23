@@ -8,7 +8,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,16 +16,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".Profile.ProfileActivity" />
-
         <activity
             android:name=".posttrip.PostTripActivity"
-
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".Home.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            ></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Dashboard.DashboardActivity" />
+        <activity android:name=".Search.SearchActivity" />
+        <activity android:name=".NavigationView.Message.writemessage.WriteMessageActivity"></activity>
     </application>
 
 </manifest>

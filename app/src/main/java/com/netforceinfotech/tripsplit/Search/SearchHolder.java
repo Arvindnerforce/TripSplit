@@ -1,4 +1,5 @@
-package com.netforceinfotech.tripsplit.NavigationView;
+package com.netforceinfotech.tripsplit.Search;
+
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,7 +12,7 @@ import com.netforceinfotech.tripsplit.R;
 /**1
  * Created by asdf on 7/21/2016.
  */
-public class MessageHolder extends RecyclerView.ViewHolder {
+public class SearchHolder extends RecyclerView.ViewHolder {
 
 
     TextView textViewTitle, textViewCategory, textViewPros;
@@ -20,7 +21,7 @@ public class MessageHolder extends RecyclerView.ViewHolder {
     View view;
 
 
-    public MessageHolder(View itemView) {
+    public SearchHolder(View itemView) {
         super(itemView);
         //implementing onClickListener
         view = itemView;

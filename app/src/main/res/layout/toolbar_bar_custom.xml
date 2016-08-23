@@ -28,8 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_splittrip_textlogo"
-                 android:layout_marginRight="30dp"
-                android:visibility="gone"
+                android:layout_marginRight="30dp"
 
                 />
         </LinearLayout>
@@ -39,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:visibility="gone"
+
             >
 
             <ImageView
@@ -58,34 +57,34 @@
 
         </FrameLayout>
 
-<FrameLayout
-    android:id="@+id/logoutbutton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentRight="true"
-    android:visibility="gone"
-    >
+        <FrameLayout
+            android:id="@+id/logoutbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            >
 
 
 
-    <Button
+            <Button
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
-        android:text="LOGOUT"
-        android:textColor="@color/white"
-        android:textSize="18dp"
-        android:padding="5dp"
-        android:background="@color/colorPrimaryTransparent"
-        android:textAllCaps="true"
-        android:layout_marginTop="5dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:text="LOGOUT"
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:padding="5dp"
+                android:background="@color/colorPrimaryTransparent"
+                android:textAllCaps="true"
+                android:layout_marginTop="5dp"
 
-        />
+                />
 
-</FrameLayout>
+        </FrameLayout>
     </RelativeLayout>
 
 </android.support.v7.widget.Toolbar>

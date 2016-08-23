@@ -1,6 +1,7 @@
-package com.netforceinfotech.tripsplit.NavigationView;
+package com.netforceinfotech.tripsplit.NavigationView.Message;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.balysv.materialripple.MaterialRippleLayout;
+import com.netforceinfotech.tripsplit.NavigationView.Message.writemessage.WriteMessageActivity;
 import com.netforceinfotech.tripsplit.R;
 
 
@@ -29,7 +30,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private Context context;
     ArrayList<Boolean> booleanGames = new ArrayList<>();
 
-
+    private ItemClickListener clickListener;
 
     public MessageAdapter(Context context, List<MessageFragmentData> itemList)
     {
@@ -44,16 +45,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
 
-        View view = inflater.inflate(R.layout.rowhighestrank, parent, false);
+        View view = inflater.inflate(R.layout.row_message, parent, false);
         RichestHolder viewHolder = new RichestHolder(view);
-        for (int i = 0; i < itemList.size(); i++) {
-            if (i == 0) {
-                booleanGames.add(true);
-            } else {
-                booleanGames.add(false);
-            }
-            Log.i("looppp", "" + i);
-        }
 
         return viewHolder;
 
@@ -78,23 +71,38 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 //        return itemList.size();
     }
 
+    public void setClickListener(ItemClickListener itemClickListener) {
+        this.clickListener = itemClickListener;
+    }
 
-    public class RichestHolder extends RecyclerView.ViewHolder {
+    public class RichestHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    {
 
 
         TextView textViewTitle, textViewCategory, textViewPros;
 
-        MaterialRippleLayout materialRippleLayout;
         View view;
-
 
         public RichestHolder(View itemView) {
             super(itemView);
             //implementing onClickListener
             view = itemView;
 
-            materialRippleLayout = (MaterialRippleLayout) itemView.findViewById(R.id.ripple);
+            itemView.setOnClickListener(this);
 
         }
+
+
+        public void onClick(View view)
+        {
+            Intent intent =  new Intent(context, WriteMessageActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
+
+    }
+
+    public interface ItemClickListener {
+        void onClick(View view, int position);
     }
 }
