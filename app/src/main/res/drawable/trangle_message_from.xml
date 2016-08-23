@@ -5,7 +5,7 @@
             android:fromDegrees="45"
             android:toDegrees="45"
             android:pivotX="87%"
-            android:pivotY="140%" >
+            android:pivotY="180%" >
             <shape
                 android:shape="rectangle" >
                 <stroke android:color="#C0C0C0" android:width="10dp"/>

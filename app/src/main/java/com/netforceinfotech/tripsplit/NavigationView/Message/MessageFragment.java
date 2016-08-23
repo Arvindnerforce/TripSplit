@@ -31,7 +31,6 @@ public class MessageFragment extends Fragment
     int theme;
 
 
-
     ArrayList<MessageFragmentData> highestDatas = new ArrayList<MessageFragmentData>();
 
     public MessageFragment()
@@ -90,7 +89,8 @@ public class MessageFragment extends Fragment
 
 
 
-    public void onClick(View view, int position) {
+    public void onClick(View view, int position)
+    {
         // The onClick implementation of the RecyclerView item click
 
     }
