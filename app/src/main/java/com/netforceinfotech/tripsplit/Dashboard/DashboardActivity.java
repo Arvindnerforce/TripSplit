@@ -25,15 +25,18 @@ public class DashboardActivity extends AppCompatActivity
     private DrawerLayout drawerLayout;
 
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
         // Initializing Toolbar and setting it as the actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
 
         //Initializing NavigationView
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -43,7 +46,8 @@ public class DashboardActivity extends AppCompatActivity
 
             // This method will trigger on item Click of navigation menu
             @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
+            public boolean onNavigationItemSelected(MenuItem menuItem)
+            {
 
 
                 //Checking if the item is in checked state or not, if not make it in checked state
@@ -54,9 +58,9 @@ public class DashboardActivity extends AppCompatActivity
                 drawerLayout.closeDrawers();
 
                 //Check to see which item was being clicked and perform appropriate action
-                switch (menuItem.getItemId()) {
-
-
+                switch (menuItem.getItemId())
+                {
+                    
                     //Replacing the main content with ContentFragment Which is our Inbox View;
                     case R.id.nav_preferences:
                        // Toast.makeText(getApplicationContext(), "Inbox Selected", Toast.LENGTH_SHORT).show();
@@ -90,21 +94,19 @@ public class DashboardActivity extends AppCompatActivity
             }
         });
 
-
-
-
         // Initializing Drawer Layout and ActionBarToggle
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
 
         android.support.v7.app.ActionBarDrawerToggle actionBarDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
-            public void onDrawerClosed(View v) {
+            public void onDrawerClosed(View v)
+            {
 
                 super.onDrawerClosed(v);
             }
 
             @Override
-            public void onDrawerOpened(View v) {
+            public void onDrawerOpened(View v)
+            {
                 super.onDrawerOpened(v);
             }
 
@@ -122,8 +124,5 @@ public class DashboardActivity extends AppCompatActivity
 
 
     }
-
-
-
 
 }

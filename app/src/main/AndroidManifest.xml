@@ -16,15 +16,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".Profile.ProfileActivity" />
-        <activity
-            android:name=".posttrip.PostTripActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Home.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".posttrip.PostTripActivity" />
+        <activity android:name=".Home.HomeActivity" />
         <activity android:name=".Dashboard.DashboardActivity" />
         <activity android:name=".Search.SearchActivity" />
-        <activity android:name=".NavigationView.Message.writemessage.WriteMessageActivity"></activity>
+        <activity android:name=".NavigationView.Message.writemessage.WriteMessageActivity" />
     </application>
 
 </manifest>

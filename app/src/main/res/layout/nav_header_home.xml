@@ -50,7 +50,6 @@
 
 
 
-
     <io.techery.properratingbar.ProperRatingBar
         android:id="@+id/lowerRatingBar"
         android:layout_width="wrap_content"

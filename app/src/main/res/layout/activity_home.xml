@@ -11,7 +11,6 @@
     android:background="#F3F4F6"
     >
 
-
     <include
         layout="@layout/app_bar_home"
         android:layout_width="match_parent"
@@ -25,7 +24,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_home"
-        app:menu="@menu/activity_home_drawer"
+        app:menu="@menu/drawer"
         android:background="#F3F4F6"
         />
 
