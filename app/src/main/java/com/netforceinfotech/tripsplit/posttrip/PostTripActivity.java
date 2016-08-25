@@ -121,26 +121,7 @@ public class PostTripActivity extends AppCompatActivity implements NavigationVie
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_preferences)
-        {
-            // Handle the camera action
-        } else if (id == R.id.nav_invite_friends)
-        {
 
-        } else if (id == R.id.nav_search)
-        {
-
-        } else if (id == R.id.nav_create_trip)
-        {
-
-        }
-
-        else if (id == R.id.nav_group)
-        {
-
-        } else if (id == R.id.nav_community) {
-
-        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

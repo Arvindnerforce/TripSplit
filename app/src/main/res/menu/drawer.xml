@@ -2,6 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
+
         <item
             android:id="@+id/nav_preferences"
             android:icon="@drawable/ic_prefrence"
@@ -26,29 +27,4 @@
 
 
     </group>
-
-    <item android:title="Sub Menu"
-        >
-        <menu>
-            <item
-                android:id="@+id/nav_group"
-                android:icon="@drawable/ic_group"
-                android:title="Group" />
-            <item
-                android:id="@+id/nav_community"
-                android:icon="@drawable/ic_community"
-                android:title="Community" />
-
-            <item
-                android:id="@+id/nav_share_app"
-                android:icon="@drawable/ic_community"
-                android:title="Share App" />
-
-            <item
-                android:id="@+id/nav_rate_us"
-                android:icon="@drawable/ic_community"
-                android:title="Rate Us" />
-        </menu>
-    </item>
-
 </menu>

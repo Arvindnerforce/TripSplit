@@ -72,6 +72,7 @@ public class HomeActivity extends AppCompatActivity
                 //Check to see which item was being clicked and perform appropriate action
                 switch (menuItem.getItemId()) {
 
+/*
 
                     case R.id.nav_preferences:
                         setupDashboardFragment();
@@ -79,6 +80,7 @@ public class HomeActivity extends AppCompatActivity
                     case R.id.nav_message:
                         setupMessageFragment();
                         return true;
+*/
 
                     default:
                         Toast.makeText(getApplicationContext(), "Somethings Wrong", Toast.LENGTH_SHORT).show();
