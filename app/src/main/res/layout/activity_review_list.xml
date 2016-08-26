@@ -6,11 +6,24 @@
     android:id="@+id/coordinatorlayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:focusableInTouchMode="true"
-
-
+    android:orientation="vertical"
     >
 
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_bar_custom"
+            />
+    </android.support.design.widget.AppBarLayout>
+
+
+</LinearLayout>
 
 
     <android.support.v4.widget.NestedScrollView
@@ -25,13 +38,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-               >
+                >
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="280dp"
                     android:padding="15dp"
-                   >
+                    >
 
 
                     <RelativeLayout
@@ -41,23 +54,23 @@
                         android:layout_marginBottom="10dp"
                         >
 
-                    <Button
-                        android:id="@+id/editbutton"
-                        android:layout_width="70dp"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/ic_editplus_icon" />
+                        <Button
+                            android:id="@+id/editbutton"
+                            android:layout_width="70dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="10dp"
+                            android:background="@drawable/ic_editplus_icon" />
 
-                    <Button
-                        android:id="@+id/country"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="15dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/ic_circle"
-                        android:text="NZ"
-                        android:textColor="@color/white" />
+                        <Button
+                            android:id="@+id/country"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="15dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/ic_circle"
+                            android:text="NZ"
+                            android:textColor="@color/white" />
 
                     </RelativeLayout>
                     <io.techery.properratingbar.ProperRatingBar
@@ -87,6 +100,17 @@
                         android:layout_margin="10dp"
                         />
 
+                    <Button
+                        android:id="@+id/editbutton2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:text="Write Review"
+                        />
+
                 </RelativeLayout>
 
             </LinearLayout>
@@ -109,8 +133,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginTop="10dp"
+                        android:padding="10dp"
                         android:orientation="vertical">
 
 
@@ -118,7 +141,7 @@
                             android:id="@+id/name_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+
                             android:text="Ryan,"
                             android:textColor="@color/black"
                             android:textSize="18dp"
@@ -139,7 +162,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/name_text"
-                            android:layout_marginLeft="10dp"
+
                             android:text="Thailand, Phuket"
                             android:textColor="@color/black"
                             android:textSize="16dp" />
@@ -152,18 +175,18 @@
 
                             <ImageView
                                 android:id="@+id/email"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
                                 android:layout_marginRight="5dp"
                                 android:src="@drawable/ic_message"
                                 />
 
                             <ImageView
                                 android:id="@+id/whatsapp"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
                                 android:layout_marginLeft="5dp"
-                                android:layout_marginRight="10dp"
+
                                 android:layout_toRightOf="@+id/email"
                                 android:src="@drawable/ic_chat" />
 
@@ -171,29 +194,99 @@
 
                     </RelativeLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/view_background"
+                        ></View>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:text="@string/about_me_heading"
+                        android:padding="15dp"
+                        android:textStyle="bold"
+                        android:textSize="18dp"
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:text="@string/about_me_txt"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="10dp"
+                        />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/view_background"
+                        ></View>
+
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Review"
+                            android:layout_alignParentLeft="true"
+                            android:textStyle="bold"
+                            android:textColor="@color/red"
+                            />
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="12"
+                            android:layout_alignParentRight="true"
+                            android:textStyle="bold"
+                            android:textColor="@color/red"
+                            />
+
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/view_background"
+                        ></View>
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        >
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/recycler"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+
+                            android:layout_alignParentTop="true"
+
+                            ></android.support.v7.widget.RecyclerView>
+
+                    </RelativeLayout>
 
                 </LinearLayout>
 
 
-                <android.support.design.widget.TabLayout
-                    android:id="@+id/tab_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="10dp"
-                    android:elevation="6dp"
-                    android:minHeight="?attr/actionBarSize"
-                    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                    app:tabIndicatorColor="@color/colorPrimary"
-                    app:tabSelectedTextColor="@color/black"
-                    app:tabTextColor="@color/white" />
-
-                <com.netforceinfotech.tripsplit.general.WrapContentViewPager
-                    android:id="@+id/pager"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    />
 
             </LinearLayout>
+
+
+
 
         </LinearLayout>
 

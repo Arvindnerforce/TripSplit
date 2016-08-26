@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.balysv.materialripple.MaterialRippleLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:id="@+id/ripple"
+    android:orientation="horizontal"
+
+    >
+    <!-- <AbsoluteLayout
+         android:layout_width="wrap_content"
+         android:layout_height=""></AbsoluteLayout>-->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="@color/background"
+            >
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/profile_image"
+                android:layout_width="80dp"
+                android:layout_height="90dp"
+                android:src="@drawable/david"
+               android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                app:civ_border_width="0dp"
+                />
+
+<LinearLayout
+    android:id="@+id/linearlayout_content"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_toRightOf="@+id/profile_image"
+    android:orientation="vertical"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="5dp"
+    >
+
+            <TextView
+                android:id="@+id/name_title"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/profile_image"
+                android:text="Ryan Conolly"
+                android:textStyle="bold"
+                />
+
+            <TextView
+               android:id="@+id/month_txt"
+                android:textColor="@color/colorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="March"
+                />
+
+            <io.techery.properratingbar.ProperRatingBar
+                android:id="@+id/lowerRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:layout_gravity="center_horizontal"
+                app:prb_defaultRating="3"
+                app:prb_tickNormalDrawable="@drawable/star_outlineicon"
+                app:prb_tickSelectedDrawable="@drawable/star_icon"
+                app:prb_totalTicks="5"
+                app:prb_clickable="true"
+                app:prb_tickSpacing="0dp"
+                android:layout_marginTop="2dp"
+                />
+
+            <TextView
+                android:id="@+id/occupation_txt"
+                android:textColor="@color/colorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Leteral Legend"
+                />
+
+
+
+
+</LinearLayout>
+
+<ImageView
+    android:layout_width="20dp"
+    android:layout_height="100dp"
+    android:layout_alignParentRight="true"
+  android:src="@drawable/ic_review"
+    android:scaleType="fitXY"
+    />
+
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/black"
+            />
+    </LinearLayout>
+</com.balysv.materialripple.MaterialRippleLayout>

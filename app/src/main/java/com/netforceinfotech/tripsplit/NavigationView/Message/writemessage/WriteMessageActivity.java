@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -40,6 +41,7 @@ public class WriteMessageActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setupRecyclerView();
     }
@@ -84,6 +86,20 @@ public class WriteMessageActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        // Handle item selection
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                finish();
 
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 }

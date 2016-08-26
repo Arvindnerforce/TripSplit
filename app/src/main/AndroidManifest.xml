@@ -21,6 +21,7 @@
         <activity android:name=".Dashboard.DashboardActivity" />
         <activity android:name=".Search.SearchActivity" />
         <activity android:name=".NavigationView.Message.writemessage.WriteMessageActivity" />
+        <activity android:name=".Review.ReviewListActivity"></activity>
     </application>
 
 </manifest>

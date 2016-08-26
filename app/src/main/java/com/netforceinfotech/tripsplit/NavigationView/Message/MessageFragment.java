@@ -21,8 +21,6 @@ import java.util.ArrayList;
 
 public class MessageFragment extends Fragment
 {
-
-
     private RecyclerView recyclerView;
     Context context;
     private LinearLayoutManager layoutManager;
