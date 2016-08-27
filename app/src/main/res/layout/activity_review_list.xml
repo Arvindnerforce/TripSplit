@@ -101,14 +101,16 @@
                         />
 
                     <Button
-                        android:id="@+id/editbutton2"
+                        android:id="@+id/write_reviewButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-
+                        android:background="@drawable/button_border"
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentLeft="true"
                         android:text="Write Review"
+                        android:padding="5dp"
+                        android:textAllCaps="false"
                         />
 
                 </RelativeLayout>
@@ -232,6 +234,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="15dp"
+                        android:id="@+id/reviewlayout"
                         >
 
                         <TextView
@@ -240,6 +243,7 @@
                             android:text="Review"
                             android:layout_alignParentLeft="true"
                             android:textStyle="bold"
+                            android:textSize="18dp"
                             android:textColor="@color/red"
                             />
 
@@ -279,17 +283,37 @@
 
                     </RelativeLayout>
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorPrimary"
+                        android:padding="20dp"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="73 Tips"
+                            android:textColor="@color/white"
+                            android:textSize="18dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            />
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="See More"
+                            />
+
+                    </RelativeLayout>
+
                 </LinearLayout>
-
-
 
             </LinearLayout>
 
-
-
-
         </LinearLayout>
-
 
     </android.support.v4.widget.NestedScrollView>
 

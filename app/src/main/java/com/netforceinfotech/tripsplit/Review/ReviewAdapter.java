@@ -1,14 +1,18 @@
 package com.netforceinfotech.tripsplit.Review;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.netforceinfotech.tripsplit.NavigationView.Message.writemessage.WriteMessageActivity;
 import com.netforceinfotech.tripsplit.R;
+import com.netforceinfotech.tripsplit.Review.ReviewDetails.ReviewDetails;
 import com.netforceinfotech.tripsplit.Search.SearchData;
 import com.netforceinfotech.tripsplit.Search.SearchHolder;
 
@@ -27,6 +31,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private List<ReviewData> itemList;
     private Context context;
     ArrayList<Boolean> booleanGames = new ArrayList<>();
+    private ItemClickListener clickListener;
+
 
 
     public ReviewAdapter(Context context, List<ReviewData> itemList)
@@ -43,17 +49,20 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         View view = inflater.inflate(R.layout.row_review, parent, false);
         ReviewHolder viewHolder = new ReviewHolder(view);
-        for (int i = 0; i < itemList.size(); i++) {
-            if (i == 0) {
+        for (int i = 0; i < itemList.size(); i++)
+        {
+            if (i == 0)
+            {
                 booleanGames.add(true);
-            } else {
+            }
+            else
+            {
                 booleanGames.add(false);
             }
             Log.i("looppp", "" + i);
         }
 
         return viewHolder;
-
 
     }
 
@@ -69,11 +78,42 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
 
+
     @Override
     public int getItemCount() {
         return 12;
 //        return itemList.size();
     }
 
+    public void setClickListener(ItemClickListener itemClickListener) {
+        this.clickListener = itemClickListener;
+    }
+
+    public class ReviewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    {
+        TextView textViewTitle, textViewCategory, textViewPros;
+
+        View view;
+
+        public ReviewHolder(View itemView)
+        {
+            super(itemView);
+            //implementing onClickListener
+            view = itemView;
+            itemView.setOnClickListener(this);
+        }
+
+        public void onClick(View view)
+        {
+            Intent intent =  new Intent(context, ReviewDetails.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
+
+    }
+
+    public interface ItemClickListener {
+        void onClick(View view, int position);
+    }
 
 }

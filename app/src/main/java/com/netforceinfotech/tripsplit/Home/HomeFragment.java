@@ -71,7 +71,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Intent i = new Intent(getActivity(), ProfileActivity.class);
+                Intent i = new Intent(getActivity(), PostTripActivity.class);
                 startActivity(i);
             }
         });

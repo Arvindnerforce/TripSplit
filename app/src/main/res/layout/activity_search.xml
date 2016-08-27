@@ -29,14 +29,15 @@
 
             <TextView
                 android:id="@+id/date_text"
-                android:layout_margin="10dp"
+                android:layout_margin="7dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:textColorHint="@color/colorPrimary"
                 android:textColor="@color/colorPrimary"
                 android:hint="Select Date"
-                android:background="@drawable/button_border"
+                android:textSize="18dp"
+                android:background="@drawable/button_border_back"
                 />
 
 
@@ -62,7 +63,7 @@
                 android:layout_width="0dp"
                 android:layout_height="32dp"
                 android:layout_weight="30"
-                android:background="@drawable/button_border"
+                android:background="@drawable/button_border_back"
                 android:text="Sort"
                 android:textAllCaps="false"
                 android:layout_marginLeft="5dp"
@@ -76,7 +77,7 @@
                 android:layout_height="32dp"
                 android:layout_weight="30"
                 android:layout_marginTop="3dp"
-                android:background="@drawable/button_border"
+                android:background="@drawable/button_border_back"
                 android:text="Globe"
                 android:textAllCaps="false"
                 android:layout_marginLeft="5dp"
@@ -101,9 +102,7 @@
                 android:id="@+id/recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
                 android:layout_alignParentTop="true"
-
                 ></android.support.v7.widget.RecyclerView>
 
         </RelativeLayout>

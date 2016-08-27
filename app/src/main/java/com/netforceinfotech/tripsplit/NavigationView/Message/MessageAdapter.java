@@ -29,8 +29,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private List<MessageFragmentData> itemList;
     private Context context;
     ArrayList<Boolean> booleanGames = new ArrayList<>();
-
     private ItemClickListener clickListener;
+
+
 
     public MessageAdapter(Context context, List<MessageFragmentData> itemList)
     {
@@ -38,7 +39,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.context = context;
         inflater = LayoutInflater.from(context);
     }
-
 
 
     @Override
@@ -61,6 +61,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private void showMessage(String s)
     {
+
         Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
     }
 
@@ -77,8 +78,6 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class RichestHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
-
-
         TextView textViewTitle, textViewCategory, textViewPros;
 
         View view;
@@ -87,11 +86,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             super(itemView);
             //implementing onClickListener
             view = itemView;
-
             itemView.setOnClickListener(this);
-
         }
-
 
         public void onClick(View view)
         {
