@@ -51,9 +51,12 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         sort_button = (Button) findViewById(R.id.sortbutton);
         Calendar now;
-        setSupportActionBar(toolbar);
 
         setupRecyclerView();
 

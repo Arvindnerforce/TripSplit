@@ -5,16 +5,15 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
-
 import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.NavigationView.Message.MessageFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.Search.SearchActivity;
+import com.netforceinfotech.tripsplit.posttrip.PostTripActivity;
 
 public class DashboardActivity extends AppCompatActivity
 {
@@ -42,25 +41,23 @@ public class DashboardActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
+        {
             // This method will trigger on item Click of navigation menu
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem)
             {
-
-
                 //Checking if the item is in checked state or not, if not make it in checked state
-                if (menuItem.isChecked()) menuItem.setChecked(false);
-                else menuItem.setChecked(true);
+                if (menuItem.isChecked())
 
+                    menuItem.setChecked(false);
+                else
+                    menuItem.setChecked(true);
                 //Closing drawer on item click
                 drawerLayout.closeDrawers();
-
                 //Check to see which item was being clicked and perform appropriate action
                 switch (menuItem.getItemId())
                 {
-                    
                     //Replacing the main content with ContentFragment Which is our Inbox View;
                     case R.id.nav_preferences:
                        // Toast.makeText(getApplicationContext(), "Inbox Selected", Toast.LENGTH_SHORT).show();
@@ -69,9 +66,7 @@ public class DashboardActivity extends AppCompatActivity
                         fragmentTransaction.replace(R.id.frame, fragment);
                         fragmentTransaction.commit();
                         return true;
-
                     // For rest of the options we just show a toast on click
-
                     case R.id.nav_message:
                         MessageFragment messagefragment = new MessageFragment();
                         android.support.v4.app.FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
@@ -81,7 +76,6 @@ public class DashboardActivity extends AppCompatActivity
                         return true;
 
                     case R.id.nav_search:
-
                         Intent i = new Intent(DashboardActivity.this, SearchActivity.class);
                         startActivity(i);
 
@@ -100,7 +94,6 @@ public class DashboardActivity extends AppCompatActivity
             @Override
             public void onDrawerClosed(View v)
             {
-
                 super.onDrawerClosed(v);
             }
 
@@ -114,7 +107,6 @@ public class DashboardActivity extends AppCompatActivity
 
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-
 
 
         HomeFragment fragment = new HomeFragment();

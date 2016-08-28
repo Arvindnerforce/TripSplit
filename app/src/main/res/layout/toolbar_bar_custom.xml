@@ -1,4 +1,5 @@
-<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
@@ -6,6 +7,7 @@
     android:background="@color/colorPrimary"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     app:theme="@style/AppTheme.AppBarOverlay"
+    app:titleTextAppearance="@style/Toolbar.TitleText"
     >
 
     <RelativeLayout
@@ -19,7 +21,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="-20dp"
-
             >
             <ImageView
                 android:id="@+id/image_appicon"
@@ -29,7 +30,8 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_splittrip_textlogo"
                 android:layout_marginRight="30dp"
-
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
                 />
         </LinearLayout>
 
@@ -42,8 +44,8 @@
             >
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="50dp"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
                 android:src="@drawable/ic_home"
                 android:layout_marginRight="20dp"
                 android:background="@color/colorPrimary"
@@ -68,10 +70,8 @@
 
 
             <Button
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
                 android:text="LOGOUT"
@@ -81,7 +81,6 @@
                 android:background="@color/colorPrimaryTransparent"
                 android:textAllCaps="true"
                 android:layout_marginTop="5dp"
-
                 />
 
         </FrameLayout>

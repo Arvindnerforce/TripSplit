@@ -1,78 +1,92 @@
 package com.netforceinfotech.tripsplit.posttrip;
 
+
+import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
-
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import com.netforceinfotech.tripsplit.Profile.PagerAdapter;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
 
-public class PostTripActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
+public class PostTripActivity extends AppCompatActivity
 {
 
-    CoordinatorLayout coordinatorLayout;
+
     WrapContentViewPager viewPager;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_post_trip);
+        setContentView(R.layout.app_bar_profile);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        setuptoolbar();
 
         setupTab();
+
+    }
+
+    private void setuptoolbar()
+    {
+        Toolbar toolbar = (Toolbar)  findViewById(R.id.toolbar);
+
+        FrameLayout home = (FrameLayout) findViewById(R.id.homebutton);
+
+        ImageView icon = (ImageView)  findViewById(R.id.image_appicon);
+
+        FrameLayout logout = (FrameLayout) findViewById(R.id.logoutbutton);
+
+        home.setVisibility(View.VISIBLE);
+        icon.setVisibility(View.VISIBLE);
+        logout.setVisibility(View.INVISIBLE);
+
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
     }
 
 
     private void setupTab()
     {
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorlayout);
 
-        viewPager = (WrapContentViewPager)findViewById(R.id.pager);
+        viewPager = (WrapContentViewPager) findViewById(R.id.pager);
         viewPager.setPagingEnabled(false);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
-        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_plane)));
-        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_car)));
-        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_bus)));
-        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_build)));
+        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_plane)));
+        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_car)));
+        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_bus)));
+        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_build)));
 
-        final int tabIconColor = ContextCompat.getColor(getApplicationContext(), R.color.black);
-        final int tabIconSelectedColor = ContextCompat.getColor(getApplicationContext(), R.color.red);
+        final int tabIconColor = ContextCompat.getColor(this, R.color.black);
+        final int tabIconSelectedColor = ContextCompat.getColor(this, R.color.red);
 
         tabLayout.getTabAt(0).getIcon().setColorFilter(tabIconSelectedColor, PorterDuff.Mode.SRC_IN);
         tabLayout.getTabAt(1).getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
         tabLayout.getTabAt(2).getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
         tabLayout.getTabAt(3).getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
 
-
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager() , tabLayout.getTabCount());
 
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -101,30 +115,20 @@ public class PostTripActivity extends AppCompatActivity implements NavigationVie
 
     }
 
-
     @Override
-    public void onBackPressed()
+    public boolean onOptionsItemSelected(MenuItem item)
     {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        // Handle item selection
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                finish();
+
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
-
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 }

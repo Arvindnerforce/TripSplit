@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.netforceinfotech.tripsplit"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -21,7 +21,14 @@ android {
 
     repositories {
         jcenter()
-        maven { url "https://jitpack.io" }
+        maven {
+            url "https://jitpack.io"
+
+        }
+
+        maven {
+            url  "http://dl.bintray.com/ahmedrizwan/maven"
+        }
     }
 }
 
@@ -39,4 +46,8 @@ dependencies {
     compile 'com.github.citux:datetimepicker:0.2.0'
     compile 'com.wdullaer:materialdatetimepicker:2.5.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.afollestad.material-dialogs:commons:0.9.0.0'
+    compile 'com.github.anasanasanas123:MaterialDesignLibrary:1.8'
+    compile 'com.minimize.library:seekbar-compat:0.2.5'
+    compile 'com.jaredrummler:material-spinner:1.1.0'
 }

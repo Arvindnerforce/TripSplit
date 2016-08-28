@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.NavigationView.Message;
+package com.netforceinfotech.tripsplit.Review;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,28 +12,30 @@ import android.widget.Toast;
 
 import com.netforceinfotech.tripsplit.NavigationView.Message.writemessage.WriteMessageActivity;
 import com.netforceinfotech.tripsplit.R;
-
+import com.netforceinfotech.tripsplit.Review.ReviewDetails.ReviewDetails;
+import com.netforceinfotech.tripsplit.Search.SearchData;
+import com.netforceinfotech.tripsplit.Search.SearchHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by John on 7/25/2016.
+ * Created by John on 8/26/2016.
  */
-public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
 
     private static final int SIMPLE_TYPE = 0;
     private static final int IMAGE_TYPE = 1;
     private final LayoutInflater inflater;
-    private List<MessageFragmentData> itemList;
+    private List<ReviewData> itemList;
     private Context context;
     ArrayList<Boolean> booleanGames = new ArrayList<>();
     private ItemClickListener clickListener;
 
 
 
-    public MessageAdapter(Context context, List<MessageFragmentData> itemList)
+    public ReviewAdapter(Context context, List<ReviewData> itemList)
     {
         this.itemList = itemList;
         this.context = context;
@@ -45,11 +47,22 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
 
-        View view = inflater.inflate(R.layout.row_message, parent, false);
-        RichestHolder viewHolder = new RichestHolder(view);
+        View view = inflater.inflate(R.layout.row_review, parent, false);
+        ReviewHolder viewHolder = new ReviewHolder(view);
+        for (int i = 0; i < itemList.size(); i++)
+        {
+            if (i == 0)
+            {
+                booleanGames.add(true);
+            }
+            else
+            {
+                booleanGames.add(false);
+            }
+            Log.i("looppp", "" + i);
+        }
 
         return viewHolder;
-
 
     }
 
@@ -61,9 +74,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private void showMessage(String s)
     {
-
         Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
     }
+
 
 
     @Override
@@ -76,13 +89,14 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.clickListener = itemClickListener;
     }
 
-    public class RichestHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    public class ReviewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         TextView textViewTitle, textViewCategory, textViewPros;
 
         View view;
 
-        public RichestHolder(View itemView) {
+        public ReviewHolder(View itemView)
+        {
             super(itemView);
             //implementing onClickListener
             view = itemView;
@@ -91,7 +105,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public void onClick(View view)
         {
-            Intent intent =  new Intent(context, WriteMessageActivity.class);
+            Intent intent =  new Intent(context, ReviewDetails.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         }
@@ -101,4 +115,5 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public interface ItemClickListener {
         void onClick(View view, int position);
     }
+
 }
