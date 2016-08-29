@@ -13,6 +13,7 @@ import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.NavigationView.Message.MessageFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.Search.SearchActivity;
+import com.netforceinfotech.tripsplit.Search.SearchSplitActivity;
 import com.netforceinfotech.tripsplit.posttrip.PostTripActivity;
 
 public class DashboardActivity extends AppCompatActivity
@@ -76,7 +77,7 @@ public class DashboardActivity extends AppCompatActivity
                         return true;
 
                     case R.id.nav_search:
-                        Intent i = new Intent(DashboardActivity.this, SearchActivity.class);
+                        Intent i = new Intent(DashboardActivity.this, SearchSplitActivity.class);
                         startActivity(i);
 
                     return true;

@@ -128,7 +128,7 @@ public class ReviewListActivity extends AppCompatActivity implements View.OnClic
     private void showPopUp(String s)
     {
         dailog = new MaterialDialog.Builder(ReviewListActivity.this)
-                .title("")
+
                 .customView(R.layout.custom_write_review_dailog, true).build();
 
         Button b = (Button) dailog.findViewById(R.id.submit);

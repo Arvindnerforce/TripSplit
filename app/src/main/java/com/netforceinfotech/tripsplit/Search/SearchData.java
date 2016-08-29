@@ -6,7 +6,8 @@ package com.netforceinfotech.tripsplit.Search;
 public class SearchData {
 
 
-    String imageurl,title;
+   public String imageurl,title;
+
     SearchData(String title, String imageurl){
         this.imageurl=imageurl;
         this.title=title;
