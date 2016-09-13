@@ -416,30 +416,30 @@
         </LinearLayout>
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorPrimary"
-            >
 
-         <Button
-
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:text="Post Split +"
-
-             android:textColor="@color/white"
-             android:background="?android:attr/selectableItemBackground"
-             />
-
-
-        </LinearLayout>
 
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorPrimary"
+        >
 
+        <Button
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Post Split +"
+
+            android:textColor="@color/white"
+            android:background="?android:attr/selectableItemBackground"
+            />
+
+
+    </LinearLayout>
 
 </LinearLayout>

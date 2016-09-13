@@ -27,7 +27,7 @@ android {
         }
 
         maven {
-            url  "http://dl.bintray.com/ahmedrizwan/maven"
+            url "http://dl.bintray.com/ahmedrizwan/maven"
         }
     }
 }

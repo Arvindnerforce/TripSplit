@@ -20,7 +20,6 @@
         android:id="@+id/imageView"
         android:layout_width="120dp"
         android:layout_height="110dp"
-
         android:src="@drawable/ryan"
         />
 
@@ -53,7 +52,7 @@
     <io.techery.properratingbar.ProperRatingBar
         android:id="@+id/lowerRatingBar"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="15dp"
         android:layout_gravity="center_horizontal"
         app:prb_defaultRating="4"
         app:prb_tickNormalDrawable="@drawable/star_outlineicon"
@@ -62,7 +61,7 @@
         app:prb_totalTicks="5"
         app:prb_clickable="true"
         android:layout_below="@+id/relativeedit"
-        app:prb_tickSpacing="3dp"
+        app:prb_tickSpacing="0dp"
         android:layout_marginBottom="15dp"
         />
 

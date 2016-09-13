@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"
             android:text="@string/review_text"
             android:textColor="@color/black"
+            android:textSize="18dp"
             />
 
 
