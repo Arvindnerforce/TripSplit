@@ -29,6 +29,7 @@ public class MessageFragment extends Fragment
     int theme;
 
 
+
     ArrayList<MessageFragmentData> highestDatas = new ArrayList<MessageFragmentData>();
 
     public MessageFragment()

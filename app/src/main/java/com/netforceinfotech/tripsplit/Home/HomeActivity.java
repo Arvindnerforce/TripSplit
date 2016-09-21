@@ -24,7 +24,7 @@ import com.netforceinfotech.tripsplit.NavigationView.Message.MessageFragment;
 
 import com.netforceinfotech.tripsplit.R;
 
-import com.netforceinfotech.tripsplit.posttrip.PostTripActivity;
+import com.netforceinfotech.tripsplit.posttrip.PostTripFragment;
 
 public class HomeActivity extends AppCompatActivity
 {
@@ -152,7 +152,7 @@ public class HomeActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
 
-                Intent i = new Intent(HomeActivity.this, PostTripActivity.class);
+                Intent i = new Intent(HomeActivity.this, PostTripFragment.class);
 
                 startActivity(i);
             }
@@ -162,7 +162,7 @@ public class HomeActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
 
-                Intent i = new Intent(HomeActivity.this, PostTripActivity.class);
+                Intent i = new Intent(HomeActivity.this, PostTripFragment.class);
 
                 startActivity(i);
             }

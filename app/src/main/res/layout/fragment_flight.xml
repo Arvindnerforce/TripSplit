@@ -4,7 +4,9 @@
     android:layout_height="match_parent"
     xmlns:materialdesign="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#E3E4E6"
+    >
 
 
     <View
@@ -24,10 +26,10 @@
         android:padding="15dp"
         >
         <TextView
-            android:id="@+id/textview1"
+            android:id="@+id/pass_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="4"
+            android:text="1"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:textColor="@color/red"
@@ -37,13 +39,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pax"
+            android:text="Passanger"
             android:layout_marginLeft="10dp"
             android:textColor="@color/black"
             android:layout_marginTop="5dp"
             android:textStyle="bold"
             android:gravity="center_vertical"
-            android:layout_toRightOf="@+id/textview1"
+            android:layout_toRightOf="@+id/pass_txt"
             />
 
         <RelativeLayout
@@ -53,7 +55,7 @@
             >
 
             <Button
-                android:id="@+id/imageview1"
+                android:id="@+id/increament_pass"
                 android:layout_width="40dp"
                 android:layout_height="27dp"
                 android:background="@drawable/border_image"
@@ -62,11 +64,11 @@
                 android:textSize="18dp"
                 />
             <Button
-                android:id="@+id/imageview2"
+                android:id="@+id/decreament_pass"
                 android:layout_width="40dp"
                 android:layout_height="27dp"
                 android:background="@drawable/border_image2"
-                android:layout_toRightOf="@+id/imageview1"
+                android:layout_toRightOf="@+id/increament_pass"
                 android:text="-"
                 android:textColor="@color/red"
                 android:textSize="18dp"
@@ -83,17 +85,16 @@
         ></View>
 
     <RelativeLayout
-
         android:id="@+id/relativelayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="15dp"
         >
         <TextView
-            android:id="@+id/textview2"
+            android:id="@+id/space_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="4"
+            android:text="1"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:textColor="@color/red"
@@ -103,13 +104,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pax"
+            android:text="Spaces"
             android:layout_marginLeft="10dp"
             android:textColor="@color/black"
             android:layout_marginTop="5dp"
             android:textStyle="bold"
             android:gravity="center_vertical"
-            android:layout_toRightOf="@+id/textview2"
+            android:layout_toRightOf="@+id/space_txt"
             />
 
         <RelativeLayout
@@ -119,7 +120,7 @@
             >
 
             <Button
-                android:id="@+id/imageview3"
+                android:id="@+id/increament_Space"
                 android:layout_width="40dp"
                 android:layout_height="27dp"
                 android:background="@drawable/border_image"
@@ -128,11 +129,11 @@
                 android:textSize="18dp"
                 />
             <Button
-                android:id="@+id/imageview4"
+                android:id="@+id/decreament_Space"
                 android:layout_width="40dp"
                 android:layout_height="27dp"
                 android:background="@drawable/border_image2"
-                android:layout_toRightOf="@+id/imageview3"
+                android:layout_toRightOf="@+id/increament_Space"
                 android:text="-"
                 android:textColor="@color/red"
                 android:textSize="18dp"
@@ -208,7 +209,6 @@
             />
 
 
-
         <Button
             android:id="@+id/mixedButton"
             android:layout_width="0dp"
@@ -282,37 +282,110 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:orientation="vertical"
+
         >
 
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+             android:orientation="horizontal"
+            android:weightSum="100"
+            >
+
+            <RelativeLayout
+                android:id="@+id/oneway_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+               android:layout_marginLeft="2dp"
+                android:layout_weight="50"
+                >
+
+                <CheckBox
+                    android:id="@+id/onecheck"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:button="@xml/custom_checkbox"
+
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="One Way"
+                    android:textSize="16dp"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/onecheck"
+                    />
+
+
+            </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+
+            >
+
+                <CheckBox
+                    android:id="@+id/returncheck"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="10dp"
+                    android:button="@xml/custom_checkbox"
+                    />
+
+
+                <TextView
+                    android:layout_toRightOf="@+id/returncheck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Return"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="5dp"
+                    />
+
+          </RelativeLayout>
+
+
+        </LinearLayout>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/editext_background"
             android:hint="Vehical Type"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:padding="8dp"
             android:textColorHint="@color/red"
             android:drawablePadding="10dp"
-
             />
+
+
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/editext_background"
             android:hint=" Departure Address"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:padding="8dp"
             android:textColorHint="@color/red"
-
             />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="ETD"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:textColor="@color/black"
             android:textSize="18dp"
             android:layout_marginLeft="10dp"
@@ -397,9 +470,10 @@
 
             <EditText
                 android:layout_width="0dp"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="60"
                 android:layout_marginRight="5dp"
+                android:maxLines="5"
                 android:background="@drawable/iteninary_editext_border"
                 />
 

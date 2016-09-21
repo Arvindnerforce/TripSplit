@@ -3,7 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#E6E7E9"
+
    >
+
 
 
     <View
@@ -28,24 +31,30 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/iteninary_editext_border"
-            android:hint="Travel To"
+            android:hint="Travel From"
             android:layout_marginTop="10dp"
-            android:padding="5dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:textColorHint="@color/red"
             android:layout_marginRight="5dp"
             android:layout_weight="50"
+            android:textSize="14dp"
             />
 
         <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/iteninary_editext_border"
-            android:hint="Travel From"
+            android:hint="Travel To"
             android:layout_marginTop="10dp"
-            android:padding="5dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:textColorHint="@color/red"
             android:layout_marginLeft="5dp"
             android:layout_weight="50"
+            android:textSize="14dp"
             />
 
 
@@ -61,11 +70,14 @@
             android:layout_margin="7dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:textColorHint="@color/colorPrimary"
             android:textColor="@color/colorPrimary"
             android:hint="Select Date"
-            android:textSize="18dp"
+            android:textSize="14dp"
+           android:textStyle="bold"
             android:background="@drawable/iteninary_editext_border"
             />
 
@@ -121,6 +133,8 @@
         android:layout_height="1dp"
         android:background="@color/view_background"
         />
+
+
 
     <RelativeLayout
         android:layout_width="match_parent"

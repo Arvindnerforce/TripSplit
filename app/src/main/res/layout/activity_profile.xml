@@ -7,11 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:focusableInTouchMode="true"
-
-
+    android:background="@color/white"
     >
-
-
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -25,7 +22,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                >
 
                 <RelativeLayout
@@ -62,6 +58,8 @@
                         android:textColor="@color/white" />
 
                     </RelativeLayout>
+
+
                     <io.techery.properratingbar.ProperRatingBar
                         android:id="@+id/lowerRatingBar"
                         android:layout_width="wrap_content"
@@ -79,6 +77,7 @@
                         android:layout_marginRight="-60dp"
                         />
 
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -89,6 +88,7 @@
                         android:layout_margin="10dp"
                         />
 
+
                 </RelativeLayout>
 
             </LinearLayout>
@@ -97,7 +97,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-
                 >
 
 
@@ -182,17 +181,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
-                    android:elevation="6dp"
+                    android:elevation="0dp"
                     android:minHeight="?attr/actionBarSize"
                     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                     app:tabIndicatorColor="@color/colorPrimary"
                     app:tabSelectedTextColor="@color/black"
-                    app:tabTextColor="@color/white" />
+                    app:tabTextColor="@color/white"
+                    android:background="#E3E4E6"
+                    />
 
                 <com.netforceinfotech.tripsplit.general.WrapContentViewPager
                     android:id="@+id/pager"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+
                     />
 
             </LinearLayout>

@@ -149,9 +149,6 @@ public class ReviewListActivity extends AppCompatActivity implements View.OnClic
         });
         dailog.show();
 
-
-
-
     }
 
 

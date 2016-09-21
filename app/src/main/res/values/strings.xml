@@ -16,5 +16,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="white_chat_box_text">Sed ut per hgfrehb wehry fwegfrwh hjgfd ugwebhjg ghdtg wygejwh vhgf tweugbn </string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+
 
 </resources>

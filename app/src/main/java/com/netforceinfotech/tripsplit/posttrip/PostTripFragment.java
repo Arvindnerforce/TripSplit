@@ -1,54 +1,61 @@
-package com.netforceinfotech.tripsplit.Search;
+package com.netforceinfotech.tripsplit.posttrip;
 
+import android.content.Context;
 import android.graphics.PorterDuff;
-import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
+
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+
+import android.support.v4.widget.DrawerLayout;
+
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-
 import com.netforceinfotech.tripsplit.Profile.PagerAdapter;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
 
-public class SearchSplitActivity extends AppCompatActivity
+public class PostTripFragment extends Fragment
 {
 
     WrapContentViewPager viewPager;
+    DrawerLayout mDrawerLayout;
+    ActionBarDrawerToggle mDrawerToggle;
+    Context context;
+
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_search_split);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        View view = inflater.inflate(R.layout.activity_profile, container, false);
+        context = getActivity();
 
         setuptoolbar();
 
-        setupTab();
+        setupTab(view);
+
+        return view;
 
     }
 
     private void setuptoolbar()
     {
-        Toolbar toolbar = (Toolbar)  findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar)  getActivity().findViewById(R.id.toolbar);
 
-        FrameLayout home = (FrameLayout) findViewById(R.id.homebutton);
+        FrameLayout home = (FrameLayout) getActivity().findViewById(R.id.homebutton);
 
-        ImageView icon = (ImageView)  findViewById(R.id.image_appicon);
+        ImageView icon = (ImageView)  getActivity().findViewById(R.id.image_appicon);
 
-        FrameLayout logout = (FrameLayout) findViewById(R.id.logoutbutton);
+        FrameLayout logout = (FrameLayout) getActivity().findViewById(R.id.logoutbutton);
 
         home.setVisibility(View.VISIBLE);
         icon.setVisibility(View.VISIBLE);
@@ -58,22 +65,22 @@ public class SearchSplitActivity extends AppCompatActivity
 
     }
 
-
-    private void setupTab()
+    private void setupTab(View v)
     {
 
-        viewPager = (WrapContentViewPager) findViewById(R.id.pager);
-        viewPager.setPagingEnabled(false);
+        viewPager = (WrapContentViewPager) v.findViewById(R.id.pager);
+        viewPager.setPagingEnabled(true);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        TabLayout tabLayout = (TabLayout) v.findViewById(R.id.tab_layout);
 
-        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_plane)));
-        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_car)));
-        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_bus)));
-        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(this, R.drawable.ic_build)));
+        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_plane)));
+        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_car)));
+        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_bus)));
+        tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_build)));
 
-        final int tabIconColor = ContextCompat.getColor(this, R.color.black);
-        final int tabIconSelectedColor = ContextCompat.getColor(this, R.color.red);
+        final int tabIconColor = ContextCompat.getColor(getActivity(), R.color.black);
+        final int tabIconSelectedColor = ContextCompat.getColor(getActivity(), R.color.red);
+
 
         tabLayout.getTabAt(0).getIcon().setColorFilter(tabIconSelectedColor, PorterDuff.Mode.SRC_IN);
         tabLayout.getTabAt(1).getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
@@ -82,14 +89,19 @@ public class SearchSplitActivity extends AppCompatActivity
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final SearchPagerAdapter adapter = new SearchPagerAdapter(getSupportFragmentManager() , tabLayout.getTabCount());
+        final PagerAdapter adapter = new PagerAdapter(getChildFragmentManager() , tabLayout.getTabCount());
 
         viewPager.setAdapter(adapter);
+
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
+        {
+
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
+            public void onTabSelected(TabLayout.Tab tab)
+            {
                 viewPager.setCurrentItem(tab.getPosition());
                 tab.getIcon().setColorFilter(tabIconSelectedColor, PorterDuff.Mode.SRC_IN);
 
@@ -117,12 +129,16 @@ public class SearchSplitActivity extends AppCompatActivity
         switch (item.getItemId())
         {
             case android.R.id.home:
-                finish();
+              ///  finish();
+
                 break;
             default:
                 return super.onOptionsItemSelected(item);
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
 
 }
