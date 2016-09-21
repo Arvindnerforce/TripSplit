@@ -4,29 +4,9 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    android:background="#E3E4E6"
     >
-
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-
-        <include
-            layout="@layout/toolbar_bar_custom"
-            >
-        </include>
-
-    </android.support.design.widget.AppBarLayout>
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/coordinatorlayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusableInTouchMode="true"
-
-
-        >
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -57,11 +37,8 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="120dp"
-
                         android:background="@drawable/car_bg"
                         >
-
-
 
 
                     </RelativeLayout>
@@ -72,16 +49,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-
                     >
-
-
 
                     <android.support.design.widget.TabLayout
                         android:id="@+id/tab_layout"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-
                         android:elevation="6dp"
                         android:minHeight="?attr/actionBarSize"
                         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -105,5 +78,3 @@
 
     </LinearLayout>
 
-
-</LinearLayout>

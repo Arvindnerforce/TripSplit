@@ -1,6 +1,7 @@
 package com.netforceinfotech.tripsplit.Search.searchfragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.netforceinfotech.tripsplit.Profile.TripDetailsActivity;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.Search.SearchData;
 import com.netforceinfotech.tripsplit.Search.SearchHolder;
@@ -27,7 +29,7 @@ public class CarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private List<CarData> itemList;
     private Context context;
     ArrayList<Boolean> booleanGames = new ArrayList<>();
-
+    CarHolder viewHolder;
 
 
     public CarAdapter(Context context, List<CarData> itemList)
@@ -44,15 +46,7 @@ public class CarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     {
 
         View view = inflater.inflate(R.layout.row_search, parent, false);
-        SearchHolder viewHolder = new SearchHolder(view);
-        for (int i = 0; i < itemList.size(); i++) {
-            if (i == 0) {
-                booleanGames.add(true);
-            } else {
-                booleanGames.add(false);
-            }
-            Log.i("looppp", "" + i);
-        }
+         viewHolder = new CarHolder(view);
 
         return viewHolder;
 
@@ -63,10 +57,21 @@ public class CarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position)
     {
 
+        viewHolder.materialRippleLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                Intent i = new Intent(context,TripDetailsActivity.class);
+                context.startActivity(i);
+            }
+        });
+
+
     }
 
     private void showMessage(String s)
     {
+
         Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
     }
 

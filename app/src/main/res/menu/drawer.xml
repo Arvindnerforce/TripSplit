@@ -27,4 +27,26 @@
 
 
     </group>
+
+    <group
+        android:checkableBehavior="single"
+        >
+
+        <item
+            android:id="@+id/nav_group"
+            android:icon="@drawable/ic_message"
+            android:title="Message" />
+
+
+
+    </group>
+
+    <group
+        android:checkableBehavior="single"
+        ></group>
+
+
+    <group
+        android:checkableBehavior="single"
+        ></group>
 </menu>

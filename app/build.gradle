@@ -35,13 +35,13 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.1.1'
+    compile 'com.android.support:appcompat-v7:24.2.0'
     compile 'com.balysv:material-ripple:1.0.2'
-    compile 'com.android.support:design:24.1.1'
+    compile 'com.android.support:design:24.2.0'
     compile 'com.hedgehog.ratingbar:app:1.1.2'
     compile 'com.github.techery:properratingbar:0.0.5'
     compile 'com.github.whinc:ratingbar:1.1.1'
-    compile 'com.android.support:support-v4:24.1.1'
+    compile 'com.android.support:support-v4:24.2.0'
     compile 'com.shehabic.droppy:Droppy:0.5.1@aar'
     compile 'com.github.citux:datetimepicker:0.2.0'
     compile 'com.wdullaer:materialdatetimepicker:2.5.0'
@@ -50,4 +50,5 @@ dependencies {
     compile 'com.github.anasanasanas123:MaterialDesignLibrary:1.8'
     compile 'com.minimize.library:seekbar-compat:0.2.5'
     compile 'com.jaredrummler:material-spinner:1.1.0'
+    compile 'com.codinguser.android:contactpicker:3.0.0@aar'
 }

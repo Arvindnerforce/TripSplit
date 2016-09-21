@@ -22,6 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="-20dp"
             >
+
+
             <ImageView
                 android:id="@+id/image_appicon"
                 android:padding="10dp"
