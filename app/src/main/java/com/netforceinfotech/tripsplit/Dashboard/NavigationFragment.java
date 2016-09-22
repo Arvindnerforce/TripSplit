@@ -3,7 +3,6 @@ package com.netforceinfotech.tripsplit.Dashboard;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -26,7 +25,7 @@ import android.widget.Toast;
 
 import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.NavigationView.Message.MessageFragment;
-import com.netforceinfotech.tripsplit.NavigationView.Message.contactlist.ContactlistActivity;
+import com.netforceinfotech.tripsplit.NavigationView.Message.contactlist.ContactlistFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 
@@ -235,9 +234,12 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
                     fragmentTransaction.commit();
                     break;
                 case 1:
-                    Intent i = new Intent(getActivity(), ContactlistActivity.class);
-                    startActivity(i);
+                    ContactlistFragment contactlistFragment = new ContactlistFragment();
+                    android.support.v4.app.FragmentTransaction fragmentTransaction2 = getActivity().getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction2.replace(R.id.frame, contactlistFragment);
+                    fragmentTransaction2.commit();
                     break;
+
                 case 2:
                     //Intent i2 = new Intent(getActivity(), PostTripActivity.class);
                     //startActivity(i2);

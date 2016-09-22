@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#F3F4F6"
     tools:context="com.netforceinfotech.tripsplit.Dashboard.NavigationFragment"
     >
 
@@ -94,7 +95,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearheader"
-        android:background="@color/white"
+          android:background="#F3F4F6"
 
         >
 
@@ -120,7 +121,7 @@
             android:id="@+id/group"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-
+            android:background="#F3F4F6"
             android:gravity="center">
 
             <ImageView
@@ -149,7 +150,7 @@
             android:id="@+id/community"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-
+            android:background="#F3F4F6"
             android:gravity="center">
 
             <ImageView

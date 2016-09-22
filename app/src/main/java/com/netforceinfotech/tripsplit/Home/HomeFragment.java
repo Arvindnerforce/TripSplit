@@ -3,15 +3,18 @@ package com.netforceinfotech.tripsplit.Home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.Search.SearchSplitFragment;
+import com.netforceinfotech.tripsplit.posttrip.GoogleMapActivity;
 import com.netforceinfotech.tripsplit.posttrip.PostTripFragment;
 
 
@@ -38,11 +41,11 @@ public class HomeFragment extends Fragment {
 
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
-        FrameLayout home = (FrameLayout) getActivity().findViewById(R.id.homebutton);
+        ImageView home = (ImageView) getActivity().findViewById(R.id.homeButton);
 
         ImageView icon = (ImageView) getActivity().findViewById(R.id.image_appicon);
 
-        FrameLayout logout = (FrameLayout) getActivity().findViewById(R.id.logoutbutton);
+        ImageView logout = (ImageView) getActivity().findViewById(R.id.lagouttxt);
 
         home.setVisibility(View.INVISIBLE);
         icon.setVisibility(View.INVISIBLE);
@@ -65,10 +68,14 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                PostTripFragment postTripActivity = new PostTripFragment();
+             /*   PostTripFragment postTripActivity = new PostTripFragment();
                 android.support.v4.app.FragmentTransaction message_fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                 message_fragmentTransaction.replace(R.id.frame, postTripActivity);
-                message_fragmentTransaction.commit();
+                message_fragmentTransaction.commit();*/
+
+                Intent map = new Intent(getActivity(), GoogleMapActivity.class);
+                startActivity(map);
+
 
 
             }
