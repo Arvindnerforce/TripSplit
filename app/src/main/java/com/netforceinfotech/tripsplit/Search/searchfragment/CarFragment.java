@@ -1,6 +1,7 @@
 package com.netforceinfotech.tripsplit.Search.searchfragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.Search.SearchAdapter;
 import com.netforceinfotech.tripsplit.Search.SearchData;
+
+import com.netforceinfotech.tripsplit.posttrip.GoogleMapActivity;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
 import com.shehabic.droppy.DroppyMenuPopup;
@@ -43,7 +46,7 @@ public class CarFragment extends Fragment implements View.OnClickListener, TimeP
     CarAdapter adapter;
     Button sort_button;
     ArrayList<CarData> highestDatas = new ArrayList<CarData>();
-    TextView date_txt;
+    TextView date_txt,travel_from,travel_to;
 
     Context context;
 
@@ -93,6 +96,15 @@ public class CarFragment extends Fragment implements View.OnClickListener, TimeP
 
 
     private void setupRecyclerView(View v) {
+
+        travel_from = (TextView) v.findViewById(R.id.travel_from);
+
+        travel_from.setOnClickListener(this);
+
+        travel_to = (TextView) v.findViewById(R.id.travel_to);
+
+        travel_to.setOnClickListener(this);
+
         recyclerView = (RecyclerView) v.findViewById(R.id.recycler);
 
         date_txt = (TextView) v.findViewById(R.id.date_text);
@@ -146,9 +158,16 @@ public class CarFragment extends Fragment implements View.OnClickListener, TimeP
                         now.get(Calendar.DAY_OF_MONTH)
                 );
                 dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
-
-
                 break;
+            case R.id.travel_from:
+
+                Intent google_intent = new Intent(getActivity(), GoogleMapActivity.class);
+                startActivity(google_intent);
+
+            case R.id.travel_to:
+
+                Intent google_intent2 = new Intent(getActivity(), GoogleMapActivity.class);
+                startActivity(google_intent2);
 
         }
 
