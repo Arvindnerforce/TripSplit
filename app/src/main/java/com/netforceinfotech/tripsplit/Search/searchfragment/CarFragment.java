@@ -92,6 +92,8 @@ public class CarFragment extends Fragment implements View.OnClickListener, TimeP
         droppyBuilder.build();
 
         return view;
+
+
     }
 
 
@@ -122,10 +124,14 @@ public class CarFragment extends Fragment implements View.OnClickListener, TimeP
 
     }
 
-    private void setupFinsihedDatas() {
-        try {
+    private void setupFinsihedDatas()
+    {
+        try
+        {
             highestDatas.clear();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
 
         }
         highestDatas.add(new CarData("Tea", "imageurl"));
@@ -145,36 +151,37 @@ public class CarFragment extends Fragment implements View.OnClickListener, TimeP
     }
 
 
-    public void onClick(View view) {
+    public void onClick(View view)
+    {
 
-        switch (view.getId()) {
+        switch (view.getId())
+        {
             case R.id.date_text:
-
                 Calendar now = Calendar.getInstance();
-                DatePickerDialog dpd = DatePickerDialog.newInstance(
-                        CarFragment.this,
-                        now.get(Calendar.YEAR),
-                        now.get(Calendar.MONTH),
-                        now.get(Calendar.DAY_OF_MONTH)
-                );
+                DatePickerDialog dpd = DatePickerDialog.newInstance(CarFragment.this, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+
                 dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
                 break;
             case R.id.travel_from:
 
                 Intent google_intent = new Intent(getActivity(), GoogleMapActivity.class);
+                google_intent.putExtra("choose_source",true);
                 startActivity(google_intent);
 
             case R.id.travel_to:
 
                 Intent google_intent2 = new Intent(getActivity(), GoogleMapActivity.class);
+                google_intent2.putExtra("choose_source",false);
                 startActivity(google_intent2);
+
 
         }
 
 
     }
 
-    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second)
+    {
         String hourString = hourOfDay < 10 ? "0"+hourOfDay : ""+hourOfDay;
         String minuteString = minute < 10 ? "0"+minute : ""+minute;
         String secondString = second < 10 ? "0"+second : ""+second;
@@ -188,9 +195,12 @@ public class CarFragment extends Fragment implements View.OnClickListener, TimeP
         String date = "You picked the following date: "+dayOfMonth+"/"+(++monthOfYear)+"/"+year;
         Date date2 = new Date();
         SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd");
-        try {
+        try
+        {
             date2 = date_format.parse(year+"-"+monthOfYear+"-"+dayOfMonth);
-        } catch (ParseException e) {
+        }
+        catch (ParseException e)
+        {
             e.printStackTrace();
         }
 
