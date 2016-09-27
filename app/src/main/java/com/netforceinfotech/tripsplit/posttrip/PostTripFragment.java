@@ -19,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.netforceinfotech.tripsplit.Profile.PagerAdapter;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
@@ -51,11 +53,11 @@ public class PostTripFragment extends Fragment
     {
         Toolbar toolbar = (Toolbar)  getActivity().findViewById(R.id.toolbar);
 
-        FrameLayout home = (FrameLayout) getActivity().findViewById(R.id.homebutton);
+        ImageView home = (ImageView) getActivity().findViewById(R.id.homeButton);
 
         ImageView icon = (ImageView)  getActivity().findViewById(R.id.image_appicon);
 
-        FrameLayout logout = (FrameLayout) getActivity().findViewById(R.id.logoutbutton);
+        ImageView logout = (ImageView) getActivity().findViewById(R.id.lagouttxt);
 
         home.setVisibility(View.VISIBLE);
         icon.setVisibility(View.VISIBLE);

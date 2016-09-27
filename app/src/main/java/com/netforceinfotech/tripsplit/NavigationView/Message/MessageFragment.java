@@ -55,11 +55,12 @@ public class MessageFragment extends Fragment
     {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
-        FrameLayout home = (FrameLayout) getActivity().findViewById(R.id.homebutton);
+        ImageView home = (ImageView) getActivity().findViewById(R.id.homeButton);
 
         ImageView icon = (ImageView) getActivity().findViewById(R.id.image_appicon);
 
-        FrameLayout logout = (FrameLayout) getActivity().findViewById(R.id.logoutbutton);
+        ImageView logout = (ImageView) getActivity().findViewById(R.id.lagouttxt);
+
 
         home.setVisibility(View.VISIBLE);
         icon.setVisibility(View.VISIBLE);

@@ -275,8 +275,6 @@
         android:layout_below="@+id/relativelayout1"
         ></View>
 
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -285,12 +283,13 @@
 
         >
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
              android:orientation="horizontal"
             android:weightSum="100"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             >
 
             <RelativeLayout
@@ -329,7 +328,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="50"
-
             >
 
                 <CheckBox
@@ -473,7 +471,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="60"
                 android:layout_marginRight="5dp"
-                android:maxLines="5"
+                android:minLines="3"
                 android:background="@drawable/iteninary_editext_border"
                 />
 
@@ -508,7 +506,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Post Split +"
-
+            android:textAllCaps="false"
             android:textColor="@color/white"
             android:background="?android:attr/selectableItemBackground"
             />

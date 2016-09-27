@@ -24,16 +24,16 @@ import java.util.Locale;
  */
 public class SelectUserAdapter extends BaseAdapter {
 
-    public List<SelectU> _data;
-    private ArrayList<SelectU> arraylist;
+    public List<SelectUser> _data;
+    private ArrayList<SelectUser> arraylist;
     Context _c;
     ViewHolder v;
 
 
-    public SelectUserAdapter(List<SelectU> selectUsers, Context context) {
+    public SelectUserAdapter(List<SelectUser> selectUsers, Context context) {
         _data = selectUsers;
         _c = context;
-        this.arraylist = new ArrayList<SelectU>();
+        this.arraylist = new ArrayList<SelectUser>();
         this.arraylist.addAll(_data);
     }
 
@@ -72,9 +72,9 @@ public class SelectUserAdapter extends BaseAdapter {
         v.phone = (TextView) view.findViewById(R.id.no);
         v.imageView = (ImageView) view.findViewById(R.id.pic);
 
-        final SelectU data = (SelectU) _data.get(i);
+        final SelectUser data = (SelectUser) _data.get(i);
         v.title.setText(data.getName().toString());
-        v.check.setChecked(data.isChecked());
+        v.check.setChecked(data.getCheckedBox());
         v.phone.setText(data.getPhone().toString());
 
         // Set image if exists
@@ -121,7 +121,7 @@ public class SelectUserAdapter extends BaseAdapter {
         if (charText.length() == 0) {
             _data.addAll(arraylist);
         } else {
-            for (SelectU wp : arraylist) {
+            for (SelectUser wp : arraylist) {
                 if (wp.getName().toString().toLowerCase(Locale.getDefault())
                         .contains(charText)) {
                     _data.add(wp);

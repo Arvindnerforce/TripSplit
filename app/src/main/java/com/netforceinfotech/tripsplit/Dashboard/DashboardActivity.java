@@ -26,6 +26,11 @@ public class DashboardActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+
+
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
 
         setupNavigationCustom();

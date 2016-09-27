@@ -11,7 +11,10 @@ import com.netforceinfotech.tripsplit.Search.searchfragment.CarFragment;
  * Created by John on 8/29/2016.
  */
 
-public class SearchPagerAdapter extends FragmentStatePagerAdapter {
+public class SearchPagerAdapter extends FragmentStatePagerAdapter
+{
+
+
     int mNumOfTabs;
     private CarFragment carFragment;
 
@@ -20,7 +23,6 @@ public class SearchPagerAdapter extends FragmentStatePagerAdapter {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
     }
-
 
 
     @Override

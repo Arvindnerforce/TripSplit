@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.netforceinfotech.tripsplit">
 
+    <uses-permission android:name="com.example.googlemaps.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
+    <permission
+        android:name="com.example.googlemaps.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <!-- Google MAP API key -->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,7 +31,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".Profile.TripDetailsActivity" />
-
         <activity android:name=".Home.HomeActivity" />
         <activity android:name=".Dashboard.DashboardActivity" />
         <activity android:name=".Search.SearchActivity" />
@@ -24,9 +38,21 @@
         <activity android:name=".Review.ReviewListActivity" />
         <activity android:name=".Review.ReviewDetails.ReviewDetails" />
 
-        <activity android:name=".Profile.editprofile.EditProfileActivity" />
-       <activity android:name=".NavigationView.Message.contactlist.ContactlistActivity"></activity>
+        <activity android:name=".posttrip.GoogleMapActivity" />
 
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyAMn0mOmp00HfX7751RGRRSE1zjNlbmmkM" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"
+            tools:replace="android:value" />
+
+        <activity android:name=".googlemap.MapGoogle" />
+        <activity android:name=".map.MapActivity"></activity>
+
+
+        <activity android:name=".tutorial.TutorialActivity"></activity>
     </application>
 
 </manifest>

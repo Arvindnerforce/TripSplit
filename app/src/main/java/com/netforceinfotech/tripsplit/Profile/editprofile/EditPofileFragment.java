@@ -1,10 +1,14 @@
 package com.netforceinfotech.tripsplit.Profile.editprofile;
 
-import android.graphics.drawable.Drawable;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,31 +22,58 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class EditProfileActivity extends AppCompatActivity implements  View.OnClickListener,TimePickerDialog.OnTimeSetListener,DatePickerDialog.OnDateSetListener
+
+public class EditPofileFragment extends Fragment implements  View.OnClickListener,TimePickerDialog.OnTimeSetListener,DatePickerDialog.OnDateSetListener
 {
 
-    EditText editAge ;
+
     TextView dob_txt;
     LinearLayout linearlayoutdob;
+    View view;;
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public EditPofileFragment()
     {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_profile);
-
-        linearlayoutdob = (LinearLayout) findViewById(R.id.linearlayoutdob);
-
-        linearlayoutdob.setOnClickListener(this);
-
-        dob_txt = (TextView) findViewById(R.id.dob_txt);
-
-
+        // Required empty public constructor
     }
 
 
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        // Inflate the layout for this fragment
+       view =inflater.inflate(R.layout.fragment_edit_profile, container, false);
+
+        view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+
+        linearlayoutdob = (LinearLayout) view.findViewById(R.id.linearlayoutdob);
+
+        linearlayoutdob.setOnClickListener(this);
+
+        dob_txt = (TextView) view.findViewById(R.id.dob_txt);
+        setuptoolbar(view);
+        return view;
+    }
+
+
+
+    private void setuptoolbar(View view)
+    {
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+
+        ImageView home = (ImageView) getActivity().findViewById(R.id.homeButton);
+
+        ImageView icon = (ImageView) getActivity().findViewById(R.id.image_appicon);
+
+        ImageView logout = (ImageView) getActivity().findViewById(R.id.lagouttxt);
+
+        home.setVisibility(View.VISIBLE);
+        icon.setVisibility(View.VISIBLE);
+        logout.setVisibility(View.INVISIBLE);
+
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
+    }
 
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
         String hourString = hourOfDay < 10 ? "0"+hourOfDay : ""+hourOfDay;
@@ -81,15 +112,14 @@ public class EditProfileActivity extends AppCompatActivity implements  View.OnCl
         {
             case R.id.linearlayoutdob:
 
-                Calendar now = Calendar.getInstance();
-                DatePickerDialog dpd = DatePickerDialog.newInstance(
-                        EditProfileActivity.this,
+               /* Calendar now = Calendar.getInstance();
+                DatePickerDialog dpd = DatePickerDialog.newInstance(getActivity(),
                         now.get(Calendar.YEAR),
                         now.get(Calendar.MONTH),
                         now.get(Calendar.DAY_OF_MONTH)
                 );
-                dpd.show(getFragmentManager(), "Datepickerdialog");
-
+                dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+*/
 
                 break;
 
@@ -97,9 +127,6 @@ public class EditProfileActivity extends AppCompatActivity implements  View.OnCl
 
 
     }
-
-
-
 
 
 }
