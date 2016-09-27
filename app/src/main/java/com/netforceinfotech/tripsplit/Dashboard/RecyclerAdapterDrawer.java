@@ -41,8 +41,11 @@ public class RecyclerAdapterDrawer extends RecyclerView.Adapter<RecyclerView.Vie
         this.context = context;
 
         drawableId = new int[]{
-                R.drawable.ic_prefrence_red, R.drawable.ic_invite_frnd_red, R.drawable.ic_search_red, R.drawable.ic_create_trip_red, R.drawable.ic_message_red
+
+                R.drawable.ic_home_red,  R.drawable.ic_prefrence_red,R.drawable.ic_edit_profile_red, R.drawable.ic_invite_frnd_red, R.drawable.ic_search_red, R.drawable.ic_create_trip_red, R.drawable.ic_message_red
         };
+
+
 
     }
 
@@ -72,6 +75,8 @@ public class RecyclerAdapterDrawer extends RecyclerView.Adapter<RecyclerView.Vie
             myViewHolder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.selected_menu_back));
             int cImage = drawableId[position];
             myViewHolder.imageView.setImageResource(cImage);
+
+
         }
         else
         {
@@ -88,6 +93,7 @@ public class RecyclerAdapterDrawer extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     private void showMessage(String s) {
+
         Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
     }
 
@@ -98,13 +104,12 @@ public class RecyclerAdapterDrawer extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     public void setClickListner(clickListner click) {
+
         this.click = click;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder
     {
-
-
         TextView textView;
         ImageView imageView;
         LinearLayout linearLayout;
@@ -118,9 +123,12 @@ public class RecyclerAdapterDrawer extends RecyclerView.Adapter<RecyclerView.Vie
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
             linearLayout = (LinearLayout) itemView.findViewById(R.id.header);
 
-            linearLayout.setOnClickListener(new View.OnClickListener() {
+            linearLayout.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View v)
+                {
+
                     click.itemClicked(itemView, getAdapterPosition());
 
                 }
@@ -128,11 +136,10 @@ public class RecyclerAdapterDrawer extends RecyclerView.Adapter<RecyclerView.Vie
         }
 
 
-
-
     }
 
-    public interface clickListner {
+    public interface clickListner
+    {
         void itemClicked(View view, int position);
     }
 

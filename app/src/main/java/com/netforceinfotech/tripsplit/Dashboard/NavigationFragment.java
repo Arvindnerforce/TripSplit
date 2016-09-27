@@ -26,8 +26,11 @@ import android.widget.Toast;
 import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.NavigationView.Message.MessageFragment;
 import com.netforceinfotech.tripsplit.NavigationView.Message.contactlist.ContactlistFragment;
+import com.netforceinfotech.tripsplit.Profile.editprofile.EditPofileFragment;
 import com.netforceinfotech.tripsplit.R;
+import com.netforceinfotech.tripsplit.Search.SearchSplitFragment;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
+import com.netforceinfotech.tripsplit.posttrip.PostTripFragment;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -38,7 +41,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NavigationFragment extends Fragment implements RecyclerAdapterDrawer.clickListner, View.OnClickListener {
+public class NavigationFragment extends Fragment implements RecyclerAdapterDrawer.clickListner, View.OnClickListener
+{
 
     public static final String preFile = "textFile";
     public static final String userKey = "key";
@@ -66,7 +70,8 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
     public MessageFragment messageFragment;
 
 
-    public NavigationFragment() {
+    public NavigationFragment()
+    {
         // Required empty public constructor
     }
 
@@ -89,7 +94,6 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
 
         header = (RelativeLayout) view.findViewById(R.id.header);
 
-
         adapter = new RecyclerAdapterDrawer(context, list);
 
 
@@ -111,6 +115,7 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
 
 
 
+
     }
 
 
@@ -118,11 +123,15 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
     private List<RowDataDrawer> setDrawer()
     {
         List<RowDataDrawer> list = new ArrayList<>();
-        String title[] = {"Preferences", "Invite Friends", "Search Split", "Create Trip","Messages"};
+
+        String title[] = {"Home","Preferences","Edit Profile", "Invite Friends", "Search Split", "Create Trip","Messages"};
 
         int drawableId[];
-        drawableId = new int[]{
-                R.drawable.ic_prefrence, R.drawable.ic_invite_frnd, R.drawable.ic_search, R.drawable.ic_create_trip, R.drawable.ic_message
+
+
+        drawableId = new int[]
+                {
+               R.drawable.ic_home_menu, R.drawable.ic_prefrence, R.drawable.ic_edit_profile, R.drawable.ic_invite_frnd, R.drawable.ic_search, R.drawable.ic_create_trip, R.drawable.ic_message
         };
 
 
@@ -135,6 +144,9 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
             list.add(current);
 
         }
+
+
+
         Log.i("TAG count", list.size() + "");
         return list;
     }
@@ -233,24 +245,52 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
                     fragmentTransaction.replace(R.id.frame, fragment);
                     fragmentTransaction.commit();
                     break;
+
                 case 1:
+
+
+
+
+                    break;
+
+
+                case 2:
+
+                    EditPofileFragment editProfileFragment = new EditPofileFragment();
+                    FragmentTransaction editfragmentTrasaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    editfragmentTrasaction.replace(R.id.frame,editProfileFragment);
+                    editfragmentTrasaction.commit();
+
+
+                    break;
+
+                case 3:
+
                     ContactlistFragment contactlistFragment = new ContactlistFragment();
                     android.support.v4.app.FragmentTransaction fragmentTransaction2 = getActivity().getSupportFragmentManager().beginTransaction();
                     fragmentTransaction2.replace(R.id.frame, contactlistFragment);
                     fragmentTransaction2.commit();
-                    break;
-
-                case 2:
                     //Intent i2 = new Intent(getActivity(), PostTripActivity.class);
                     //startActivity(i2);
                     // setupSpecial_Category(0);
                     break;
-                case 3:
-                    // setupSpecial_Category(1);
-                    //Intent sell = new Intent(getActivity(), PostTripActivity.class);
-                    //startActivity(sell);
-                    break;
                 case 4:
+
+                    SearchSplitFragment searchSplitFragment = new SearchSplitFragment();
+                    android.support.v4.app.FragmentTransaction searchfragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    searchfragmentTransaction.replace(R.id.frame, searchSplitFragment);
+                    searchfragmentTransaction.commit();
+
+                    break;
+                case 5:
+
+                    PostTripFragment postTripFragment = new PostTripFragment();
+                    android.support.v4.app.FragmentTransaction post_fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    post_fragmentTransaction.replace(R.id.frame, postTripFragment);
+                    post_fragmentTransaction.commit();
+
+                    break;
+                case 6:
 
                     MessageFragment messageFragment = new MessageFragment();
                     android.support.v4.app.FragmentTransaction message_fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -259,9 +299,9 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
 
 
                     break;
-                case 5:
-                    break;
-                case 6:
+                case 7:
+
+
                     break;
 
             }

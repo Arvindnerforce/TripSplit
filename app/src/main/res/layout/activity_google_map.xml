@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-
+    android:layout_height="fill_parent"
+    >
 
     <LinearLayout
         android:id="@+id/linearlayout"
@@ -15,21 +15,27 @@
     <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
         android:id="@+id/places_autocomplete"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_height="35dp"
+        android:layout_margin="5dp"
         app:pacv_googleMapsApiKey="AIzaSyAyjIfqniiR1A2GqpP5M0-bL7bKa54Ctqk"
         android:layout_weight="70"
+        android:background="@drawable/edit_black_background"
+        android:hint="Enter Place "
+        android:textColorHint="@color/black"
+        android:paddingLeft="5dp"
         />
 
     <Button
         android:id="@+id/search_button"
         android:layout_width="0dp"
         android:layout_weight="30"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:text="Search"
+        android:textColor="@color/white"
         android:textAllCaps="false"
         android:layout_toRightOf="@+id/places_autocomplete"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
+        android:background="@color/colorPrimary"
         />
 
     </LinearLayout>
@@ -40,6 +46,19 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/linearlayout"
         android:layout_marginTop="10dp"
+        />
+
+    <Button
+        android:id="@+id/done_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="done"
+        android:textColor="@color/white"
+        android:background="@color/darker_blue"
+        android:textAllCaps="false"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="5dp"
         />
 
 </RelativeLayout>

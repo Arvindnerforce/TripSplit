@@ -37,7 +37,7 @@
         <activity android:name=".NavigationView.Message.writemessage.WriteMessageActivity" />
         <activity android:name=".Review.ReviewListActivity" />
         <activity android:name=".Review.ReviewDetails.ReviewDetails" />
-        <activity android:name=".Profile.editprofile.EditProfileActivity" />
+
         <activity android:name=".posttrip.GoogleMapActivity" />
 
         <meta-data
@@ -50,6 +50,9 @@
 
         <activity android:name=".googlemap.MapGoogle" />
         <activity android:name=".map.MapActivity"></activity>
+
+
+        <activity android:name=".tutorial.TutorialActivity"></activity>
     </application>
 
 </manifest>

@@ -42,6 +42,7 @@ import io.nlopez.smartlocation.SmartLocation;
 public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCallback
 {
 
+
     private static final int PERMISSION_REQUEST_CODE_LOCATION = 1;
     static final LatLng TutorialsPoint = new LatLng(21 , 57);
     PlacesAutocompleteTextView placesAutocomplete;
@@ -54,7 +55,7 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
     static double destination_longitude = 77.9470939;
     private Polyline newPolyline;
     LatLng latLng;
-    Button search;
+    Button search,done;
     boolean source_place;
     String MY_PREFS_NAME ="preference_data";
     SharedPreferences.Editor editor ;
@@ -76,8 +77,25 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
 
         System.out.println("gsdysugd============"+source_place);
 
+        done = (Button) findViewById(R.id.done_button);
+
         MapFragment   googleMap = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         googleMap.getMapAsync(GoogleMapActivity.this);
+
+
+       done.setOnClickListener(new View.OnClickListener()
+      {
+        @Override
+        public void onClick(View view)
+        {
+
+            onBackPressed();
+
+        }
+
+
+       });
+
 
 
     }
@@ -97,13 +115,16 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
             requestPermission(Manifest.permission.ACCESS_FINE_LOCATION,PERMISSION_REQUEST_CODE_LOCATION,getApplicationContext(),GoogleMapActivity.this);
         }
 
-        Gmap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+        Gmap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
+        {
             @Override
-            public void onMapClick(LatLng latLng) {
+            public void onMapClick(LatLng latLng)
+            {
 
                 clearMarker();
                 Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Selected Location"));
                 currentLatLng = latLng;
+
 
 
             }
@@ -150,15 +171,13 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
 
                         source_lat = Double.parseDouble(prefs.getString("source_latitude", null));
 
-
                         source_log = Double.parseDouble(prefs.getString("destination_latitude",null));
 
-                       Gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), 8.0f));
-                       findDirections(source_lat,source_log,
+                        Gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), 8.0f));
+
+                        findDirections(source_lat,source_log,
                                latLng.latitude, latLng.longitude,
                                GMapV2Direction.MODE_DRIVING);
-
-
 
                    }
                }

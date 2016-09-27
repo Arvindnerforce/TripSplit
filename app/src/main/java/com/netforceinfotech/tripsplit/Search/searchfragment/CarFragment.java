@@ -165,12 +165,14 @@ public class CarFragment extends Fragment implements View.OnClickListener, TimeP
             case R.id.travel_from:
 
                 Intent google_intent = new Intent(getActivity(), GoogleMapActivity.class);
+                google_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 google_intent.putExtra("choose_source",true);
                 startActivity(google_intent);
 
             case R.id.travel_to:
 
                 Intent google_intent2 = new Intent(getActivity(), GoogleMapActivity.class);
+                google_intent2.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 google_intent2.putExtra("choose_source",false);
                 startActivity(google_intent2);
 

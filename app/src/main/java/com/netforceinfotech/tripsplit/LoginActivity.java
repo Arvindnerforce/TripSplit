@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.netforceinfotech.tripsplit.Dashboard.DashboardActivity;
+import com.netforceinfotech.tripsplit.tutorial.TutorialActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -21,9 +22,7 @@ public class LoginActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-
         setSupportActionBar(toolbar);
-
 
         sign_button = (Button) findViewById(R.id.sign_button);
 
@@ -31,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
-                Intent i = new Intent(LoginActivity.this, DashboardActivity.class);
+                Intent i = new Intent(LoginActivity.this, TutorialActivity.class);
 
                 startActivity(i);
             }
