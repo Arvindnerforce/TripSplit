@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.NavigationView.Message.MessageFragment;
 import com.netforceinfotech.tripsplit.NavigationView.Message.contactlist.ContactlistFragment;
+import com.netforceinfotech.tripsplit.NavigationView.Message.mysplit.MySplitFragment;
 import com.netforceinfotech.tripsplit.Profile.editprofile.EditPofileFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.Search.SearchSplitFragment;
@@ -248,7 +249,10 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
 
                 case 1:
 
-
+                    MySplitFragment mySplitFragment = new MySplitFragment();
+                    FragmentTransaction myspitFragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    myspitFragmentTransaction.replace(R.id.frame,mySplitFragment);
+                    myspitFragmentTransaction.commit();
 
 
                     break;

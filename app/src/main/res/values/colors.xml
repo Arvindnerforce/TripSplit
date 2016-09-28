@@ -14,4 +14,5 @@
     <color name="greentranparent">#a463cc55</color>
     <color name="red">#e40e0e</color>
     <color name="selected_menu_back">#e5e5e5</color>
+    <color name="polyline_color">#43a047</color>
 </resources>

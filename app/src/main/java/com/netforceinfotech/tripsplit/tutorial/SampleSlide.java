@@ -12,7 +12,8 @@ public class SampleSlide extends Fragment {
     private static final String ARG_LAYOUT_RES_ID = "layoutResId";
     private int layoutResId;
 
-    public static SampleSlide newInstance(int layoutResId) {
+    public static SampleSlide newInstance(int layoutResId)
+    {
         SampleSlide sampleSlide = new SampleSlide();
 
         Bundle args = new Bundle();

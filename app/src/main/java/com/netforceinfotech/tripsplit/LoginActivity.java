@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.netforceinfotech.tripsplit.Dashboard.DashboardActivity;
+import com.netforceinfotech.tripsplit.tutorial.DefaultIntro;
 import com.netforceinfotech.tripsplit.tutorial.TutorialActivity;
 
 public class LoginActivity extends AppCompatActivity {
@@ -30,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
-                Intent i = new Intent(LoginActivity.this, TutorialActivity.class);
+                Intent i = new Intent(LoginActivity.this, DefaultIntro.class);
 
                 startActivity(i);
             }

@@ -21,6 +21,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -158,7 +159,7 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
                    {
 
                        Gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), 8.0f));
-                       Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Source"));
+                       Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_location_green50)).title("Source"));
 
                        editor.putString("source_latitude", Double.toString(latLng.latitude));
                        editor.putString("destination_latitude", Double.toString(latLng.longitude));
@@ -216,7 +217,7 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
                             {
 
                                 Gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), 8.0f));
-                                Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Source"));
+                                Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_location_green50)).title("Source"));
 
                                 editor.putString("source_latitude", Double.toString(latLng.latitude));
                                 editor.putString("destination_latitude", Double.toString(latLng.longitude));
@@ -392,7 +393,7 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
     public void handleGetDirectionsResult(ArrayList<LatLng> directionPoints)
     {
 
-        PolylineOptions rectLine = new PolylineOptions().width(10).color(Color.GREEN);
+        PolylineOptions rectLine = new PolylineOptions().width(10).color(R.color.polyline_color);
 
         for (int i = 0; i < directionPoints.size(); i++)
         {
@@ -407,11 +408,11 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
         newPolyline = Gmap.addPolyline(rectLine);
 
         MarkerOptions marker2 = new MarkerOptions().position(
-                new LatLng(source_lat, source_log)).title(
+                new LatLng(source_lat, source_log)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_location_green50)).title(
                 "My Location");
 
         MarkerOptions marker3 = new MarkerOptions().position(
-                new LatLng(latLng.latitude, latLng.longitude)).title(
+                new LatLng(latLng.latitude, latLng.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_location_red50)).title(
                 "Dehradun");
 
         Gmap.addMarker(marker2);
