@@ -53,6 +53,10 @@
 
 
         <activity android:name=".tutorial.TutorialActivity"></activity>
+
+        <activity android:name=".tutorial.DefaultIntro"></activity>
+
+
     </application>
 
 </manifest>

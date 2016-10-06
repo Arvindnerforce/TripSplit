@@ -1,54 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_weight="10"
-    android:background="#222222"
+    android:background="@color/colorPrimary"
+    android:weightSum="10"
     android:orientation="vertical">
 
     <TextView
+        android:layout_weight="1"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_gravity="center"
-        android:layout_weight="3"
-        android:fontFamily="sans-serif-thin"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
-        android:text="Slide 1 title"
-        android:textColor="#ffffff"
-        android:textSize="28sp" />
+        android:textSize="18sp"
+        android:text="Sign Up"
+        android:textColor="@color/white"
+        />
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_weight="1"
+        >
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:src="@drawable/ic_splash" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <ImageView
+        android:layout_weight="5"
+        android:id="@+id/imageview1"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:layout_weight="3"
-        android:gravity="center"
-        android:paddingLeft="64dp"
-        android:paddingRight="64dp"
-        android:text="Loooooooooooooooo[...]ooooooooong description here"
-        android:textColor="#ffffff"
-        android:textSize="16sp" />
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/tutorial_image1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        />
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="64dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_weight="2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+
+        >
+        <TextView
+            android:id="@+id/footerTittle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign up and be apart of the next big thing in Social Travel"
+            android:textColor="#ffffff"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_centerHorizontal="true"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/footerTittle"
+            android:layout_marginTop="10dp"
+            />
+
+    </RelativeLayout>
 </LinearLayout>
