@@ -23,93 +23,72 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class EditPofileFragment extends Fragment implements  View.OnClickListener,TimePickerDialog.OnTimeSetListener,DatePickerDialog.OnDateSetListener
-{
-
-
+public class EditPofileFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
     TextView dob_txt;
     LinearLayout linearlayoutdob;
-    View view;;
+    View view;
 
-    public EditPofileFragment()
-    {
+    public EditPofileFragment() {
         // Required empty public constructor
     }
 
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       view =inflater.inflate(R.layout.fragment_edit_profile, container, false);
-
         view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
-
         linearlayoutdob = (LinearLayout) view.findViewById(R.id.linearlayoutdob);
-
         linearlayoutdob.setOnClickListener(this);
-
         dob_txt = (TextView) view.findViewById(R.id.dob_txt);
         setuptoolbar(view);
         return view;
     }
 
 
-
-    private void setuptoolbar(View view)
-    {
+    private void setuptoolbar(View view) {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-
-        ImageView home = (ImageView) getActivity().findViewById(R.id.homeButton);
-
-        ImageView icon = (ImageView) getActivity().findViewById(R.id.image_appicon);
-
-        ImageView logout = (ImageView) getActivity().findViewById(R.id.lagouttxt);
-
+        ImageView home = (ImageView) toolbar.findViewById(R.id.homeButton);
+        ImageView icon = (ImageView) toolbar.findViewById(R.id.image_appicon);
+        TextView textViewLogout = (TextView) toolbar.findViewById(R.id.textviewLogout);
+        textViewLogout.setVisibility(View.GONE);
         home.setVisibility(View.VISIBLE);
         icon.setVisibility(View.VISIBLE);
-        logout.setVisibility(View.INVISIBLE);
 
         toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
     }
 
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
-        String hourString = hourOfDay < 10 ? "0"+hourOfDay : ""+hourOfDay;
-        String minuteString = minute < 10 ? "0"+minute : ""+minute;
-        String secondString = second < 10 ? "0"+second : ""+second;
-        String time = "You picked the following time: "+hourString+"h"+minuteString+"m"+secondString+"s";
+        String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
+        String minuteString = minute < 10 ? "0" + minute : "" + minute;
+        String secondString = second < 10 ? "0" + second : "" + second;
+        String time = "You picked the following time: " + hourString + "h" + minuteString + "m" + secondString + "s";
         dob_txt.setText(time);
     }
 
 
-    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth)
-    {
-        String date = "You picked the following date: "+dayOfMonth+"/"+(++monthOfYear)+"/"+year;
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        String date = "You picked the following date: " + dayOfMonth + "/" + (++monthOfYear) + "/" + year;
         Date date2 = new Date();
         SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            date2 = date_format.parse(year+"-"+monthOfYear+"-"+dayOfMonth);
+            date2 = date_format.parse(year + "-" + monthOfYear + "-" + dayOfMonth);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
         System.out.println("date======" + date2.toString());
 
-        String day_txt = date2.toString().substring(0,3);
+        String day_txt = date2.toString().substring(0, 3);
 
         String month_txt = date2.toString().substring(4, 7);
-        dob_txt.setText(day_txt + " " + dayOfMonth +" "+month_txt);
+        dob_txt.setText(day_txt + " " + dayOfMonth + " " + month_txt);
 
     }
 
 
-    public void onClick(View view)
-    {
+    public void onClick(View view) {
 
-        switch (view.getId())
-        {
+        switch (view.getId()) {
             case R.id.linearlayoutdob:
 
                /* Calendar now = Calendar.getInstance();

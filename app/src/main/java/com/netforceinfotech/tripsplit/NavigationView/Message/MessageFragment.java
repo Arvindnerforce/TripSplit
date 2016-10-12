@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.netforceinfotech.tripsplit.NavigationView.Message.writemessage.WriteAdapter;
 import com.netforceinfotech.tripsplit.R;
@@ -19,8 +20,7 @@ import com.netforceinfotech.tripsplit.R;
 import java.util.ArrayList;
 
 
-public class MessageFragment extends Fragment
-{
+public class MessageFragment extends Fragment {
     private RecyclerView recyclerView;
     Context context;
     private LinearLayoutManager layoutManager;
@@ -29,18 +29,15 @@ public class MessageFragment extends Fragment
     int theme;
 
 
-
     ArrayList<MessageFragmentData> highestDatas = new ArrayList<MessageFragmentData>();
 
-    public MessageFragment()
-    {
+    public MessageFragment() {
         // Required empty public constructor
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_message, container, false);
         context = getActivity();
 
@@ -51,28 +48,20 @@ public class MessageFragment extends Fragment
     }
 
 
-    private void setuptoolbar(View view)
-    {
+    private void setuptoolbar(View view) {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-
-        ImageView home = (ImageView) getActivity().findViewById(R.id.homeButton);
-
-        ImageView icon = (ImageView) getActivity().findViewById(R.id.image_appicon);
-
-        ImageView logout = (ImageView) getActivity().findViewById(R.id.lagouttxt);
-
-
+        ImageView home = (ImageView) toolbar.findViewById(R.id.homeButton);
+        ImageView icon = (ImageView) toolbar.findViewById(R.id.image_appicon);
+        TextView textViewLogout = (TextView) toolbar.findViewById(R.id.textviewLogout);
+        textViewLogout.setVisibility(View.GONE);
         home.setVisibility(View.VISIBLE);
         icon.setVisibility(View.VISIBLE);
-        logout.setVisibility(View.INVISIBLE);
-
         toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
     }
 
 
-    private void setupRecyclerView(View view)
-    {
+    private void setupRecyclerView(View view) {
         messageLayout = (FrameLayout) view.findViewById(R.id.messagelayout);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
@@ -88,20 +77,15 @@ public class MessageFragment extends Fragment
     }
 
 
-
-    public void onClick(View view, int position)
-    {
+    public void onClick(View view, int position) {
         // The onClick implementation of the RecyclerView item click
 
     }
 
-    private void setupFinsihedDatas()
-    {
-        try
-        {
+    private void setupFinsihedDatas() {
+        try {
             highestDatas.clear();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
 
         }
         highestDatas.add(new MessageFragmentData("Tea", "imageurl"));

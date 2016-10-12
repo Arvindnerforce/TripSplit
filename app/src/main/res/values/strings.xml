@@ -1,4 +1,5 @@
 <resources>
+    <string name="facebook_app_id">1857181957836361</string>
     <string name="app_name">TripSplit</string>
     <string name="login">Login</string>
     <string name="welcome_text">Welcome to TripSplit, where you can share Journeys and connect with new friends</string>
@@ -18,6 +19,7 @@
     <string name="white_chat_box_text">Sed ut per hgfrehb wehry fwegfrwh hjgfd ugwebhjg ghdtg wygejwh vhgf tweugbn </string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    <string name="shareit">Share it</string>
 
 
 </resources>

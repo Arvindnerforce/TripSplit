@@ -1,185 +1,104 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#F3F4F6"
-    tools:context="com.netforceinfotech.tripsplit.Dashboard.NavigationFragment"
-    >
+    tools:context="com.netforceinfotech.tripsplit.Dashboard.NavigationFragment">
 
 
-
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-   >
-
-
-
-    <LinearLayout
-        android:id="@+id/linearheader"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="#F3F4F6"
-        >
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="true">
 
-        <RelativeLayout
-            android:id="@+id/header"
-            android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:id="@+id/linearheader"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
+            android:background="#F3F4F6"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/header"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="40dp"
+
+                >
+
+                <ImageView
+                    android:id="@+id/imageViewDp"
+                    android:layout_width="120dp"
+                    android:layout_height="110dp"
+                    android:src="@drawable/ryan" />
+
+                <TextView
+                    android:id="@+id/textviewCountry"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginRight="8dp"
+                    android:background="@drawable/circular_bg_fill"
+                    android:gravity="center"
+                    android:text="NY"
+                    android:textColor="@color/white" />
+
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/textviewName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:padding="5dp"
+                android:text="Ryan"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+
+            <io.techery.properratingbar.ProperRatingBar
+                android:id="@+id/lowerRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/relativeedit"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="15dp"
+                android:isIndicator="false"
+                app:prb_defaultRating="4"
+                app:prb_tickNormalDrawable="@drawable/star_outlineicon"
+                app:prb_tickSelectedDrawable="@drawable/star_icon"
+                app:prb_tickSpacing="0dp"
+                app:prb_totalTicks="5" />
+
+
+        </LinearLayout>
+
+
+        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linearheader"
+            android:background="#F3F4F6"
 
             >
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="120dp"
-                android:layout_height="110dp"
-                android:src="@drawable/ryan"
-                />
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="80dp"
-                android:layout_marginLeft="80dp"
-                android:layout_marginBottom="10dp"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/small_circle"
-                />
+        </android.support.v7.widget.RecyclerView>
 
 
-        </RelativeLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="Ryan"
-            android:textStyle="bold"
-            android:layout_gravity="center_horizontal"
-            android:textColor="#000000"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
-
-        <io.techery.properratingbar.ProperRatingBar
-            android:id="@+id/lowerRatingBar"
-            android:layout_width="wrap_content"
-            android:layout_height="15dp"
-            android:layout_gravity="center_horizontal"
-            app:prb_defaultRating="4"
-            app:prb_tickNormalDrawable="@drawable/star_outlineicon"
-            app:prb_tickSelectedDrawable="@drawable/star_icon"
-            android:layout_alignParentRight="true"
-            app:prb_totalTicks="5"
-            app:prb_clickable="true"
-            android:layout_below="@+id/relativeedit"
-            app:prb_tickSpacing="0dp"
-            android:layout_marginBottom="15dp"
-            />
-
-
-
-
-
-    </LinearLayout>
-
-
-      <android.support.v7.widget.RecyclerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/linearheader"
-          android:background="#F3F4F6"
-
-        >
-
-     </android.support.v7.widget.RecyclerView>
-
-
-
-    <LinearLayout
-        android:layout_below="@+id/recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/white"
-        >
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:background="@color/black"
-            ></View>
-
-        <LinearLayout
-            android:id="@+id/group"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="#F3F4F6"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/grou_image"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_group" />
-
-
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="16dp"
-                android:text="Group"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/community"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="#F3F4F6"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/community_image"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_group" />
-
-
-            <TextView
-                android:id="@+id/community_txt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="16dp"
-                android:text="Community"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-
-                />
-
-        </LinearLayout>
-
-
-
-
-    </LinearLayout>
-
-
-</RelativeLayout>
+            android:layout_below="@+id/recycler"
+            android:background="@color/white"
+            android:orientation="vertical"></LinearLayout>
+    </RelativeLayout>
 </ScrollView>

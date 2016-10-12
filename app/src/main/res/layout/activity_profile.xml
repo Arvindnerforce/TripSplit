@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/coordinatorlayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:focusableInTouchMode="true"
     android:background="@color/white"
-    >
+    android:focusableInTouchMode="true">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -21,15 +19,12 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-               >
+                android:layout_height="wrap_content">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="280dp"
-                    android:padding="15dp"
-                    android:background="@drawable/post_trip_bg"
-                   >
+                    android:background="@drawable/post_trip_bg">
 
 
                     <RelativeLayout
@@ -37,56 +32,57 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        >
+                        android:layout_marginTop="16dp">
 
-                    <Button
-                        android:id="@+id/editbutton"
-                        android:layout_width="70dp"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/ic_editplus_icon" />
 
-                    <Button
-                        android:id="@+id/country"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="15dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/ic_circle"
-                        android:text="NZ"
-                        android:textColor="@color/white" />
+                        <Button
+                            android:id="@+id/editbutton"
+                            android:layout_width="70dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="10dp"
+                            android:background="@drawable/ic_editplus_icon" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="16dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/circular_bg_fill"
+                                android:gravity="center"
+                                android:text="NZ"
+                                android:textColor="@color/white" />
+
+                            <io.techery.properratingbar.ProperRatingBar
+                                android:id="@+id/lowerRatingBar"
+                                android:layout_width="40dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="7dp"
+                                android:orientation="vertical"
+                                app:prb_clickable="false"
+                                app:prb_defaultRating="3"
+                                app:prb_tickNormalDrawable="@drawable/star_outlineicon"
+                                app:prb_tickSelectedDrawable="@drawable/star_icon"
+                                app:prb_tickSpacing="5dp"
+                                app:prb_totalTicks="5" />
+                        </LinearLayout>
 
                     </RelativeLayout>
-
-
-                    <io.techery.properratingbar.ProperRatingBar
-                        android:id="@+id/lowerRatingBar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:rotation="90"
-                        app:prb_defaultRating="3"
-                        app:prb_tickNormalDrawable="@drawable/star_outlineicon"
-                        app:prb_tickSelectedDrawable="@drawable/star_icon"
-                        android:layout_alignParentRight="true"
-                        app:prb_totalTicks="5"
-                        app:prb_clickable="true"
-                        android:layout_marginTop="60dp"
-                        android:layout_below="@+id/relativeedit"
-                        app:prb_tickSpacing="5dp"
-                        android:layout_marginRight="-60dp"
-                        />
 
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="8 July 2016"
-                        android:textColor="@color/red"
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentRight="true"
-                        android:layout_margin="10dp"
-                        />
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginRight="16dp"
+                        android:text="8 July 2016"
+                        android:textColor="@color/red" />
 
 
                 </RelativeLayout>
@@ -96,8 +92,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
 
                 <LinearLayout
@@ -156,8 +151,7 @@
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:layout_marginRight="5dp"
-                                android:src="@drawable/ic_message"
-                                />
+                                android:src="@drawable/ic_message" />
 
                             <ImageView
                                 android:id="@+id/whatsapp"
@@ -181,14 +175,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
+                    android:background="#E3E4E6"
                     android:elevation="0dp"
                     android:minHeight="?attr/actionBarSize"
                     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                     app:tabIndicatorColor="@color/colorPrimary"
                     app:tabSelectedTextColor="@color/black"
-                    app:tabTextColor="@color/white"
-                    android:background="#E3E4E6"
-                    />
+                    app:tabTextColor="@color/white" />
 
                 <com.netforceinfotech.tripsplit.general.WrapContentViewPager
                     android:id="@+id/pager"

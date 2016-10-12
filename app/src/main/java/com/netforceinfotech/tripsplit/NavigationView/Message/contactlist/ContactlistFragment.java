@@ -90,11 +90,8 @@ public class ContactlistFragment extends Fragment
 
         ImageView icon = (ImageView) getActivity().findViewById(R.id.image_appicon);
 
-        ImageView logout = (ImageView) getActivity().findViewById(R.id.lagouttxt);
-
         home.setVisibility(View.VISIBLE);
         icon.setVisibility(View.VISIBLE);
-        logout.setVisibility(View.INVISIBLE);
 
         toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 

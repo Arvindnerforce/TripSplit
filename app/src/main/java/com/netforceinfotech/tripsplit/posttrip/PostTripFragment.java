@@ -25,50 +25,36 @@ import com.netforceinfotech.tripsplit.Profile.PagerAdapter;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
 
-public class PostTripFragment extends Fragment
-{
+public class PostTripFragment extends Fragment {
 
     WrapContentViewPager viewPager;
-    DrawerLayout mDrawerLayout;
-    ActionBarDrawerToggle mDrawerToggle;
     Context context;
 
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_profile, container, false);
         context = getActivity();
-
         setuptoolbar();
-
         setupTab(view);
-
         return view;
 
     }
 
-    private void setuptoolbar()
-    {
-        Toolbar toolbar = (Toolbar)  getActivity().findViewById(R.id.toolbar);
-
-        ImageView home = (ImageView) getActivity().findViewById(R.id.homeButton);
-
-        ImageView icon = (ImageView)  getActivity().findViewById(R.id.image_appicon);
-
-        ImageView logout = (ImageView) getActivity().findViewById(R.id.lagouttxt);
-
+    private void setuptoolbar() {
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        ImageView home = (ImageView) toolbar.findViewById(R.id.homeButton);
+        ImageView icon = (ImageView) toolbar.findViewById(R.id.image_appicon);
+        TextView textViewLogout = (TextView) toolbar.findViewById(R.id.textviewLogout);
+        textViewLogout.setVisibility(View.GONE);
         home.setVisibility(View.VISIBLE);
         icon.setVisibility(View.VISIBLE);
-        logout.setVisibility(View.INVISIBLE);
 
         toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
     }
 
-    private void setupTab(View v)
-    {
+    private void setupTab(View v) {
 
         viewPager = (WrapContentViewPager) v.findViewById(R.id.pager);
         viewPager.setPagingEnabled(true);
@@ -91,19 +77,17 @@ public class PostTripFragment extends Fragment
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final PagerAdapter adapter = new PagerAdapter(getChildFragmentManager() , tabLayout.getTabCount());
+        final PagerAdapter adapter = new PagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
 
         viewPager.setAdapter(adapter);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
-        {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
             @Override
-            public void onTabSelected(TabLayout.Tab tab)
-            {
+            public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
                 tab.getIcon().setColorFilter(tabIconSelectedColor, PorterDuff.Mode.SRC_IN);
 
@@ -125,13 +109,11 @@ public class PostTripFragment extends Fragment
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case android.R.id.home:
-              ///  finish();
+                ///  finish();
 
                 break;
             default:
@@ -139,8 +121,6 @@ public class PostTripFragment extends Fragment
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 
 
 }

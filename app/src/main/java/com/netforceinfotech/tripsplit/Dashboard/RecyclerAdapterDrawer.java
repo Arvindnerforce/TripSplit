@@ -21,75 +21,99 @@ import java.util.List;
 /**
  * Created by John on 9/14/2016.
  */
-public class RecyclerAdapterDrawer extends RecyclerView.Adapter<RecyclerView.ViewHolder>
-{
-
-    private static final int ALERT_DRAWER = 4;
+public class RecyclerAdapterDrawer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final int NORMAL = 1;
+    private static final int DUMMY = 0;
+    private static final int MESSAGE = 2;
     public static int selected_item = 0;
     private final LayoutInflater inflater;
     List<RowDataDrawer> data = Collections.emptyList();
     Context context;
-    private clickListner click = null;
-    private final int NORMAL_DRAWER = 2;
-    private Intent intent;
-    int drawableId[];
+    public clickListner click = null;
 
-    RecyclerAdapterDrawer(Context context, List<RowDataDrawer> data)
-    {
+    public RecyclerAdapterDrawer(Context context, List<RowDataDrawer> data) {
         inflater = LayoutInflater.from(context);
         this.data = data;
         this.context = context;
 
-        drawableId = new int[]{
-
-                R.drawable.ic_home_red,  R.drawable.ic_prefrence_red,R.drawable.ic_edit_profile_red, R.drawable.ic_invite_frnd_red, R.drawable.ic_search_red, R.drawable.ic_create_trip_red, R.drawable.ic_message_red
-        };
-
-
 
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (data.get(position).text.equalsIgnoreCase("dummy")) {
+            return DUMMY;
+        } else if (data.get(position).text.equalsIgnoreCase("messages")) {
+            return MESSAGE;
+        } else {
+            return NORMAL;
+        }
 
+
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = inflater.inflate(R.layout.row_navigation_drawer, parent, false);
-        MyViewHolder viewHolder = new MyViewHolder(view);
-        return viewHolder;
+        if (viewType == DUMMY) {
+            View view = inflater.inflate(R.layout.row_dummy, parent, false);
+            MyViewHolder1 viewHolder = new MyViewHolder1(view);
+            return viewHolder;
+        } else if (viewType == MESSAGE) {
+            View view = inflater.inflate(R.layout.row_navigation_drawer_message, parent, false);
+            MyViewHolder2 viewHolder = new MyViewHolder2(view);
+            return viewHolder;
+        } else {
+            View view = inflater.inflate(R.layout.row_navigation_drawer, parent, false);
+            MyViewHolder viewHolder = new MyViewHolder(view);
+            return viewHolder;
+        }
 
     }
 
 
-
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position)
-    {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
 
-        MyViewHolder myViewHolder = (MyViewHolder) holder;
 
-        if(position == selected_item)
-        {
+        if (getItemViewType(position) == NORMAL) {
+            MyViewHolder myViewHolder = (MyViewHolder) holder;
 
-            myViewHolder.textView.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-            myViewHolder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.selected_menu_back));
-            int cImage = drawableId[position];
-            myViewHolder.imageView.setImageResource(cImage);
+            if (position == selected_item) {
 
+                myViewHolder.textView.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                myViewHolder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.selected_menu_back));
+                myViewHolder.imageView.setImageResource(data.get(position).id);
+
+            } else {
+
+                myViewHolder.textView.setTextColor(ContextCompat.getColor(context, R.color.black));
+                myViewHolder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+                myViewHolder.imageView.setImageResource(data.get(position).id);
+            }
+
+            myViewHolder.textView.setText(data.get(position).text);
 
         }
-        else
-        {
+        if (getItemViewType(position) == MESSAGE) {
+            MyViewHolder2 myViewHolder = (MyViewHolder2) holder;
 
-            myViewHolder.textView.setTextColor(ContextCompat.getColor(context, R.color.black));
-            myViewHolder.linearLayout.setBackgroundColor(ContextCompat.getColor(context,R.color.white));
-            myViewHolder.imageView.setImageResource(data.get(position).id);
+            if (position == selected_item) {
+
+                myViewHolder.textView.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                myViewHolder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.selected_menu_back));
+                myViewHolder.imageView.setImageResource(data.get(position).id);
+
+            } else {
+
+                myViewHolder.textView.setTextColor(ContextCompat.getColor(context, R.color.black));
+                myViewHolder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+                myViewHolder.imageView.setImageResource(data.get(position).id);
+            }
+            myViewHolder.textviewBadge.setText("14");
+            myViewHolder.textView.setText(data.get(position).text);
+
         }
-
-        myViewHolder.textView.setText(data.get(position).text);
-
-
-
     }
 
     private void showMessage(String s) {
@@ -104,32 +128,49 @@ public class RecyclerAdapterDrawer extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     public void setClickListner(clickListner click) {
-
         this.click = click;
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder
-    {
+    class MyViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
         ImageView imageView;
         LinearLayout linearLayout;
 
 
-
-        public MyViewHolder(final View itemView)
-        {
+        public MyViewHolder(final View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.textView1);
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
             linearLayout = (LinearLayout) itemView.findViewById(R.id.header);
 
-            linearLayout.setOnClickListener(new View.OnClickListener()
-            {
+            linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v)
-                {
+                public void onClick(View v) {
+                    click.itemClicked(getAdapterPosition());
+                }
+            });
+        }
 
-                    click.itemClicked(itemView, getAdapterPosition());
+
+    }
+
+    class MyViewHolder2 extends RecyclerView.ViewHolder {
+        TextView textView, textviewBadge;
+        ImageView imageView;
+        LinearLayout linearLayout;
+
+
+        public MyViewHolder2(final View itemView) {
+            super(itemView);
+            textView = (TextView) itemView.findViewById(R.id.textView1);
+            imageView = (ImageView) itemView.findViewById(R.id.imageView);
+            linearLayout = (LinearLayout) itemView.findViewById(R.id.header);
+            textviewBadge = (TextView) itemView.findViewById(R.id.textviewBadge);
+            linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    click.itemClicked(getAdapterPosition());
 
                 }
             });
@@ -138,10 +179,18 @@ public class RecyclerAdapterDrawer extends RecyclerView.Adapter<RecyclerView.Vie
 
     }
 
-    public interface clickListner
-    {
-        void itemClicked(View view, int position);
+    class MyViewHolder1 extends RecyclerView.ViewHolder {
+
+
+        public MyViewHolder1(final View itemView) {
+            super(itemView);
+        }
+
+
     }
 
+    public interface clickListner {
+        void itemClicked(int position);
+    }
 
 }

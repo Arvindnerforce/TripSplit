@@ -1,180 +1,195 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:orientation="vertical"
-    android:weightSum="100"
-    >
+    android:weightSum="100">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="30"
-        android:background="@drawable/login_header"
-        >
-
+        android:background="@drawable/login_header">
 
 
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
         android:layout_height="0dp"
+        android:layout_marginTop="10dp"
         android:layout_weight="70"
 
         >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-
-        >
-
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-
-                android:orientation="vertical"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-
-
-                >
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/login"
-        android:gravity="center"
-
-        android:textColor="#FFFFFF"
-         android:textStyle="bold"
-        android:textAllCaps="true"
-        />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/welcome_text"
-            android:gravity="center"
-            android:textColor="#FFFFFF"
-            android:layout_marginTop="10dp"
-            android:textSize="16sp"
-            />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/contact_background"
-            android:hint="Name"
-            android:layout_marginTop="10dp"
-            android:padding="8dp"
-            android:textColorHint="@color/red"
-            android:drawableLeft="@drawable/ic_email"
-            android:drawablePadding="10dp"
-
-            />
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/contact_background"
-            android:hint="Email"
-            android:padding="8dp"
-            android:layout_marginTop="10dp"
-            android:textColorHint="@color/red"
-            android:drawableLeft="@drawable/ic_name"
-            android:drawablePadding="10dp"
-            />
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="100"
+            android:layout_height="match_parent"
+
+
             >
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="50"
-                android:layout_marginRight="5dp"
-                >
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/contact_background"
-                    android:hint="Password"
-                    android:padding="8dp"
-                    android:layout_marginTop="10dp"
-                    android:textColorHint="@color/red"
-                    android:drawableLeft="@drawable/ic_password"
-                    android:drawablePadding="10dp"
-                    />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="50"
-                android:layout_marginLeft="5dp"
+
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:orientation="vertical"
+
+
                 >
-                <EditText
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/contact_background"
-                    android:hint="Confirm"
-                    android:padding="8dp"
+                    android:gravity="center"
+                    android:text="@string/login"
+
+                    android:textAllCaps="true"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:textColorHint="@color/red"
-                    android:drawableLeft="@drawable/ic_password"
-                    android:drawablePadding="10dp"
-                    />
+                    android:gravity="center"
+                    android:text="@string/welcome_text"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/contact_background"
+                        android:drawableLeft="@drawable/ic_email"
+                        android:drawablePadding="10dp"
+                        android:hint="Name"
+                        android:padding="8dp"
+                        android:textColorHint="@color/red"
+
+                        />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/contact_background"
+                        android:drawableLeft="@drawable/ic_name"
+                        android:drawablePadding="10dp"
+                        android:hint="Email"
+                        android:padding="8dp"
+                        android:textColorHint="@color/red" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="100">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="50">
+
+                            <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:background="@drawable/contact_background"
+                                android:drawableLeft="@drawable/ic_password"
+                                android:drawablePadding="10dp"
+                                android:hint="Password"
+                                android:padding="8dp"
+                                android:textColorHint="@color/red" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="50">
+
+                            <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:background="@drawable/contact_background"
+                                android:drawableLeft="@drawable/ic_password"
+                                android:drawablePadding="10dp"
+                                android:hint="Confirm"
+                                android:padding="8dp"
+                                android:textColorHint="@color/red" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/sign_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/contact_background"
+                        android:text="SIGN IN"
+                        android:textColor="@color/red" />
+                </LinearLayout>
+
+                <com.netforceinfotech.tripsplit.general.WrapContentViewPager
+                    android:id="@+id/viewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </com.netforceinfotech.tripsplit.general.WrapContentViewPager>
+
+                <me.relex.circleindicator.CircleIndicator
+                    android:id="@+id/indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp" />
+
+                <com.balysv.materialripple.MaterialRippleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/ripple"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <Button
+                        android:id="@+id/buttonCustomFB"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:background="@drawable/ic_facebook_button"
+
+                        />
+
+                </com.balysv.materialripple.MaterialRippleLayout>
 
             </LinearLayout>
-
-
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/sign_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="SIGN IN"
-            android:background="@drawable/contact_background"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/red"
-            />
-
-        <com.balysv.materialripple.MaterialRippleLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:id="@+id/ripple"
-
-            >
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                 android:layout_marginBottom="10dp"
-                android:background="@drawable/ic_facebook_button"
-
-                />
-           </com.balysv.materialripple.MaterialRippleLayout>
-
-            </LinearLayout>
-
-    </LinearLayout>
-
     </ScrollView>
 
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
+        android:visibility="gone" />
 </LinearLayout>

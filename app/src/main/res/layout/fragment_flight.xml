@@ -250,19 +250,21 @@
          android:textColor="@color/red"
          />
 
-        <app.minimize.com.seek_bar_compat.SeekBarCompat
-            android:id="@+id/materialSeekBar"
+        <com.appyvet.rangebar.RangeBar
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/rangebar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="5dp"
-            android:layout_below="@+id/text1"
-            android:maxHeight="300sp"
-            android:max="100"
-            app:progressColor="#EE4039"
-            app:progressBackgroundColor="#EE4039"
-            app:thumbColor="#EE4039"
-            app:thumbAlpha="2.0"/>
+            android:layout_height="72dp"
+            custom:tickStart="0"
+            custom:tickInterval="1"
+            custom:rangeBarColor="@color/red"
+            custom:pinColor="@color/red"
+            custom:tickColor="@color/red"
+            custom:connectingLineColor="@color/red"
+            custom:selectorColor="@color/red"
+            custom:tickEnd="100"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
 
 
     </RelativeLayout>

@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
 
@@ -41,15 +43,13 @@ public class SearchSplitFragment extends Fragment
     {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
-        ImageView home = (ImageView) getActivity().findViewById(R.id.homeButton);
+        ImageView home = (ImageView) toolbar.findViewById(R.id.homeButton);
 
-        ImageView icon = (ImageView) getActivity().findViewById(R.id.image_appicon);
-
-        ImageView logout = (ImageView) getActivity().findViewById(R.id.lagouttxt);
-
+        ImageView icon = (ImageView) toolbar.findViewById(R.id.image_appicon);
+        TextView textViewLogout = (TextView) toolbar.findViewById(R.id.textviewLogout);
+        textViewLogout.setVisibility(View.GONE);
         home.setVisibility(View.VISIBLE);
         icon.setVisibility(View.VISIBLE);
-        logout.setVisibility(View.INVISIBLE);
 
         toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 

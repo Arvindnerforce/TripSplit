@@ -116,7 +116,7 @@ public class HomeActivity extends AppCompatActivity
     {
         if (homeFragment == null)
         {
-            homeFragment = new HomeFragment();
+            homeFragment = new HomeFragment(null);
         }
 
         tagName = homeFragment.getClass().getName();

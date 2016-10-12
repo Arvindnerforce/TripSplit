@@ -3,14 +3,13 @@ package com.netforceinfotech.tripsplit.Dashboard;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,14 +18,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.NavigationView.Message.MessageFragment;
-import com.netforceinfotech.tripsplit.NavigationView.Message.contactlist.ContactlistFragment;
-import com.netforceinfotech.tripsplit.NavigationView.Message.mysplit.MySplitFragment;
 import com.netforceinfotech.tripsplit.Profile.editprofile.EditPofileFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.Search.SearchSplitFragment;
@@ -38,17 +36,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.techery.properratingbar.ProperRatingBar;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NavigationFragment extends Fragment implements RecyclerAdapterDrawer.clickListner, View.OnClickListener
-{
+public class NavigationFragment extends Fragment implements RecyclerAdapterDrawer.clickListner, View.OnClickListener {
 
     public static final String preFile = "textFile";
     public static final String userKey = "key";
     private static final String TAG = "gcm_tag";
-    private static int POSITION = 0;
+    public static int POSITION = 0;
     public static ActionBarDrawerToggle mDrawerToggle;
     public static DrawerLayout mDrawerLayout;
     boolean mUserLearnedDrawer;
@@ -61,91 +59,65 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
     public static SharedPreferences.Editor loginPrefsEditor;
     public static List<RowDataDrawer> list = new LinkedList<>();
     private Context context;
+    ImageView imageViewDp;
+    TextView textViewName, textviewCountry;
+    ProperRatingBar properRatingBar;
 
-    RelativeLayout header;
-    CircleImageView circleImageViewProfilePic;
-    TextView textViewName;
-    private UserSessionManager userSessionManager;
-
-    private HomeFragment homeFragment;
-    public MessageFragment messageFragment;
-
-
-    public NavigationFragment()
-    {
+    public NavigationFragment() {
         // Required empty public constructor
     }
 
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_navigation, container, false);
         initView();
+        setupHomeFragment();
         return view;
     }
 
-    private void initView()
-    {
+    private void initView() {
+        imageViewDp = (ImageView) view.findViewById(R.id.imageViewDp);
+        textviewCountry = (TextView) view.findViewById(R.id.textviewCountry);
+        textViewName = (TextView) view.findViewById(R.id.textviewName);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
-
         list = setDrawer();
-
-        header = (RelativeLayout) view.findViewById(R.id.header);
-
         adapter = new RecyclerAdapterDrawer(context, list);
-
-
         adapter.setClickListner(this);
-
-        header.setOnClickListener(this);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-
         recyclerView.setNestedScrollingEnabled(true);
-
-
         //sharedprefrance
         loginPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
-        userSessionManager = new UserSessionManager(context);
-
-
-
 
     }
 
 
-
-    private List<RowDataDrawer> setDrawer()
-    {
+    private List<RowDataDrawer> setDrawer() {
         List<RowDataDrawer> list = new ArrayList<>();
 
-        String title[] = {"Home","Preferences","Edit Profile", "Invite Friends", "Search Split", "Create Trip","Messages"};
-
+        String title[] = {"Home", "Preferences", "Edit Profile", "Invite Friends", "Search Split", "Create Trip", "Messages", "dummy", "Group", "How it works", "Support"};
         int drawableId[];
 
 
         drawableId = new int[]
                 {
-               R.drawable.ic_home_menu, R.drawable.ic_prefrence, R.drawable.ic_edit_profile, R.drawable.ic_invite_frnd, R.drawable.ic_search, R.drawable.ic_create_trip, R.drawable.ic_message
-        };
+                        R.drawable.ic_home_menu, R.drawable.ic_prefrence, R.drawable.ic_edit_profile, R.drawable.ic_invite_frnd, R.drawable.ic_search, R.drawable.ic_create_trip, R.drawable.ic_message,
+                        R.drawable.ic_group, R.drawable.ic_group, R.drawable.ic_help, R.drawable.ic_community
+                };
 
 
-
-        for (int i = 0; i < title.length; i++)
-        {
+        for (int i = 0; i < title.length; i++) {
             RowDataDrawer current = new RowDataDrawer();
             current.text = title[i];
             current.id = drawableId[i];
             list.add(current);
 
         }
-
 
 
         Log.i("TAG count", list.size() + "");
@@ -230,91 +202,87 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
     }
 
     @Override
-    public void itemClicked(View view, int position) {
-        try
-        {
-
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            RecyclerAdapterDrawer.selected_item = position;
-            adapter.notifyDataSetChanged();
-            mDrawerLayout.closeDrawers();
-            switch (RecyclerAdapterDrawer.selected_item)
-            {
-                case 0:
-                    HomeFragment fragment = new HomeFragment();
-                    android.support.v4.app.FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.frame, fragment);
-                    fragmentTransaction.commit();
-                    break;
-
-                case 1:
-
-                    MySplitFragment mySplitFragment = new MySplitFragment();
-                    FragmentTransaction myspitFragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    myspitFragmentTransaction.replace(R.id.frame,mySplitFragment);
-                    myspitFragmentTransaction.commit();
-
-
-                    break;
-
-
-                case 2:
-
-                    EditPofileFragment editProfileFragment = new EditPofileFragment();
-                    FragmentTransaction editfragmentTrasaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    editfragmentTrasaction.replace(R.id.frame,editProfileFragment);
-                    editfragmentTrasaction.commit();
-
-
-                    break;
-
-                case 3:
-
-                    ContactlistFragment contactlistFragment = new ContactlistFragment();
-                    android.support.v4.app.FragmentTransaction fragmentTransaction2 = getActivity().getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction2.replace(R.id.frame, contactlistFragment);
-                    fragmentTransaction2.commit();
-                    //Intent i2 = new Intent(getActivity(), PostTripActivity.class);
-                    //startActivity(i2);
-                    // setupSpecial_Category(0);
-                    break;
-                case 4:
-
-                    SearchSplitFragment searchSplitFragment = new SearchSplitFragment();
-                    android.support.v4.app.FragmentTransaction searchfragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    searchfragmentTransaction.replace(R.id.frame, searchSplitFragment);
-                    searchfragmentTransaction.commit();
-
-                    break;
-                case 5:
-
-                    PostTripFragment postTripFragment = new PostTripFragment();
-                    android.support.v4.app.FragmentTransaction post_fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    post_fragmentTransaction.replace(R.id.frame, postTripFragment);
-                    post_fragmentTransaction.commit();
-
-                    break;
-                case 6:
-
-                    MessageFragment messageFragment = new MessageFragment();
-                    android.support.v4.app.FragmentTransaction message_fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    message_fragmentTransaction.replace(R.id.frame, messageFragment);
-                    message_fragmentTransaction.commit();
-
-
-                    break;
-                case 7:
-
-
-                    break;
-
-            }
-
-        } catch (Exception e) {
-
+    public void itemClicked(int position) {
+        POSITION = position;
+        RecyclerAdapterDrawer.selected_item = position;
+        adapter.notifyDataSetChanged();
+        mDrawerLayout.closeDrawers();
+        switch (RecyclerAdapterDrawer.selected_item) {
+            case 0:
+                setupHomeFragment();
+                break;
+            case 1:
+                setupPreferenceFragment();
+                break;
+            case 2:
+                setupEditProfileFragment();
+                break;
+            case 3:
+                setupInviteFriendFragment();
+                break;
+            case 4:
+                setupSearchSplitFramgent();
+                break;
+            case 5:
+                setupCreateTripFragment();
+                break;
+            case 6:
+                setupMessageFragment();
+                break;
+            case 7:
+                break;
+            case 8:
+                setupGroupFragment();
+                break;
+            case 9:
+                setupHiWFragment();
+                break;
+            case 10:
+                setupSupportFragment();
+                break;
         }
 
 
+    }
+
+    private void setupSupportFragment() {
+        showMessage("set up support");
+    }
+
+    private void setupHiWFragment() {
+        showMessage("set up How it work Fragment");
+    }
+
+    private void setupGroupFragment() {
+        showMessage("set up Group Fragment");
+    }
+
+    private void setupMessageFragment() {
+        MessageFragment searchSplitFragment = new MessageFragment();
+        String tag = searchSplitFragment.getClass().getName();
+        replaceFragment(searchSplitFragment, tag);
+    }
+
+    private void setupCreateTripFragment() {
+        PostTripFragment searchSplitFragment = new PostTripFragment();
+        String tag = searchSplitFragment.getClass().getName();
+        replaceFragment(searchSplitFragment, tag);
+    }
+
+    private void setupSearchSplitFramgent() {
+        SearchSplitFragment searchSplitFragment = new SearchSplitFragment();
+        String tag = searchSplitFragment.getClass().getName();
+        replaceFragment(searchSplitFragment, tag);
+    }
+
+    private void setupInviteFriendFragment() {
+        shareData();
+    }
+
+    private void setupEditProfileFragment() {
+        EditPofileFragment editPofileFragment = new EditPofileFragment();
+        String tagName = editPofileFragment.getClass().getName();
+        replaceFragment(editPofileFragment, tagName);
     }
 
     public static void hideSoftKeyboard(Activity activity)
@@ -326,10 +294,8 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
     }
 
     @Override
-    public void onClick(View v)
-    {
-        switch (v.getId())
-        {
+    public void onClick(View v) {
+        switch (v.getId()) {
 
             case R.id.header:
                 showMessage("header");
@@ -341,38 +307,30 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
         Toast.makeText(context, clicked, Toast.LENGTH_SHORT).show();
     }
 
-    private void replaceFragment(Fragment newFragment, String tag) {
 
-        FragmentTransaction transaction = ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.drawer_layout, newFragment, tag);
+    private void replaceFragment(Fragment newFragment, String tag) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame, newFragment, tag);
         transaction.commit();
     }
 
-
-   void setupMessageFragment()
-   {
-       messageFragment = new MessageFragment();
-       String tagName = messageFragment.getClass().getName();
-       replaceFragment(messageFragment, tagName);
-
+    public void setupHomeFragment() {
+        HomeFragment dashboardFragment = new HomeFragment(adapter);
+        String tagName = dashboardFragment.getClass().getName();
+        replaceFragment(dashboardFragment, tagName);
     }
 
-    private void setupHomeFragment() {
-        String teams = "Home";
-        ((AppCompatActivity) context).getSupportActionBar().setTitle(teams);
-        homeFragment = new HomeFragment();
-        String tagName = homeFragment.getClass().getName();
-        replaceFragment(homeFragment, tagName);
+    private void setupPreferenceFragment() {
+        showMessage("set up preference");
     }
 
-   /* private void setupSpecial_Category(int type) {
-        String teams = context.getString(R.string.hot_in_your_area);
-        ((AppCompatActivity) context).getSupportActionBar().setTitle(teams);
-        specialAndCategoryFragment = new SpecialAndCategoryFragment();
-        String tagName = specialAndCategoryFragment.getClass().getName();
-        Bundle args = new Bundle();
-        args.putInt("type", type);
-        specialAndCategoryFragment.setArguments(args);
-        replaceFragment(specialAndCategoryFragment, tagName);
-    }*/
+
+    private void shareData() {
+        String shareBody = "Trip split lorem ispsum";
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.shareit)));
+    }
 }
