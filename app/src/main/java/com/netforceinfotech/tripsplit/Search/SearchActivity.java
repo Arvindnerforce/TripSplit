@@ -1,7 +1,5 @@
 package com.netforceinfotech.tripsplit.Search;
 
-import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,10 +8,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.wdullaer.materialdatetimepicker.Utils;
+
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -28,7 +25,6 @@ import java.util.Calendar;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener,  TimePickerDialog.OnTimeSetListener,DatePickerDialog.OnDateSetListener
 {
@@ -87,7 +83,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     {
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
 
-        date_txt = (TextView) findViewById(R.id.date_text);
+        date_txt = (TextView) findViewById(R.id.textviewETD);
 
         layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
 
@@ -147,7 +143,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     switch (view.getId())
     {
-        case R.id.date_text:
+        case R.id.textviewETD:
 
             Calendar now = Calendar.getInstance();
             DatePickerDialog dpd = DatePickerDialog.newInstance(

@@ -20,6 +20,10 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="shareit">Share it</string>
+    <string name="editpic">Pick Image</string>
+    <string name="pick_from_galary">Pick from galary</string>
+    <string name="take_picture">Take picture</string>
+    <string name="cancel">Cancel</string>
 
 
 </resources>

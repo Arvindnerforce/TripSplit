@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -40,33 +41,29 @@ import java.util.Map;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
 
-public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCallback
-{
+public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
 
     private static final int PERMISSION_REQUEST_CODE_LOCATION = 1;
-    static final LatLng TutorialsPoint = new LatLng(21 , 57);
+    static final LatLng TutorialsPoint = new LatLng(21, 57);
     PlacesAutocompleteTextView placesAutocomplete;
     LatLng currentLatLng;
     GoogleMap Gmap;
     Context context;
-    static double source_latitude,source_lat ;
-    static double source_longitude ,source_log;
+    static double source_latitude, source_lat;
+    static double source_longitude, source_log;
     static double destination_latitude = 30.325558;
     static double destination_longitude = 77.9470939;
     private Polyline newPolyline;
     LatLng latLng;
-    Button search,done;
+    Button search, done;
     boolean source_place;
-    String MY_PREFS_NAME ="preference_data";
-    SharedPreferences.Editor editor ;
-
-
+    String MY_PREFS_NAME = "preference_data";
+    SharedPreferences.Editor editor;
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_map);
 
@@ -74,58 +71,48 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
         editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
         context = this;
 
-        source_place =getIntent().getExtras().getBoolean("choose_source");
+        source_place = getIntent().getExtras().getBoolean("choose_source");
 
-        System.out.println("gsdysugd============"+source_place);
+        System.out.println("gsdysugd============" + source_place);
 
         done = (Button) findViewById(R.id.done_button);
 
-        MapFragment   googleMap = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        MapFragment googleMap = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         googleMap.getMapAsync(GoogleMapActivity.this);
 
 
-       done.setOnClickListener(new View.OnClickListener()
-      {
-        @Override
-        public void onClick(View view)
-        {
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-            onBackPressed();
+                onBackPressed();
 
-        }
+            }
 
 
-       });
-
+        });
 
 
     }
 
-    public void onMapReady(GoogleMap map)
-    {
+    public void onMapReady(GoogleMap map) {
         Gmap = map;
-        if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION,getApplicationContext(),GoogleMapActivity.this))
-        {
+        if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, getApplicationContext(), GoogleMapActivity.this)) {
 
             Gmap.getUiSettings().setRotateGesturesEnabled(false);
-           // getLocation();
+            // getLocation();
 
-        }
-        else
-        {
-            requestPermission(Manifest.permission.ACCESS_FINE_LOCATION,PERMISSION_REQUEST_CODE_LOCATION,getApplicationContext(),GoogleMapActivity.this);
+        } else {
+            requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, PERMISSION_REQUEST_CODE_LOCATION, getApplicationContext(), GoogleMapActivity.this);
         }
 
-        Gmap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
-        {
+        Gmap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
-            public void onMapClick(LatLng latLng)
-            {
+            public void onMapClick(LatLng latLng) {
 
                 clearMarker();
                 Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Selected Location"));
                 currentLatLng = latLng;
-
 
 
             }
@@ -134,16 +121,14 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
         placesAutocomplete = (PlacesAutocompleteTextView) findViewById(R.id.places_autocomplete);
 
 
-        search = (Button)  findViewById(R.id.search_button);
+        search = (Button) findViewById(R.id.search_button);
 
 
-        search.setOnClickListener(new View.OnClickListener()
-        {
+        search.setOnClickListener(new View.OnClickListener() {
 
 
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 String strAddress = placesAutocomplete.getText().toString();
                 latLng = getLocationFromAddress(getApplicationContext(), strAddress);
                 currentLatLng = latLng;
@@ -152,44 +137,38 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
                 //  Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Selected Location"));
 
                 // Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Selected Location"));
-               try {
-                   System.out.println("latitute =====" + latLng.toString());
+                try {
+                    System.out.println("latitute =====" + latLng.toString());
 
-                   if(source_place == true)
-                   {
+                    if (source_place == true) {
 
-                       Gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), 8.0f));
-                       Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_location_green50)).title("Source"));
+                        Gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), 8.0f));
+                        Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_location_green50)).title("Source"));
 
-                       editor.putString("source_latitude", Double.toString(latLng.latitude));
-                       editor.putString("destination_latitude", Double.toString(latLng.longitude));
-                       editor.commit();
-                   }
-                   else
-                   {
+                        editor.putString("source_latitude", Double.toString(latLng.latitude));
+                        editor.putString("destination_latitude", Double.toString(latLng.longitude));
+                        editor.commit();
+                    } else {
 
-                       SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+                        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
 
                         source_lat = Double.parseDouble(prefs.getString("source_latitude", null));
 
-                        source_log = Double.parseDouble(prefs.getString("destination_latitude",null));
+                        source_log = Double.parseDouble(prefs.getString("destination_latitude", null));
 
                         Gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), 8.0f));
 
-                        findDirections(source_lat,source_log,
-                               latLng.latitude, latLng.longitude,
-                               GMapV2Direction.MODE_DRIVING);
+                        findDirections(source_lat, source_log,
+                                latLng.latitude, latLng.longitude,
+                                GMapV2Direction.MODE_DRIVING);
 
-                   }
-               }
+                    }
+                } catch (Exception e) {
 
-               catch (Exception e)
-               {
+                    e.printStackTrace();
 
-                   e.printStackTrace();
-
-                   Toast.makeText(getApplicationContext(),"please enter correct destination",Toast.LENGTH_SHORT).show();
-               }
+                    Toast.makeText(getApplicationContext(), "please enter correct destination", Toast.LENGTH_SHORT).show();
+                }
 
 
             }
@@ -213,8 +192,7 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
 
                             // Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Selected Location"));
 
-                            if(source_place == true)
-                            {
+                            if (source_place == true) {
 
                                 Gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), 8.0f));
                                 Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_location_green50)).title("Source"));
@@ -222,19 +200,17 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
                                 editor.putString("source_latitude", Double.toString(latLng.latitude));
                                 editor.putString("destination_latitude", Double.toString(latLng.longitude));
                                 editor.commit();
-                            }
-                            else
-                            {
+                            } else {
 
                                 Gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), 8.0f));
 
                                 SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
 
 
-                                 source_lat=Double.parseDouble(prefs.getString("source_latitude", null).toString()) ;
+                                source_lat = Double.parseDouble(prefs.getString("source_latitude", null).toString());
 
 
-                                 source_log = Double.parseDouble(prefs.getString("destination_latitude",null).toString());
+                                source_log = Double.parseDouble(prefs.getString("destination_latitude", null).toString());
 
                                 findDirections(source_lat, source_log,
                                         latLng.latitude, latLng.longitude,
@@ -270,8 +246,7 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
 */
 
 
-    public LatLng getLocationFromAddress(Context context, String strAddress)
-    {
+    public LatLng getLocationFromAddress(Context context, String strAddress) {
 
         Geocoder coder = new Geocoder(context);
         List<Address> address;
@@ -297,14 +272,10 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
 
-    private void clearMarker()
-    {
-        try
-        {
+    private void clearMarker() {
+        try {
             Gmap.clear();
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
 
         }
 
@@ -312,28 +283,23 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
 
-    public  void requestPermission(String strPermission,int perCode,Context _c,Activity _a)
-    {
+    public void requestPermission(String strPermission, int perCode, Context _c, Activity _a) {
 
-        if (ActivityCompat.shouldShowRequestPermissionRationale(_a,strPermission))
-        {
-            Toast.makeText(getApplicationContext(),"GPS permission allows us to access location data. Please allow in App Settings for additional functionality.",Toast.LENGTH_LONG).show();
-        }
-        else
-        {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(_a, strPermission)) {
+            Toast.makeText(getApplicationContext(), "GPS permission allows us to access location data. Please allow in App Settings for additional functionality.", Toast.LENGTH_LONG).show();
+        } else {
 
             ActivityCompat.requestPermissions(_a, new String[]{strPermission}, perCode);
         }
     }
 
-    public static boolean checkPermission(String strPermission,Context _c,Activity _a){
+    public static boolean checkPermission(String strPermission, Context _c, Activity _a) {
         int result = ContextCompat.checkSelfPermission(_c, strPermission);
-        if (result == PackageManager.PERMISSION_GRANTED){
+        if (result == PackageManager.PERMISSION_GRANTED) {
 
             return true;
 
-        }
-        else {
+        } else {
 
             return false;
 
@@ -341,24 +307,20 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
-    {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
 
 
         switch (requestCode) {
 
             case PERMISSION_REQUEST_CODE_LOCATION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     Gmap.getUiSettings().setRotateGesturesEnabled(false);
                     //getLocation();
 
-                }
-                else
-                {
+                } else {
 
-                    Toast.makeText(getApplicationContext(),"Permission Denied, You cannot access location data.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Permission Denied, You cannot access location data.", Toast.LENGTH_LONG).show();
 
                 }
                 break;
@@ -369,8 +331,7 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
 
     public void findDirections(double fromPositionDoubleLat,
                                double fromPositionDoubleLong, double toPositionDoubleLat,
-                               double toPositionDoubleLong, String mode)
-    {
+                               double toPositionDoubleLong, String mode) {
 
         Map<String, String> map = new HashMap<String, String>();
         map.put(GetDirectionsAsyncTask4.USER_CURRENT_LAT,
@@ -387,21 +348,17 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
         asyncTask.execute(map);
 
 
-
     }
 
-    public void handleGetDirectionsResult(ArrayList<LatLng> directionPoints)
-    {
+    public void handleGetDirectionsResult(ArrayList<LatLng> directionPoints) {
 
         PolylineOptions rectLine = new PolylineOptions().width(10).color(R.color.polyline_color);
 
-        for (int i = 0; i < directionPoints.size(); i++)
-        {
+        for (int i = 0; i < directionPoints.size(); i++) {
             rectLine.add(directionPoints.get(i));
         }
 
-        if (newPolyline != null)
-        {
+        if (newPolyline != null) {
             newPolyline.remove();
         }
 

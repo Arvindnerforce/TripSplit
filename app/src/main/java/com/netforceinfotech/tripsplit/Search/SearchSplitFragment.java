@@ -5,42 +5,36 @@ import android.graphics.PorterDuff;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
 
-public class SearchSplitFragment extends Fragment
-{
+public class SearchSplitFragment extends Fragment {
 
     WrapContentViewPager viewPager;
     Context context;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        View view = inflater.inflate(R.layout.activity_search_split, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_search_split, container, false);
         context = getActivity();
-
         setuptoolbar();
-
         setupTab(view);
 
         return view;
 
     }
 
-    private void setuptoolbar()
-    {
+    private void setuptoolbar() {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 
         ImageView home = (ImageView) toolbar.findViewById(R.id.homeButton);
@@ -56,13 +50,17 @@ public class SearchSplitFragment extends Fragment
     }
 
 
-    private void setupTab(View view)
-    {
+    private void setupTab(View view) {
 
         viewPager = (WrapContentViewPager) view.findViewById(R.id.pager);
         viewPager.setPagingEnabled(true);
-
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        WindowManager windowmanager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
+        int deviceWidth = displayMetrics.widthPixels;
+        int deviceHeight = displayMetrics.heightPixels;
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+        viewPager.getLayoutParams().height = deviceHeight;
 
         tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_plane)));
         tabLayout.addTab(tabLayout.newTab().setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_car)));
@@ -80,7 +78,7 @@ public class SearchSplitFragment extends Fragment
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
 
-        final SearchPagerAdapter adapter = new SearchPagerAdapter(getChildFragmentManager() , tabLayout.getTabCount());
+        final SearchPagerAdapter adapter = new SearchPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
 
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -107,7 +105,6 @@ public class SearchSplitFragment extends Fragment
 
 
     }
-
 
 
 }

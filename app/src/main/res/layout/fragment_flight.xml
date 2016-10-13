@@ -1,519 +1,521 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:materialdesign="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:materialdesign="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:background="#E3E4E6"
-    >
+    android:orientation="vertical">
 
-
-    <View
-        android:id="@+id/view1"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/flight_view_background"
-
-        ></View>
-
-
-    <RelativeLayout
-
-        android:id="@+id/relativelayout1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        >
-        <TextView
-            android:id="@+id/pass_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:textColor="@color/red"
-
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Passanger"
-            android:layout_marginLeft="10dp"
-            android:textColor="@color/black"
-            android:layout_marginTop="5dp"
-            android:textStyle="bold"
-            android:gravity="center_vertical"
-            android:layout_toRightOf="@+id/pass_txt"
-            />
-
-        <RelativeLayout
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            >
-
-            <Button
-                android:id="@+id/increament_pass"
-                android:layout_width="40dp"
-                android:layout_height="27dp"
-                android:background="@drawable/border_image"
-                android:text="+"
-                android:textColor="@color/red"
-                android:textSize="18dp"
-                />
-            <Button
-                android:id="@+id/decreament_pass"
-                android:layout_width="40dp"
-                android:layout_height="27dp"
-                android:background="@drawable/border_image2"
-                android:layout_toRightOf="@+id/increament_pass"
-                android:text="-"
-                android:textColor="@color/red"
-                android:textSize="18dp"
-                />
-
-        </RelativeLayout>
-
-    </RelativeLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/flight_view_background"
-        android:layout_below="@+id/relativelayout1"
-        ></View>
-
-    <RelativeLayout
-        android:id="@+id/relativelayout2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        >
-        <TextView
-            android:id="@+id/space_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:textColor="@color/red"
-
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Spaces"
-            android:layout_marginLeft="10dp"
-            android:textColor="@color/black"
-            android:layout_marginTop="5dp"
-            android:textStyle="bold"
-            android:gravity="center_vertical"
-            android:layout_toRightOf="@+id/space_txt"
-            />
-
-        <RelativeLayout
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            >
-
-            <Button
-                android:id="@+id/increament_Space"
-                android:layout_width="40dp"
-                android:layout_height="27dp"
-                android:background="@drawable/border_image"
-                android:text="+"
-                android:textColor="@color/red"
-                android:textSize="18dp"
-                />
-            <Button
-                android:id="@+id/decreament_Space"
-                android:layout_width="40dp"
-                android:layout_height="27dp"
-                android:background="@drawable/border_image2"
-                android:layout_toRightOf="@+id/increament_Space"
-                android:text="-"
-                android:textColor="@color/red"
-                android:textSize="18dp"
-                />
-
-        </RelativeLayout>
-
-    </RelativeLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/flight_view_background"
-        android:layout_below="@+id/relativelayout1"
-        ></View>
-
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        >
-
-
-
-     <TextView
-         android:id="@+id/group"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:text="Group"
-         android:textColor="@color/black"
-         android:textStyle="bold"
-         android:textAllCaps="false"
-         android:textSize="16dp"
-
-         />
-
-        <LinearLayout
-            android:id="@+id/lineargroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="90"
-            android:layout_below="@+id/group"
-            android:orientation="horizontal"
-            >
-
-        <Button
-            android:id="@+id/maleButton"
-            android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:background="@drawable/border_image"
-            android:text="Male"
-            android:textColor="@color/red"
-            android:textAllCaps="false"
-            android:layout_below="@+id/group"
-            android:layout_marginTop="10dp"
-            android:layout_weight="30"
-            />
-
-
-        <Button
-            android:id="@+id/femaleButton"
-            android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:background="@drawable/border_image2"
-            android:layout_toRightOf="@+id/maleButton"
-            android:text="Female"
-            android:textColor="@color/red"
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/group"
-            android:textAllCaps="false"
-            android:layout_weight="30"
-            />
-
-
-        <Button
-            android:id="@+id/mixedButton"
-            android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:background="@drawable/border_image2"
-            android:layout_toRightOf="@+id/femaleButton"
-            android:text="Mixed"
-            android:textColor="@color/red"
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/group"
-            android:textAllCaps="false"
-            android:layout_weight="30"
-            />
-
-
-        </LinearLayout>
-
-
-    </RelativeLayout>
-
-
-    <RelativeLayout
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:id="@+id/relative"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-
-        >
-
-     <TextView
-         android:id="@+id/text1"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignParentRight="true"
-         android:text="0-35"
-         android:textSize="18dp"
-         android:textColor="@color/red"
-         />
-
-        <com.appyvet.rangebar.RangeBar
-            xmlns:custom="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/rangebar"
-            android:layout_width="match_parent"
-            android:layout_height="72dp"
-            custom:tickStart="0"
-            custom:tickInterval="1"
-            custom:rangeBarColor="@color/red"
-            custom:pinColor="@color/red"
-            custom:tickColor="@color/red"
-            custom:connectingLineColor="@color/red"
-            custom:selectorColor="@color/red"
-            custom:tickEnd="100"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"/>
-
-
-    </RelativeLayout>
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/flight_view_background"
-        android:layout_below="@+id/relativelayout1"
-        ></View>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:orientation="vertical"
-
-        >
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-             android:orientation="horizontal"
-            android:weightSum="100"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            >
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/view1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/flight_view_background"
+
+                ></View>
+
 
             <RelativeLayout
-                android:id="@+id/oneway_layout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-               android:layout_marginLeft="2dp"
-                android:layout_weight="50"
-                >
 
-                <CheckBox
-                    android:id="@+id/onecheck"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:button="@xml/custom_checkbox"
+                android:id="@+id/relativelayout1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp">
+
+                <TextView
+                    android:id="@+id/pass_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="1"
+                    android:textColor="@color/red"
 
                     />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="One Way"
-                    android:textSize="16dp"
-                    android:textColor="@color/colorPrimary"
-                    android:textStyle="bold"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="5dp"
-                    android:layout_toRightOf="@+id/onecheck"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_toRightOf="@+id/pass_txt"
+                    android:gravity="center_vertical"
+                    android:text="Passanger"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true">
+
+                    <Button
+                        android:id="@+id/increament_pass"
+                        android:layout_width="40dp"
+                        android:layout_height="27dp"
+                        android:background="@drawable/border_image"
+                        android:text="+"
+                        android:textColor="@color/red"
+                        android:textSize="18dp" />
+
+                    <Button
+                        android:id="@+id/decreament_pass"
+                        android:layout_width="40dp"
+                        android:layout_height="27dp"
+                        android:layout_toRightOf="@+id/increament_pass"
+                        android:background="@drawable/border_image2"
+                        android:text="-"
+                        android:textColor="@color/red"
+                        android:textSize="18dp" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/relativelayout1"
+                android:background="@color/flight_view_background"></View>
+
+            <RelativeLayout
+                android:id="@+id/relativelayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp">
+
+                <TextView
+                    android:id="@+id/space_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="1"
+                    android:textColor="@color/red"
+
                     />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_toRightOf="@+id/space_txt"
+                    android:gravity="center_vertical"
+                    android:text="Spaces"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true">
+
+                    <Button
+                        android:id="@+id/increament_Space"
+                        android:layout_width="40dp"
+                        android:layout_height="27dp"
+                        android:background="@drawable/border_image"
+                        android:text="+"
+                        android:textColor="@color/red"
+                        android:textSize="18dp" />
+
+                    <Button
+                        android:id="@+id/decreament_Space"
+                        android:layout_width="40dp"
+                        android:layout_height="27dp"
+                        android:layout_toRightOf="@+id/increament_Space"
+                        android:background="@drawable/border_image2"
+                        android:text="-"
+                        android:textColor="@color/red"
+                        android:textSize="18dp" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/relativelayout1"
+                android:background="@color/flight_view_background"></View>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp">
+
+
+                <TextView
+                    android:id="@+id/group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Group"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
+
+                    />
+
+                <LinearLayout
+                    android:id="@+id/lineargroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/group"
+                    android:orientation="horizontal"
+                    android:weightSum="90">
+
+                    <Button
+                        android:id="@+id/maleButton"
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:layout_below="@+id/group"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="30"
+                        android:background="@drawable/border_image"
+                        android:text="Male"
+                        android:textAllCaps="false"
+                        android:textColor="@color/red" />
+
+
+                    <Button
+                        android:id="@+id/femaleButton"
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:layout_below="@+id/group"
+                        android:layout_marginTop="10dp"
+                        android:layout_toRightOf="@+id/maleButton"
+                        android:layout_weight="30"
+                        android:background="@drawable/border_image2"
+                        android:text="Female"
+                        android:textAllCaps="false"
+                        android:textColor="@color/red" />
+
+
+                    <Button
+                        android:id="@+id/mixedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:layout_below="@+id/group"
+                        android:layout_marginTop="10dp"
+                        android:layout_toRightOf="@+id/femaleButton"
+                        android:layout_weight="30"
+                        android:background="@drawable/border_image2"
+                        android:text="Mixed"
+                        android:textAllCaps="false"
+                        android:textColor="@color/red" />
+
+
+                </LinearLayout>
 
 
             </RelativeLayout>
 
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="50"
-            >
+            <RelativeLayout
+                android:id="@+id/relative"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp"
 
-                <CheckBox
-                    android:id="@+id/returncheck"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginLeft="10dp"
-                    android:button="@xml/custom_checkbox"
-                    />
-
+                >
 
                 <TextView
-                    android:layout_toRightOf="@+id/returncheck"
+                    android:id="@+id/textviewAgeGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Return"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14dp"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="5dp"
-                    />
+                    android:layout_alignParentRight="true"
+                    android:text="0-35"
+                    android:textColor="@color/red"
+                    android:textSize="18dp" />
 
-          </RelativeLayout>
-
-
-        </LinearLayout>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/editext_background"
-            android:hint="Vehical Type"
-            android:layout_marginTop="20dp"
-            android:padding="8dp"
-            android:textColorHint="@color/red"
-            android:drawablePadding="10dp"
-            />
+                <com.appyvet.rangebar.RangeBar xmlns:custom="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/rangebar"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    custom:connectingLineColor="@color/red"
+                    custom:pinColor="@color/red"
+                    custom:rangeBarColor="@color/red"
+                    custom:selectorColor="@color/red"
+                    custom:tickColor="@color/red"
+                    custom:tickEnd="100"
+                    custom:tickInterval="1"
+                    custom:tickStart="0" />
 
 
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/editext_background"
-            android:hint=" Departure Address"
-            android:layout_marginTop="20dp"
-            android:padding="8dp"
-            android:textColorHint="@color/red"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="ETD"
-            android:layout_marginTop="20dp"
-            android:textColor="@color/black"
-            android:textSize="18dp"
-            android:layout_marginLeft="10dp"
-            />
-
-        <TextView
-            android:id="@+id/date_text"
-            android:layout_margin="7dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:textColorHint="@color/colorPrimary"
-            android:textColor="@color/colorPrimary"
-            android:hint="Select Date"
-            android:textSize="18dp"
-            android:background="@drawable/iteninary_editext_border"
-            />
+            </RelativeLayout>
 
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/relativelayout1"
+                android:background="@color/flight_view_background"></View>
 
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:orientation="vertical"
-        >
-
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="Itenarary"
-          android:textColor="@color/black"
-          android:textSize="18dp"
-          />
-
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/about_me_txt"
-            android:background="@drawable/iteninary_editext_border"
-            android:padding="10dp"
-            android:layout_marginTop="10dp"
-            />
-
-
-        <Button
-            android:id="@+id/sortbutton"
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:layout_weight="30"
-            android:padding="5dp"
-            android:background="@drawable/iteninary_editext_border"
-            android:text="Add Image"
-            android:textAllCaps="false"
-
-            android:layout_marginTop="20dp"
-
-            android:drawableRight="@drawable/ic_arrow"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Total Cost"
-            android:textColor="@color/black"
-            android:layout_marginTop="10dp"
-            android:textSize="18dp"
-            />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="100"
-            android:layout_marginTop="10dp"
-            >
-
-
-            <EditText
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="60"
-                android:layout_marginRight="5dp"
-                android:minLines="3"
-                android:background="@drawable/iteninary_editext_border"
-                />
+                android:orientation="vertical"
+                android:padding="10dp"
 
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="35dp"
-                android:layout_weight="40"
-                android:text="Currency"
-                android:textAllCaps="false"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <RelativeLayout
+                        android:id="@+id/oneway_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="50">
+
+                        <CheckBox
+                            android:id="@+id/onecheck"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:button="@xml/custom_checkbox"
+
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="5dp"
+                            android:layout_toRightOf="@+id/onecheck"
+                            android:text="One Way"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="16dp"
+                            android:textStyle="bold" />
+
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="50">
+
+                        <CheckBox
+                            android:id="@+id/returncheck"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginLeft="10dp"
+                            android:button="@xml/custom_checkbox" />
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="5dp"
+                            android:layout_toRightOf="@+id/returncheck"
+                            android:text="Return"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14dp"
+                            android:textStyle="bold" />
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/editext_background"
+                    android:drawablePadding="10dp"
+                    android:hint="Vehical Type"
+                    android:padding="8dp"
+                    android:textColorHint="@color/red" />
+
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/editext_background"
+                    android:hint=" Departure Address"
+                    android:padding="8dp"
+                    android:textColorHint="@color/red" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="20dp"
+                        android:text="ETD"
+                        android:textColor="@color/black"
+                        android:textSize="18dp" />
+
+                    <TextView
+                        android:id="@+id/textviewETD"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="7dp"
+                        android:background="@drawable/iteninary_editext_border"
+                        android:hint="Select Date and Time"
+                        android:padding="10dp"
+                        android:textColor="@color/colorPrimary"
+                        android:textColorHint="@color/colorPrimary"
+                        android:textSize="18dp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="20dp"
+                        android:text="ETA"
+                        android:textColor="@color/black"
+                        android:textSize="18dp" />
+
+                    <TextView
+                        android:id="@+id/textviewETA"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="7dp"
+                        android:background="@drawable/iteninary_editext_border"
+                        android:hint="Select Date and Time"
+                        android:padding="10dp"
+                        android:textColor="@color/colorPrimary"
+                        android:textColorHint="@color/colorPrimary"
+                        android:textSize="18dp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Itenarary"
+                        android:textColor="@color/black"
+                        android:textSize="18dp" />
+
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/iteninary_editext_border"
+                        android:padding="10dp"
+                        android:text="@string/about_me_txt" />
+
+                </LinearLayout>
+
+
+                <Button
+                    android:id="@+id/buttonAddImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="30"
+                    android:background="@drawable/iteninary_editext_border"
+                    android:drawableRight="@drawable/ic_arrow"
+                    android:padding="5dp"
+
+                    android:text="Add Image"
+
+                    android:textAllCaps="false" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Total Cost"
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="60"
+                        android:background="@drawable/iteninary_editext_border"
+                        android:minLines="3" />
+
+                    <Button
+                        android:id="@+id/buttonCurrency"
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:layout_weight="40"
+                        android:background="@color/colorPrimary"
+                        android:text="Currency"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:background="@color/colorPrimary"
-                android:textColor="@color/white"
-                />
+                android:padding="10dp">
 
+                <Button
+                    android:id="@+id/buttonPost"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="Post Split +"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+
+
+            </LinearLayout>
         </LinearLayout>
-
-
-
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/colorPrimary"
-        >
-
-        <Button
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Post Split +"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:background="?android:attr/selectableItemBackground"
-            />
-
-
-    </LinearLayout>
-
+    </ScrollView>
 </LinearLayout>
