@@ -48,7 +48,7 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
     static final LatLng TutorialsPoint = new LatLng(21, 57);
     PlacesAutocompleteTextView placesAutocomplete;
     LatLng currentLatLng;
-    GoogleMap Gmap;
+    public GoogleMap Gmap;
     Context context;
     static double source_latitude, source_lat;
     static double source_longitude, source_log;
@@ -119,11 +119,7 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
         });
 
         placesAutocomplete = (PlacesAutocompleteTextView) findViewById(R.id.places_autocomplete);
-
-
         search = (Button) findViewById(R.id.search_button);
-
-
         search.setOnClickListener(new View.OnClickListener() {
 
 
@@ -161,7 +157,6 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
                         findDirections(source_lat, source_log,
                                 latLng.latitude, latLng.longitude,
                                 GMapV2Direction.MODE_DRIVING);
-
                     }
                 } catch (Exception e) {
 
@@ -189,7 +184,6 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
                             Log.i("address", strAddress);
                             clearMarker();
                             //  Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Selected Location"));
-
                             // Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Selected Location"));
 
                             if (source_place == true) {
@@ -203,15 +197,9 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
                             } else {
 
                                 Gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), 8.0f));
-
                                 SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-
-
                                 source_lat = Double.parseDouble(prefs.getString("source_latitude", null).toString());
-
-
                                 source_log = Double.parseDouble(prefs.getString("destination_latitude", null).toString());
-
                                 findDirections(source_lat, source_log,
                                         latLng.latitude, latLng.longitude,
                                         GMapV2Direction.MODE_DRIVING);

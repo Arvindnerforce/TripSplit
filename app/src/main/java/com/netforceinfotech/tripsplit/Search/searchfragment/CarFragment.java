@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.Search.SearchData;
-
 import com.netforceinfotech.tripsplit.posttrip.GoogleMapActivity;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
@@ -41,7 +40,7 @@ public class CarFragment extends Fragment implements View.OnClickListener, TimeP
     CarAdapter adapter;
     Button sort_button;
     ArrayList<CarData> highestDatas = new ArrayList<CarData>();
-    TextView date_txt, travel_from, travel_to;
+    public static TextView date_txt, travel_from, travel_to;
 
     Context context;
 
@@ -61,12 +60,23 @@ public class CarFragment extends Fragment implements View.OnClickListener, TimeP
 
         View view = inflater.inflate(R.layout.fragment_car, container, false);
         context = getActivity();
-
-        sort_button = (Button) view.findViewById(R.id.sortbutton);
-
+        initView(view);
         setupRecyclerView(view);
 
 
+        return view;
+
+
+    }
+
+    private void initView(View view) {
+        sort_button = (Button) view.findViewById(R.id.sortbutton);
+        travel_from = (TextView) view.findViewById(R.id.travel_from);
+        travel_from.setOnClickListener(this);
+        travel_to = (TextView) view.findViewById(R.id.travel_to);
+        travel_to.setOnClickListener(this);
+        date_txt = (TextView) view.findViewById(R.id.textviewETD);
+        date_txt.setOnClickListener(this);
         DroppyMenuPopup.Builder droppyBuilder = new DroppyMenuPopup.Builder(getActivity(), sort_button);
 
         droppyBuilder.addMenuItem(new DroppyMenuItem("Sort"));
@@ -84,36 +94,19 @@ public class CarFragment extends Fragment implements View.OnClickListener, TimeP
         });
         droppyBuilder.build();
 
-        return view;
-
-
     }
 
 
     private void setupRecyclerView(View v) {
 
-        travel_from = (TextView) v.findViewById(R.id.travel_from);
-
-        travel_from.setOnClickListener(this);
-
-        travel_to = (TextView) v.findViewById(R.id.travel_to);
-
-        travel_to.setOnClickListener(this);
-
         recyclerView = (RecyclerView) v.findViewById(R.id.recycler);
 
-        date_txt = (TextView) v.findViewById(R.id.textviewETD);
-
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-
         recyclerView.setLayoutManager(layoutManager);
         adapter = new CarAdapter(getActivity(), highestDatas);
         recyclerView.setAdapter(adapter);
         setupFinsihedDatas();
         adapter.notifyDataSetChanged();
-
-        date_txt.setOnClickListener(this);
-
     }
 
     private void setupFinsihedDatas() {

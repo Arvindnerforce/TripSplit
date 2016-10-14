@@ -6,17 +6,18 @@ import java.util.Map;
 import org.w3c.dom.Document;
 
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.netforceinfotech.tripsplit.posttrip.GMapV2Direction;
 import com.netforceinfotech.tripsplit.posttrip.GoogleMapActivity;
 
 
-public class GetDirectionsAsyncTask4 extends AsyncTask<Map<String, String>, Object, ArrayList<LatLng>>
-{
+public class GetDirectionsAsyncTask4 extends AsyncTask<Map<String, String>, Object, ArrayList<LatLng>> {
 
 
     public static final String USER_CURRENT_LAT = "user_current_lat";
@@ -29,48 +30,39 @@ public class GetDirectionsAsyncTask4 extends AsyncTask<Map<String, String>, Obje
     private ProgressDialog progressDialog;
 
 
-
-    public GetDirectionsAsyncTask4(GoogleMapActivity activity)
-    {
+    public GetDirectionsAsyncTask4(GoogleMapActivity activity) {
         super();
         this.activity = activity;
     }
 
-    public void onPreExecute()
-    {
+    public void onPreExecute() {
         progressDialog = new ProgressDialog(activity);
         progressDialog.setMessage("Calculating directions");
         progressDialog.show();
     }
 
     @Override
-    public void onPostExecute(ArrayList result)
-    {
+    public void onPostExecute(ArrayList result) {
         progressDialog.dismiss();
-        if (exception == null)
-        {
+        if (exception == null) {
             activity.handleGetDirectionsResult(result);
-        }
-        else
-        {
+        } else {
+
             processException();
         }
-
 
 
     }
 
     @Override
-    protected ArrayList<LatLng> doInBackground(Map<String, String>... params)
-    {
+    protected ArrayList<LatLng> doInBackground(Map<String, String>... params) {
         Map<String, String> paramMap = params[0];
-        try
-        {
+        try {
 
-            System.out.println("hi ==="+ paramMap.get(USER_CURRENT_LAT));
+            System.out.println("hi ===" + paramMap.get(USER_CURRENT_LAT));
 
-            LatLng fromPosition = new LatLng(Double.valueOf(paramMap.get(USER_CURRENT_LAT)) , Double.valueOf(paramMap.get(USER_CURRENT_LONG)));
-            LatLng toPosition = new LatLng(Double.valueOf(paramMap.get(DESTINATION_LAT)) , Double.valueOf(paramMap.get(DESTINATION_LONG)));
+            LatLng fromPosition = new LatLng(Double.valueOf(paramMap.get(USER_CURRENT_LAT)), Double.valueOf(paramMap.get(USER_CURRENT_LONG)));
+            LatLng toPosition = new LatLng(Double.valueOf(paramMap.get(DESTINATION_LAT)), Double.valueOf(paramMap.get(DESTINATION_LONG)));
 
 
             GMapV2Direction md = new GMapV2Direction();
@@ -80,16 +72,13 @@ public class GetDirectionsAsyncTask4 extends AsyncTask<Map<String, String>, Obje
             return directionPoints;
 
 
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             exception = e;
             return null;
         }
     }
 
-    private void processException()
-    {
+    private void processException() {
         Toast.makeText(activity, "Error retriving data", Toast.LENGTH_LONG).show();
     }
 
