@@ -49,9 +49,7 @@ public class PostTripFragment extends Fragment {
         textViewLogout.setVisibility(View.GONE);
         home.setVisibility(View.VISIBLE);
         icon.setVisibility(View.VISIBLE);
-
-        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-
+        toolbar.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
     }
 
     private void setupTab(View v) {

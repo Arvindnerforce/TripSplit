@@ -52,10 +52,6 @@
             android:value="@integer/google_play_services_version"
             tools:replace="android:value" />
 
-        <activity android:name=".googlemap.MapGoogle" />
-        <activity android:name=".map.MapActivity"></activity>
-
-
         <activity android:name=".tutorial.TutorialActivity"></activity>
 
         <activity android:name=".tutorial.DefaultIntro"></activity>
