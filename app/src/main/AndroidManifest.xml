@@ -53,7 +53,8 @@
 
         <activity android:name=".tutorial.TutorialActivity" />
         <activity android:name=".tutorial.DefaultIntro" />
-        <activity android:name=".login.SignUpActivity"></activity>
+        <activity android:name=".login.SignUpActivity" />
+        <activity android:name=".login.OTPActivity"></activity>
     </application>
 
 </manifest>

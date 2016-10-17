@@ -8,6 +8,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -21,6 +22,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -40,8 +43,14 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.async.http.body.JSONArrayBody;
+import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.tripsplit.Dashboard.DashboardActivity;
 import com.netforceinfotech.tripsplit.R;
+import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
 import com.netforceinfotech.tripsplit.tutorial.DefaultIntro;
 
@@ -49,9 +58,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
@@ -70,6 +82,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     String knownName, address, city, state, postalCode, country;
     String fbName, fbId, fbEmail, fbBirthday, fbGender;
     boolean sendtOTP = false;
+    UserSessionManager userSessionManager;
+    private String country_code = "";
+    private MaterialDialog dialogPic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +93,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         AppEventsLogger.activateApp(getApplication());
         setContentView(R.layout.activity_login);
         context = this;
+        userSessionManager = new UserSessionManager(context);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         initView();
@@ -126,10 +142,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         buttonFacebook.setReadPermissions(permissions);
         buttonFacebook.registerCallback(mCallbackManager, mCallBack);
         profile = Profile.getCurrentProfile();
+/*
 
         if (profile != null) {
             showMessage("You are logged in");
+            Intent i = new Intent(LoginActivity.this, DefaultIntro.class);
+            startActivity(i);
+            finish();
+
         }
+*/
 
     }
 
@@ -206,7 +228,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         }
                     });
             Bundle parameters = new Bundle();
-            parameters.putString("fields", "id,name,email,gender,user_birthday,user_location");
+            parameters.putString("fields", "id,name,email,gender,birthday,location");
             request.setParameters(parameters);
             request.executeAsync();
         }
@@ -225,8 +247,71 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void facebooklogin() {
     /*    getPermission();
         getLocation();*/
-    }
+          /*
+        * services.php?opt=register&facebook=1&fb_token=qwertyu&fb_id=asdfasdf232324&reg_id=asdfasdf232324
+        * &name=Kunsang Wangyal&email=kunwangyal05@yahoo.com&profile_image=imageURL&dob=1987-09-12&country=India&country_code=91&send_otp=true&state=delhi&pin=201301&city=Delhi&contactno=7838610665&password=123456
+        * */
+        try {
+            fbName = URLEncoder.encode(fbName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String baseurl = getString(R.string.url);
+        String url = baseurl + "services.php?opt=register&facebook=1&fb_token=&fb_id" + fbId + "&reg_id=" + userSessionManager.getRegId()
+                + "&name=" + fbName + "&email" + "" + "&dob=" + fbBirthday + "&country=" + country + "&country_code=" + country_code + "&send_otp=" + sendtOTP + "&password=";
+        Log.i("kresult", url);
+        Ion.with(context)
+                .load(url)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        if (result != null) {
+                            Log.i("kresult", result.toString());
+                            if (result.get("status").getAsString().equalsIgnoreCase("success")) {
+                                /*JsonArray data = result.getAsJsonArray("data");
+                                JsonObject jsonObject = data.get(0).getAsJsonObject();
+                                String user_id = jsonObject.get("user_id").getAsString();
+                                userSessionManager.setUserId(user_id);
+                                Intent intent = new Intent(context, OTPActivity.class);
+                                startActivity(intent);*/
 
+                            }
+                        } else if (result.get("status").getAsString().equalsIgnoreCase("failed")) {
+                            try {
+                                JsonArray data = result.getAsJsonArray("data");
+                                JsonObject jsonObject = data.get(0).getAsJsonObject();
+                                if (jsonObject.get("msg").getAsString().equalsIgnoreCase("Please Enter Email ID")) {
+                                    showEditPicPopup();
+                                }
+
+                            } catch (Exception ex) {
+
+                            }
+
+                        }
+                    }
+                });
+
+    }
+    private void showEditPicPopup() {
+        boolean wrapInScrollView = true;
+        dialogPic = new MaterialDialog.Builder(context)
+                .title("Email required")
+                .customView(R.layout.custom_email, wrapInScrollView)
+                .negativeText(R.string.cancel)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+         EditText etemailpopup= (EditText) dialogPic.findViewById(R.id.etemailpopup);
+        Button button= (Button) dialogPic.findViewById(R.id.buttonDonePopup);
+        dialogPic.findViewById(R.id.linearLayoutPicture).setOnClickListener(this);
+
+    }
     private void getLocation() {
         SmartLocation.with(context).location()
                 .start(new OnLocationUpdatedListener() {
@@ -302,7 +387,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(i);
                 break;
             case R.id.textViewRegister:
-
+                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivity(intent);
                 break;
         }
     }
@@ -335,10 +421,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 @Override
                 public void run() {
-                    Intent i = new Intent(LoginActivity.this, DefaultIntro.class);
+                   /* Intent i = new Intent(LoginActivity.this, DefaultIntro.class);
                     startActivity(i);
 
-                    finish();
+                    finish();*/
                 }
             }, SPLASH_TIME_OUT);
         } else {

@@ -68,5 +68,6 @@ dependencies {
     compile 'com.appyvet:materialrangebar:1.3'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'dev.dworks.libs:volleyplus:+'
+    compile 'com.koushikdutta.ion:ion:2.+'
     testCompile 'junit:junit:4.12'
 }

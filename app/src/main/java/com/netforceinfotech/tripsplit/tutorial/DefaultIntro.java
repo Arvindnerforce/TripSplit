@@ -1,4 +1,5 @@
 package com.netforceinfotech.tripsplit.tutorial;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -6,21 +7,21 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.netforceinfotech.tripsplit.Dashboard.DashboardActivity;
 import com.netforceinfotech.tripsplit.R;
+
 import tyrantgit.explosionfield.ExplosionField;
 
-public final class DefaultIntro extends BaseIntro
-{
+public final class DefaultIntro extends BaseIntro {
 
     Bitmap icon;
     MaterialDialog dailog;
     ExplosionField mExplosionField;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         addSlide(SampleSlide.newInstance(R.layout.activity_intro_first));
@@ -31,7 +32,6 @@ public final class DefaultIntro extends BaseIntro
         showSkipButton(false);
 
         setSeparatorColor(Color.parseColor("#EE4039"));
-
 
 
     }
@@ -51,9 +51,7 @@ public final class DefaultIntro extends BaseIntro
 
         Intent dashboard = new Intent(DefaultIntro.this, DashboardActivity.class);
         startActivity(dashboard);
-
-
-
+        finish();
 
 
     }
@@ -65,32 +63,22 @@ public final class DefaultIntro extends BaseIntro
         //Toast.makeText(getApplicationContext(), getString(R.string.skip), Toast.LENGTH_SHORT).show();
     }
 
-      public void getStarted(View v)
-      {
-          loadMainActivity();
-      }
+    public void getStarted(View v) {
+        loadMainActivity();
+    }
 
 
-
-
-    private void addListener(View root)
-    {
-        if (root instanceof ViewGroup)
-        {
+    private void addListener(View root) {
+        if (root instanceof ViewGroup) {
             ViewGroup parent = (ViewGroup) root;
-            for (int i = 0; i < parent.getChildCount(); i++)
-            {
+            for (int i = 0; i < parent.getChildCount(); i++) {
                 addListener(parent.getChildAt(i));
             }
-        }
-        else
-        {
+        } else {
             root.setClickable(true);
-            root.setOnClickListener(new View.OnClickListener()
-            {
+            root.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v)
-                {
+                public void onClick(View v) {
                     mExplosionField.explode(v);
                     v.setOnClickListener(null);
                 }

@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical">
 
     <LinearLayout
@@ -25,7 +26,7 @@
                 android:src="@drawable/post_trip_bg" />
 
             <Button
-                android:id="@+id/editbutton"
+                android:id="@+id/buttonEditDp"
                 android:layout_width="70dp"
                 android:layout_height="30dp"
                 android:layout_marginLeft="10dp"
@@ -49,24 +50,29 @@
                 android:text="LKunsang"
                 android:textSize="16sp"
                 android:textStyle="bold" />
+
             <LinearLayout
-                android:gravity="center_horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            <EditText
-                android:layout_width="140dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/edit_black_background"
-                android:drawableLeft="@drawable/ic_age"
-                android:drawablePadding="12dp"
-                android:enabled="false"
-                android:padding="6dp"
-                android:text="26 age" />
+                android:gravity="center_horizontal">
+
+                <EditText
+                    android:id="@+id/etAge"
+                    android:layout_width="140dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/edit_black_background"
+                    android:drawableLeft="@drawable/ic_age"
+                    android:drawablePadding="12dp"
+                    android:enabled="false"
+                    android:padding="8dp"
+                    android:text="26 age" />
             </LinearLayout>
+
             <EditText
+                android:id="@+id/etdob"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -75,10 +81,13 @@
                 android:background="@drawable/edit_black_background"
                 android:drawableLeft="@drawable/ic_birth"
                 android:drawablePadding="12dp"
-                android:enabled="false"
-                android:padding="6dp"
+                android:focusable="false"
+                android:clickable="true"
+                android:padding="8dp"
                 android:text="26-Dec-1990" />
+
             <EditText
+                android:id="@+id/etaddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -87,10 +96,13 @@
                 android:background="@drawable/edit_black_background"
                 android:drawableLeft="@drawable/ic_address"
                 android:drawablePadding="12dp"
-                android:enabled="false"
-                android:padding="6dp"
+                android:focusable="false"
+                android:clickable="true"
+                android:padding="8dp"
                 android:text="86, 2nd Floor, Safdarjang enclave, opp-deer park,pin: 110029, India " />
+
             <EditText
+                android:id="@+id/etcountry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -99,8 +111,9 @@
                 android:background="@drawable/edit_black_background"
                 android:drawableLeft="@drawable/ic_country"
                 android:drawablePadding="12dp"
-                android:enabled="false"
-                android:padding="6dp"
+                android:focusable="false"
+                android:clickable="true"
+                android:padding="8dp"
                 android:text="26-Dec-1990" />
 
         </LinearLayout>
@@ -111,7 +124,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary" />
+        android:background="@color/colorPrimary"
+        android:text="Done"
+        android:textColor="@color/white" />
 
 
 </RelativeLayout>
