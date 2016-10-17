@@ -1,16 +1,32 @@
 package com.netforceinfotech.tripsplit.login;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.os.Build;
 import android.os.Handler;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -23,6 +39,7 @@ import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.gson.Gson;
 import com.netforceinfotech.tripsplit.Dashboard.DashboardActivity;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
@@ -31,18 +48,28 @@ import com.netforceinfotech.tripsplit.tutorial.DefaultIntro;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
 import me.relex.circleindicator.CircleIndicator;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final long SPLASH_TIME_OUT = 2000;
-    Button sign_button, buttonCustomFB;
+    Button buttonCustomFB, buttonSignIn;
     private CallbackManager mCallbackManager;
     private LoginButton buttonFacebook;
     private Profile profile;
-    WrapContentViewPager viewPager;
+    TextView textViewRegister;
+    EditText editTextLEmail, editTextPassword;
+    Context context;
+    String knownName, address, city, state, postalCode, country;
+    String fbName, fbId, fbEmail, fbBirthday, fbGender;
+    boolean sendtOTP = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +77,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(getApplication());
         setContentView(R.layout.activity_login);
+        context = this;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         initView();
@@ -60,11 +88,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         };
         updateWithToken(AccessToken.getCurrentAccessToken());
-
-        initViewPager();
+        //  initViewPager();
         setupFacebook();
-
     }
+/*
 
     private void initViewPager() {
         final PagerAdapterLogin adapter = new PagerAdapterLogin
@@ -74,13 +101,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(viewPager);
     }
+*/
 
     private void initView() {
-        sign_button = (Button) findViewById(R.id.sign_button);
+        editTextLEmail = (EditText) findViewById(R.id.etemail);
+        editTextPassword = (EditText) findViewById(R.id.etpassWord);
+        buttonSignIn = (Button) findViewById(R.id.buttonSignIn);
         buttonCustomFB = (Button) findViewById(R.id.buttonCustomFB);
+        textViewRegister = (TextView) findViewById(R.id.textViewRegister);
+        textViewRegister.setOnClickListener(this);
         buttonCustomFB.setOnClickListener(this);
-        sign_button.setOnClickListener(this);
-        viewPager = (WrapContentViewPager) findViewById(R.id.viewPager);
+        buttonSignIn.setOnClickListener(this);
+        //  viewPager = (WrapContentViewPager) findViewById(R.id.viewPager);
 
     }
 
@@ -90,6 +122,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         ArrayList<String> permissions = new ArrayList<String>();
         permissions.add("email");
         permissions.add("user_birthday");
+        permissions.add("user_location");
         buttonFacebook.setReadPermissions(permissions);
         buttonFacebook.registerCallback(mCallbackManager, mCallBack);
         profile = Profile.getCurrentProfile();
@@ -132,35 +165,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 //parameters.putString("fields", "id,name,email,gender, birthday,picture ");
                                 AccessToken accessToken = loginResult.getAccessToken();
                                 Profile profile = Profile.getCurrentProfile();
-                                String fbName;
+
                                 try {
                                     fbName = object.getString("name");
                                 } catch (JSONException e) {
                                     fbName = "";
                                     e.printStackTrace();
                                 }
-                                String fbId;
                                 try {
                                     fbId = object.getString("id");
                                 } catch (JSONException e) {
                                     fbId = "";
                                     e.printStackTrace();
                                 }
-                                String fbEmail;
                                 try {
                                     fbEmail = object.getString("email");
                                 } catch (JSONException e) {
                                     fbEmail = "";
                                     e.printStackTrace();
                                 }
-                                String fbBirthday;
                                 try {
                                     fbBirthday = object.getString("birthday");
                                 } catch (JSONException e) {
                                     fbBirthday = "";
                                     e.printStackTrace();
                                 }
-                                String fbGender;
                                 try {
                                     fbGender = object.getString("gender");
                                 } catch (JSONException e) {
@@ -169,16 +198,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 }
                                 showMessage("facebook done. check it");
                                 String fbToken = accessToken.getToken();
-                                Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                                startActivity(intent);
+                                if (fbEmail.equalsIgnoreCase("") || fbEmail.length() == 0) {
+                                    sendtOTP = true;
+                                }
+                                facebooklogin();
                             }
                         }
                     });
             Bundle parameters = new Bundle();
-            parameters.putString("fields", "id,name,email,gender, birthday");
+            parameters.putString("fields", "id,name,email,gender,user_birthday,user_location");
             request.setParameters(parameters);
             request.executeAsync();
-
         }
 
         @Override
@@ -192,18 +222,112 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     };
 
+    private void facebooklogin() {
+    /*    getPermission();
+        getLocation();*/
+    }
+
+    private void getLocation() {
+        SmartLocation.with(context).location()
+                .start(new OnLocationUpdatedListener() {
+                    @Override
+                    public void onLocationUpdated(Location location) {
+                        getAddress(location.getLongitude(), location.getLatitude());
+                    }
+                });
+    }
+
+    private void getAddress(double longitude, double latitude) {
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            try {
+                knownName = addresses.get(0).getFeatureName();
+            } catch (Exception ex) {
+
+            }
+            try {
+                address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            } catch (Exception ex) {
+            }
+            try {
+                city = addresses.get(0).getLocality();
+            } catch (Exception ex) {
+            }
+            try {
+                state = addresses.get(0).getAdminArea();
+            } catch (Exception ex) {
+            }
+            try {
+                country = addresses.get(0).getCountryName();
+            } catch (Exception ex) {
+                postalCode = addresses.get(0).getPostalCode();
+            }
+
+        } catch (IOException e) {
+            Log.i("klocation", "unknown location");
+        }
+
+
+    }
+
+    private void getPermission() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            String[] permission = {
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+
+            };
+
+            ActivityCompat.requestPermissions(this,
+                    permission, 1);
+        }
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.buttonCustomFB:
                 buttonFacebook.performClick();
+                showMessage("clicked");
+                //login();
                 break;
-            case R.id.sign_button:
+            case R.id.buttonSignIn:
                 Intent i = new Intent(LoginActivity.this, DefaultIntro.class);
                 startActivity(i);
                 break;
+            case R.id.textViewRegister:
+
+                break;
         }
     }
+
+    private void login() {
+        RequestQueue mRequestQueue = Volley.newRequestQueue(getApplicationContext());
+        String url = "https://netforcesales.com/tripesplit/mobileApp/api/services.php?opt=register&email=kunwangyal05@yahoo.com&fb_token=qwertyu&name=Kunsang%20Wangyal&fb_id=asdfasdf232324&reg_id=dsfsdfdfsdf";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                LoginResponse loginResponse = new Gson().fromJson(response, LoginResponse.class);
+                Log.i("Response", loginResponse.toString());
+                User user = loginResponse.getUserData().get(0);
+                Log.i("response", user.getMsg());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        mRequestQueue.add(stringRequest);
+    }
+
     private void updateWithToken(AccessToken currentAccessToken) {
 
         if (currentAccessToken != null) {
@@ -211,7 +335,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 @Override
                 public void run() {
-                    Intent i = new Intent(LoginActivity.this, DashboardActivity.class);
+                    Intent i = new Intent(LoginActivity.this, DefaultIntro.class);
                     startActivity(i);
 
                     finish();
@@ -227,4 +351,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }, SPLASH_TIME_OUT);
         }
     }
+
 }

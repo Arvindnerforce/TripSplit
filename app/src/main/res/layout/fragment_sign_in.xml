@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="com.netforceinfotech.tripsplit.login.SignUp1Fragment">
+    tools:context="com.netforceinfotech.tripsplit.login.SignInFragment">
 
 
     <LinearLayout
@@ -14,19 +14,7 @@
         android:visibility="visible">
 
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/contact_background"
-            android:drawableLeft="@drawable/ic_email"
-            android:drawablePadding="10dp"
-            android:hint="Name"
-            android:padding="8dp"
-            android:textColorHint="@color/red"
-
-            />
-
-        <EditText
+            android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -34,11 +22,13 @@
             android:drawableLeft="@drawable/ic_name"
             android:drawablePadding="10dp"
             android:hint="Email"
+            android:inputType="textEmailAddress"
             android:padding="8dp"
             android:textColorHint="@color/red" />
 
 
         <EditText
+            android:id="@+id/passWord"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -46,6 +36,7 @@
             android:drawableLeft="@drawable/ic_password"
             android:drawablePadding="10dp"
             android:hint="Password"
+            android:inputType="textPassword"
             android:padding="8dp"
             android:textColorHint="@color/red" />
 

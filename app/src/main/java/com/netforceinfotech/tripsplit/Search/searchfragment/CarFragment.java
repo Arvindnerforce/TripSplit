@@ -45,7 +45,7 @@ public class CarFragment extends Fragment implements View.OnClickListener, TimeP
     CarAdapter adapter;
     public TextView date_txt, travel_from, travel_to;
     RelativeLayout relativeLayoutSort, relativeLayoutGlobe;
-    LinearLayout linearLayoutRefine, linearlayoutSearch;
+    LinearLayout linearLayoutRefine;
 
     Context context;
     private SearchClickedListner searchClickedListner;
@@ -85,18 +85,12 @@ public class CarFragment extends Fragment implements View.OnClickListener, TimeP
         relativeLayoutGlobe = (RelativeLayout) view.findViewById(R.id.relativeLayoutGlobe);
         relativeLayoutSort = (RelativeLayout) view.findViewById(R.id.relativeLayoutSort);
         linearLayoutRefine = (LinearLayout) view.findViewById(R.id.linearlayoutRefine);
-        linearlayoutSearch = (LinearLayout) view.findViewById(R.id.linearlayoutSearch);
         linearLayoutRefine.setOnClickListener(this);
-        linearlayoutSearch.setOnClickListener(this);
         DroppyMenuPopup.Builder droppyBuilder = new DroppyMenuPopup.Builder(getActivity(), relativeLayoutSort);
 
         droppyBuilder.addMenuItem(new DroppyMenuItem("Sort"));
         droppyBuilder.addMenuItem(new DroppyMenuItem("Refine"));
         droppyBuilder.addMenuItem(new DroppyMenuItem("Globe"));
-
-        /*for (int i = 0; i < countries.size(); i++) {
-            droppyBuilder.addMenuItem(new DroppyMenuItem(countries.get(i)));
-        }*/
         droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
             @Override
             public void call(View v, int id) {
@@ -115,9 +109,6 @@ public class CarFragment extends Fragment implements View.OnClickListener, TimeP
         switch (view.getId()) {
             case R.id.linearlayoutRefine:
                 clearAllData();
-                break;
-            case R.id.linearlayoutSearch:
-                dashboardFragment.updateTextValue("sournce", "destination");
                 break;
             case R.id.textviewETD:
                 Calendar now = Calendar.getInstance();
@@ -219,6 +210,15 @@ public class CarFragment extends Fragment implements View.OnClickListener, TimeP
         String tagName = dashboardFragment.getClass().getName();
         replaceFragment(dashboardFragment, tagName);
 
+    }
+
+    public void clicked() {
+        showMessage("clicked adapter");
+        dashboardFragment.updateTextValue(travel_from.getText().toString(), travel_to.getText().toString());
+    }
+
+    private void showMessage(String clicked) {
+        Toast.makeText(context, clicked, Toast.LENGTH_SHORT).show();
     }
 
     public interface SearchClickedListner {

@@ -41,7 +41,6 @@
         <activity android:name=".NavigationView.Message.writemessage.WriteMessageActivity" />
         <activity android:name=".Review.ReviewListActivity" />
         <activity android:name=".Review.ReviewDetails.ReviewDetails" />
-
         <activity android:name=".posttrip.GoogleMapActivity" />
 
         <meta-data
@@ -52,11 +51,9 @@
             android:value="@integer/google_play_services_version"
             tools:replace="android:value" />
 
-        <activity android:name=".tutorial.TutorialActivity"></activity>
-
-        <activity android:name=".tutorial.DefaultIntro"></activity>
-
-
+        <activity android:name=".tutorial.TutorialActivity" />
+        <activity android:name=".tutorial.DefaultIntro" />
+        <activity android:name=".login.SignUpActivity"></activity>
     </application>
 
 </manifest>
