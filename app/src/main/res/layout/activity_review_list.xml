@@ -63,7 +63,7 @@
                             android:background="@drawable/ic_editplus_icon" />
 
                         <Button
-                            android:id="@+id/country"
+                            android:id="@+id/countryData"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_alignParentRight="true"

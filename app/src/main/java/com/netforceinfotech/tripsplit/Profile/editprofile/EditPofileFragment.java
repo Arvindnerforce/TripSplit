@@ -1,17 +1,16 @@
 package com.netforceinfotech.tripsplit.Profile.editprofile;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.media.Image;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -31,26 +30,45 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
+import com.facebook.login.LoginManager;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.Cancellable;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.async.http.AsyncHttpClientMiddleware;
+import com.koushikdutta.ion.Ion;
+import com.mukesh.countrypicker.fragments.CountryPicker;
+import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
+import com.netforceinfotech.tripsplit.login.CountryData;
+import com.shehabic.droppy.DroppyClickCallbackInterface;
+import com.shehabic.droppy.DroppyMenuItem;
+import com.shehabic.droppy.DroppyMenuPopup;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
-import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ResponseHandler;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
-import io.nlopez.smartlocation.OnLocationUpdatedListener;
-import io.nlopez.smartlocation.SmartLocation;
+import static com.netforceinfotech.tripsplit.R.id.etcountry;
 
-
-public class EditPofileFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+public class EditPofileFragment extends Fragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
     View view;
     Context context;
     EditText etAge, etDoB, etAddress, etCountry, etaddressPopUp;
@@ -65,7 +83,12 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
     private Uri fileUri;
     private String filePath;
     private LinearLayout linearLayoutProgress, linearLayoutAddress;
-    private String countryCode;
+    private String countryCode, country;
+    private Uri imageToUploadUri;
+    UserSessionManager userSessionManager;
+    ArrayList<CountryData> countries = new ArrayList<>();
+    private File finalFile;
+    private MaterialDialog progressDialog;
 
     public EditPofileFragment() {
         // Required empty public constructor
@@ -76,25 +99,33 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         context = getActivity();
+        userSessionManager = new UserSessionManager(context);
         initView(view);
+        getUserInfo();
         setuptoolbar(view);
+        getPermission();
         return view;
     }
 
+
     private void initView(View view) {
+        progressDialog = new MaterialDialog.Builder(context)
+                .title(R.string.progress_dialog)
+                .content(R.string.please_wait)
+                .progress(true, 0).build();
         buttonDone = (Button) view.findViewById(R.id.buttonDone);
         buttonEditDp = (Button) view.findViewById(R.id.buttonEditDp);
         etDoB = (EditText) view.findViewById(R.id.etdob);
         etAddress = (EditText) view.findViewById(R.id.etaddress);
-        etCountry = (EditText) view.findViewById(R.id.etcountry);
+        etCountry = (EditText) view.findViewById(etcountry);
         etAge = (EditText) view.findViewById(R.id.etAge);
         textviewName = (TextView) view.findViewById(R.id.textviewName);
         imageViewDp = (ImageView) view.findViewById(R.id.imageviewDP);
         buttonEditDp.setOnClickListener(this);
         buttonDone.setOnClickListener(this);
         etAddress.setOnClickListener(this);
-        etCountry.setOnClickListener(this);
         etDoB.setOnClickListener(this);
+        etCountry.setOnClickListener(this);
     }
 
 
@@ -107,14 +138,6 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
         home.setVisibility(View.VISIBLE);
         icon.setVisibility(View.VISIBLE);
         toolbar.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
-
-    }
-
-    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
-        String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
-        String minuteString = minute < 10 ? "0" + minute : "" + minute;
-        String secondString = second < 10 ? "0" + second : "" + second;
-        String time = "You picked the following time: " + hourString + "h" + minuteString + "m" + secondString + "s";
     }
 
 
@@ -128,7 +151,7 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
             e.printStackTrace();
         }
 
-        SimpleDateFormat outDate = new SimpleDateFormat("dd-MMM-yyyy");
+        SimpleDateFormat outDate = new SimpleDateFormat("yyyy-MM-dd");
         etDoB.setText(outDate.format(date2));
 
 
@@ -139,7 +162,10 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
 
         switch (view.getId()) {
             case R.id.etcountry:
-                showEditCountryPopup();
+                showCountryPopUp();
+                break;
+            case R.id.buttonDone:
+                showPopUp();
                 break;
             case R.id.etaddress:
                 showEditAddressPopup();
@@ -148,6 +174,7 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
                 showEditPicPopup();
                 break;
             case R.id.linearLayoutPicture:
+
                 takePictureIntent();
                 dialogPic.dismiss();
                 break;
@@ -173,6 +200,91 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
 
         }
 
+
+    }
+
+    private void showCountryPopUp() {
+        final CountryPicker picker = CountryPicker.newInstance("Select Country");
+        picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_PICKER");
+        picker.setListener(new CountryPickerListener() {
+            @Override
+            public void onSelectCountry(String name, String code, String dialCode, int flagDrawableResID) {
+                // Implement your code here
+                etCountry.setText(name);
+                countryCode = code;
+                country = name;
+                picker.dismiss();
+            }
+        });
+    }
+
+    private void editProfile() {
+        progressDialog.show();
+        //services.php?opt=updateprofile&user_id=11&profile_image=photo.jpg
+        // &dob=1987-09-12&country=India&country_code=91&address=J 207 Ist Floor
+        String addressString = etAddress.getText().toString();
+        try {
+            addressString = URLEncoder.encode(addressString, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            addressString = "";
+            showMessage("address parsing address");
+        }
+
+        String url = getResources().getString(R.string.url);
+        String uploadurl = "services.php?opt=updateprofile&user_id=" + userSessionManager.getUserId() + "&country_code="
+                + countryCode + "&country=" + etCountry.getText().toString() + "&dob=" + etDoB.getText().toString() + "&address=" + addressString;
+        url = url + uploadurl;
+
+        Log.i("result_url", url);
+        Log.i("result_url", filePath + "   ");
+        File file = null;
+        if (filePath == null) {
+            Ion.with(context)
+                    .load(url)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+                            progressDialog.dismiss();
+                            if (result == null) {
+                                showMessage("nothing is happening");
+                            } else {
+                                Log.i("result_kunsang", result.toString());
+                                String status = result.get("status").getAsString();
+                                if (status.equalsIgnoreCase("success")) {
+                                    showMessage("Uploaded successfully");
+                                    getUserInfo();
+                                } else {
+                                    showMessage("something went wrong");
+                                }
+                            }
+                        }
+                    });
+        } else {
+
+            Ion.with(context)
+                    .load(url)
+                    .setHeader("ENCTYPE", "multipart/form-data")
+                    .setTimeout(60 * 60 * 1000)
+                    .setMultipartParameter("goop", "noop")
+                    .setMultipartFile("upload", "image/*",  new File(filePath))
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+                            progressDialog.dismiss();
+                            if (result == null) {
+                                showMessage("nothing is happening");
+                            } else {
+                                Log.i("result_kunsang", result.toString());
+                                String status = result.get("status").getAsString();
+                                if (status.equalsIgnoreCase("success")) {
+                                    showMessage("uploaded successfully");
+                                }
+                            }
+                        }
+                    });
+        }
 
     }
 
@@ -239,87 +351,6 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
 
     }
 
-    private void showEditCountryPopup() {
-
-
-    }
-
-    private void getLocation(final int select) {
-        showMessage("called get loaction");
-        Log.i("klocation", "called get location");
-        SmartLocation.with(context).location()
-                .start(new OnLocationUpdatedListener() {
-                    @Override
-                    public void onLocationUpdated(Location location) {
-                        showMessage("inside onloaction changed");
-                        getAddress(location.getLongitude(), location.getLatitude(), select);
-                        Log.i("klocation", "inisde onlocation changed");
-                    }
-                });
-    }
-
-    private void getAddress(double longitude, double latitude, int select) {
-        Geocoder geocoder;
-        List<Address> addresses;
-        geocoder = new Geocoder(context, Locale.getDefault());
-        String finalAddress = "";
-        String address, city, state, country = "", postalCode, knownName;
-
-        try {
-            addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-            try {
-                knownName = addresses.get(0).getFeatureName();
-                finalAddress += knownName;
-            } catch (Exception ex) {
-
-            }
-            try {
-                address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                finalAddress += address;
-            } catch (Exception ex) {
-            }
-            try {
-                city = addresses.get(0).getLocality();
-                finalAddress += city;
-            } catch (Exception ex) {
-
-            }
-            try {
-                state = addresses.get(0).getAdminArea();
-                finalAddress += state;
-
-            } catch (Exception ex) {
-
-            }
-            try {
-                country = addresses.get(0).getCountryName();
-                countryCode = addresses.get(0).getCountryCode();
-
-            } catch (Exception ex) {
-                country = "";
-
-            }
-            try {
-                postalCode = addresses.get(0).getPostalCode();
-
-            } catch (Exception ex) {
-                postalCode = "";
-            }
-
-        } catch (IOException e) {
-            Log.i("klocation", "unknown location");
-        }
-
-        if (select == 0) {
-            etaddressPopUp.setText(finalAddress);
-        } else {
-            etaddressPopUp.setText(country);
-        }
-        linearLayoutProgress.setVisibility(View.GONE);
-        linearLayoutAddress.setVisibility(View.VISIBLE);
-        showMessage("reached last");
-
-    }
 
     private void showMessage(String s) {
         Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
@@ -333,7 +364,6 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
                     Manifest.permission.CAMERA,
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
-
             };
 
             ActivityCompat.requestPermissions(getActivity(),
@@ -388,42 +418,200 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
             case TAKE_PHOTO_CODE:
                 if (resultCode == getActivity().RESULT_OK) {
                     Log.i("result picture", "clicked");
+                    filePath = fileUri.getPath();
+                    Glide.with(context).load(fileUri).into(imageViewDp);
                 }
                 break;
             case PICK_IMAGE:
                 if (resultCode == getActivity().RESULT_OK) {
-                    Uri uri = data.getData();
-                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                    Cursor cursor = context.getContentResolver().query(uri, filePathColumn, null, null, null);
-                    cursor.moveToFirst();
 
-                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                    Uri uri = data.getData();
                     filePath = getPath(uri);
-                    Log.i("result picture", "picked");
+                    Log.i("kresult",filePath);
+                    Glide.with(context).load(filePath).into(imageViewDp);
                 }
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public String getPath(Uri uri) {
-        // just some safety built in
-        if (uri == null) {
-            // TODO perform some logging or show user feedback
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+    public String getRealPathFromURI(Uri uri) {
+        Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
+    }
+
+
+
+
+    @SuppressLint("NewApi")
+    private String getPath(Uri uri) {
+        if( uri == null ) {
             return null;
         }
-        // try to retrieve the image from the media store first
-        // this will only work for images selected from gallery
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getActivity().managedQuery(uri, projection, null, null, null);
-        if (cursor != null) {
-            int column_index = cursor
-                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
+
+        String[] projection = { MediaStore.Images.Media.DATA };
+
+        Cursor cursor;
+        if(Build.VERSION.SDK_INT >19)
+        {
+            // Will return "image:x*"
+            String wholeID = DocumentsContract.getDocumentId(uri);
+            // Split at colon, use second item in the array
+            String id = wholeID.split(":")[1];
+            // where id is equal to
+            String sel = MediaStore.Images.Media._ID + "=?";
+
+            cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    projection, sel, new String[]{ id }, null);
         }
-        // this is our fallback here
-        return uri.getPath();
+        else
+        {
+            cursor = context.getContentResolver().query(uri, projection, null, null, null);
+        }
+        String path = null;
+        try
+        {
+            int column_index = cursor
+                    .getColumnIndex(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            path = cursor.getString(column_index).toString();
+            cursor.close();
+        }
+        catch(NullPointerException e) {
+
+        }
+        return path;
+    }
+
+    private void getUserInfo() {
+        progressDialog.show();
+        //services.php?opt=viewprofile&user_id=11
+        String baseUrl = getString(R.string.url);
+        String viewProfile = "services.php?opt=viewprofile&user_id=" + userSessionManager.getUserId();
+        String url = baseUrl + viewProfile;
+        Ion.with(context)
+                .load(url)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        progressDialog.dismiss();
+                        // do stuff with the result or error
+                        if (result != null) {
+                            Log.i("kresult", result.toString());
+                            setupUserData(result);
+                        } else {
+                            showMessage("Something went wrong");
+                        }
+                    }
+                });
+    }
+
+    private void setupUserData(JsonObject result) {
+        if (result.get("status").getAsString().equalsIgnoreCase("success")) {
+            JsonArray data = result.getAsJsonArray("data");
+            String name = "", email = "", profile_image = "", dob = "", country = "", country_code = "", address = "";
+            JsonObject jsonObject = data.get(0).getAsJsonObject();
+            if (!jsonObject.get("firstname").isJsonNull()) {
+                name = jsonObject.get("firstname").getAsString();
+            }
+            if (!jsonObject.get("email").isJsonNull()) {
+                email = jsonObject.get("email").getAsString();
+            }
+            if (!jsonObject.get("profile_image").isJsonNull()) {
+                profile_image = jsonObject.get("profile_image").getAsString();
+            }
+            if (jsonObject.get("dob").isJsonNull()) {
+                dob = jsonObject.get("dob").getAsString();
+            }
+            if (!jsonObject.get("country").isJsonNull()) {
+                country = jsonObject.get("country").getAsString();
+            }
+            if (!jsonObject.get("country_code").isJsonNull()) {
+                country_code = jsonObject.get("country_code").getAsString();
+            }
+            if (!jsonObject.get("address").isJsonNull()) {
+                address = jsonObject.get("address").getAsString();
+            }
+
+            try {
+                Glide.with(context).load(profile_image).error(R.drawable.ic_error).into(imageViewDp);
+            } catch (Exception ex) {
+            }
+            textviewName.setText(name);
+            etDoB.setText(dob);
+            etAddress.setText(address);
+            etCountry.setText(country);
+            setAge(dob);
+
+        }
+    }
+
+    private void setAge(String dob) {
+        if (dob.equalsIgnoreCase("0000-00-00")) {
+            etAge.setText("NA");
+        } else {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(simpleDateFormat.parse(dob));// all done
+                String age = getAge(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+                etAge.setText(age);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+    }
+
+    private String getAge(int year, int month, int day) {
+        Calendar dob = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
+
+        dob.set(year, month, day);
+
+        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
+            age--;
+        }
+
+        Integer ageInt = new Integer(age);
+        String ageS = ageInt.toString();
+
+        return ageS;
+    }
+
+    private void showPopUp() {
+        new MaterialDialog.Builder(context)
+                .title("Edit Profile")
+                .content("Are you sure you want to Edit you profile?")
+                .positiveText("Yes")
+                .negativeText("Cancel")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        editProfile();
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
 }

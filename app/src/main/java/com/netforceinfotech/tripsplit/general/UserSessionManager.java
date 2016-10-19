@@ -22,6 +22,10 @@ public class UserSessionManager {
 
     private static final String MUTEALL = "muteall";
     private static final String USER_ID = "user_id";
+    private static final String ISLOGGEDIN = "isloggedin";
+    private static final String RADIUS = "searchradius";
+    private static final String LOGINMODE = "loginmode";
+    private static final String PASSWORD = "password";
     // Shared Preferences reference
     SharedPreferences pref;
     // Editor reference for Shared preferences
@@ -146,5 +150,44 @@ public class UserSessionManager {
         editor.commit();
     }
 
+    public void clearData() {
+        editor.clear().commit();
+    }
 
+
+    public boolean getIsLogedIn() {
+        return pref.getBoolean(ISLOGGEDIN, false);
+    }
+
+    public void setIsLoggedIn(boolean isloggedin) {
+        editor.putBoolean(ISLOGGEDIN, isloggedin);
+        editor.commit();
+    }
+
+    public int getSearchRadius() {
+        return pref.getInt(RADIUS, 5);
+    }
+
+    public void setSearchRaius(int radius) {
+        editor.putInt(RADIUS, radius);
+        editor.commit();
+    }
+
+    public void setLoginMode(int i) {
+        editor.putInt(LOGINMODE, i);
+        editor.commit();
+    }
+
+    public int getLoginMode() {
+        return pref.getInt(LOGINMODE, 0);
+    }
+
+    public String getpassword() {
+        return pref.getString(PASSWORD, "");
+
+    }
+    public void setPassword(String pw) {
+        editor.putString(PASSWORD, pw);
+        editor.commit();
+    }
 }

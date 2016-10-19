@@ -7,13 +7,11 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -46,13 +44,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.async.http.body.JSONArrayBody;
 import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.tripsplit.Dashboard.DashboardActivity;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
-import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
-import com.netforceinfotech.tripsplit.tutorial.DefaultIntro;
+import com.netforceinfotech.tripsplit.util.Validation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,15 +59,11 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
-
-import io.nlopez.smartlocation.OnLocationUpdatedListener;
-import io.nlopez.smartlocation.SmartLocation;
-import me.relex.circleindicator.CircleIndicator;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final long SPLASH_TIME_OUT = 2000;
+    private static final String TAG = "ktokensending";
     Button buttonCustomFB, buttonSignIn;
     private CallbackManager mCallbackManager;
     private LoginButton buttonFacebook;
@@ -80,11 +72,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText editTextLEmail, editTextPassword;
     Context context;
     String knownName, address, city, state, postalCode, country;
-    String fbName, fbId, fbEmail, fbBirthday, fbGender;
+    String fbName = "", fbId = "", fbEmail = "", fbBirthday = "", fbGender = "";
     boolean sendtOTP = false;
     UserSessionManager userSessionManager;
     private String country_code = "";
-    private MaterialDialog dialogPic;
+    private MaterialDialog dialogEmail;
+    private MaterialDialog progressDialog;
+    EditText etemailpopup;
+    Button buttonpopup;
+    TextView textViewForgotPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +116,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 */
 
     private void initView() {
+        progressDialog = new MaterialDialog.Builder(this)
+                .title(R.string.progress_dialog)
+                .content(R.string.please_wait)
+                .progress(true, 0).build();
+        textViewForgotPassword = (TextView) findViewById(R.id.textviewForgotPassword);
+        textViewForgotPassword.setOnClickListener(this);
         editTextLEmail = (EditText) findViewById(R.id.etemail);
         editTextPassword = (EditText) findViewById(R.id.etpassWord);
         buttonSignIn = (Button) findViewById(R.id.buttonSignIn);
@@ -128,6 +130,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         textViewRegister.setOnClickListener(this);
         buttonCustomFB.setOnClickListener(this);
         buttonSignIn.setOnClickListener(this);
+        if (userSessionManager.getLoginMode() == 0) {
+            emailLogin(userSessionManager.getEmail(), userSessionManager.getpassword());
+        }
         //  viewPager = (WrapContentViewPager) findViewById(R.id.viewPager);
 
     }
@@ -142,16 +147,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         buttonFacebook.setReadPermissions(permissions);
         buttonFacebook.registerCallback(mCallbackManager, mCallBack);
         profile = Profile.getCurrentProfile();
-/*
 
         if (profile != null) {
-            showMessage("You are logged in");
-            Intent i = new Intent(LoginActivity.this, DefaultIntro.class);
-            startActivity(i);
-            finish();
-
+            fbName = profile.getName();
+            fbId = profile.getId();
+            if (userSessionManager.getLoginMode() == 0) {
+                return;
+            }
+            facebooklogin(fbId, fbName, "", "", "", "", 0, "");
         }
-*/
 
     }
 
@@ -223,7 +227,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 if (fbEmail.equalsIgnoreCase("") || fbEmail.length() == 0) {
                                     sendtOTP = true;
                                 }
-                                facebooklogin();
+                                facebooklogin(fbId, fbName, fbEmail, fbBirthday, "", "", 0, "");
                             }
                         }
                     });
@@ -244,7 +248,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     };
 
-    private void facebooklogin() {
+    private void facebooklogin(String fbId, String fbName, String fbEmail, String fbBirthday, String country, String country_code, int sendtOTP, String address) {
+        showProgressBar();
     /*    getPermission();
         getLocation();*/
           /*
@@ -257,8 +262,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             e.printStackTrace();
         }
         String baseurl = getString(R.string.url);
-        String url = baseurl + "services.php?opt=register&facebook=1&fb_token=&fb_id" + fbId + "&reg_id=" + userSessionManager.getRegId()
-                + "&name=" + fbName + "&email" + "" + "&dob=" + fbBirthday + "&country=" + country + "&country_code=" + country_code + "&send_otp=" + sendtOTP + "&password=";
+        String url = baseurl + "services.php?opt=register&facebook=1&fb_token=&fb_id=" + fbId + "&reg_id=" + userSessionManager.getRegId()
+                + "&name=" + fbName + "&email=" + fbEmail + "&dob=" + fbBirthday + "&country=" + country + "&country_code=" + country_code + "&address=" + address + "&password=&send_otp=" + sendtOTP;
         Log.i("kresult", url);
         Ion.with(context)
                 .load(url)
@@ -266,37 +271,64 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
+                        dissmissProgress();
                         if (result != null) {
                             Log.i("kresult", result.toString());
                             if (result.get("status").getAsString().equalsIgnoreCase("success")) {
-                                /*JsonArray data = result.getAsJsonArray("data");
+                                sendRegistrationToServer(userSessionManager.getRegId());
+                                JsonArray data = result.getAsJsonArray("data");
                                 JsonObject jsonObject = data.get(0).getAsJsonObject();
                                 String user_id = jsonObject.get("user_id").getAsString();
                                 userSessionManager.setUserId(user_id);
-                                Intent intent = new Intent(context, OTPActivity.class);
-                                startActivity(intent);*/
+                                try {
+                                    String error_code = jsonObject.get("error_code").getAsString();
+                                    if (error_code.equalsIgnoreCase("102") || error_code.equalsIgnoreCase("107")) {
+                                        userSessionManager.setIsLoggedIn(true);
+                                        userSessionManager.setLoginMode(1);
+                                        sendRegistrationToServer(userSessionManager.getRegId());
+                                        Intent intent = new Intent(context, DashboardActivity.class);
+                                        startActivity(intent);
+                                        return;
+                                    }
+                                } catch (Exception ex) {
 
-                            }
-                        } else if (result.get("status").getAsString().equalsIgnoreCase("failed")) {
-                            try {
-                                JsonArray data = result.getAsJsonArray("data");
-                                JsonObject jsonObject = data.get(0).getAsJsonObject();
-                                if (jsonObject.get("msg").getAsString().equalsIgnoreCase("Please Enter Email ID")) {
-                                    showEditPicPopup();
                                 }
 
-                            } catch (Exception ex) {
+                                Intent intent = new Intent(context, OTPActivity.class);
+                                startActivity(intent);
+
+                            } else if (result.get("status").getAsString().equalsIgnoreCase("failed")) {
+                                try {
+                                    JsonArray data = result.getAsJsonArray("data");
+                                    JsonObject jsonObject = data.get(0).getAsJsonObject();
+                                    if (jsonObject.get("msg").getAsString().equalsIgnoreCase("Please Enter Email ID")) {
+                                        showMessage("popup called");
+                                        showEditPicPopup();
+                                    }
+
+                                } catch (Exception ex) {
+
+                                }
 
                             }
-
                         }
                     }
                 });
 
     }
+
+    private void dissmissProgress() {
+        progressDialog.dismiss();
+    }
+
+    private void showProgressBar() {
+        progressDialog.show();
+
+    }
+
     private void showEditPicPopup() {
         boolean wrapInScrollView = true;
-        dialogPic = new MaterialDialog.Builder(context)
+        dialogEmail = new MaterialDialog.Builder(context)
                 .title("Email required")
                 .customView(R.layout.custom_email, wrapInScrollView)
                 .negativeText(R.string.cancel)
@@ -307,19 +339,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 })
                 .show();
-         EditText etemailpopup= (EditText) dialogPic.findViewById(R.id.etemailpopup);
-        Button button= (Button) dialogPic.findViewById(R.id.buttonDonePopup);
-        dialogPic.findViewById(R.id.linearLayoutPicture).setOnClickListener(this);
+        etemailpopup = (EditText) dialogEmail.findViewById(R.id.etemailpopup);
+        buttonpopup = (Button) dialogEmail.findViewById(R.id.buttonDonePopup);
+        buttonpopup.setOnClickListener(this);
 
-    }
-    private void getLocation() {
-        SmartLocation.with(context).location()
-                .start(new OnLocationUpdatedListener() {
-                    @Override
-                    public void onLocationUpdated(Location location) {
-                        getAddress(location.getLongitude(), location.getLatitude());
-                    }
-                });
     }
 
     private void getAddress(double longitude, double latitude) {
@@ -377,20 +400,118 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.textviewForgotPassword:
+                Intent intent = new Intent(this, ForgotPasswordActivity.class);
+                startActivity(intent);
+                finish();
+                break;
             case R.id.buttonCustomFB:
                 buttonFacebook.performClick();
                 showMessage("clicked");
                 //login();
                 break;
             case R.id.buttonSignIn:
-                Intent i = new Intent(LoginActivity.this, DefaultIntro.class);
-                startActivity(i);
+               /* if (userSessionManager.getIsFirstTime()) {
+                    Intent i = new Intent(LoginActivity.this, DefaultIntro.class);
+                    startActivity(i);
+                } else {
+                    Intent i = new Intent(LoginActivity.this, DashboardActivity.class);
+                    startActivity(i);
+                }*/
+                String email;
+                if (Validation.isEmailAddress(editTextLEmail, true)) {
+                    email = editTextLEmail.getText().toString();
+                } else {
+                    showMessage("Email not valid");
+                    return;
+                }
+                if (editTextPassword.getText().length() <= 0) {
+                    showMessage("Input password");
+                    return;
+                }
+                emailLogin(email, editTextPassword.getText().toString());
                 break;
             case R.id.textViewRegister:
-                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-                startActivity(intent);
+                Intent intent1 = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivity(intent1);
+                break;
+            case R.id.buttonDonePopup:
+                facebooklogin(fbId, fbName, etemailpopup.getText().toString(), fbBirthday, country, country_code, 1, "");
+                dialogEmail.dismiss();
                 break;
         }
+    }
+
+    private void emailLogin(final String email, final String password) {
+        showProgressBar();
+        /*
+        * services.php?opt=login&email=dileep@netforceinfotech.com&password=123456*/
+        String baseUrl = getString(R.string.url);
+        String url = baseUrl + "services.php?opt=login&email=" + email + "&password=" + password;
+        Ion.with(getApplicationContext())
+                .load(url)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        dissmissProgress();
+                        if (result != null) {
+                            Log.i("kresult", result.toString());
+                            String status = result.get("status").getAsString();
+                            if (status.equalsIgnoreCase("success")) {
+                                sendRegistrationToServer(userSessionManager.getRegId());
+                                userSessionManager.setIsLoggedIn(true);
+                                userSessionManager.setLoginMode(0);
+                                userSessionManager.setEmail(email);
+                                userSessionManager.setPassword(password);
+                                JsonArray data = result.getAsJsonArray("data");
+                                JsonObject object = data.get(0).getAsJsonObject();
+                                String user_id = object.get("user_id").getAsString();
+                                userSessionManager.setUserId(user_id);
+                                Intent intent = new Intent(context, DashboardActivity.class);
+                                startActivity(intent);
+                            } else if (status.equalsIgnoreCase("failed")) {
+                                JsonArray data = result.getAsJsonArray("data");
+                                JsonObject jsonObject = data.get(0).getAsJsonObject();
+                                String msg = jsonObject.get("msg").getAsString();
+                                showMessage(msg);
+                            }
+                        } else {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    private void sendRegistrationToServer(String token) {
+        // TODO: Implement this method to send token to your app server.
+        //services.php?opt=updateregid&user_id=11&reg_id=11
+        String url = getResources().getString(R.string.url);
+        String pushurl = "services.php?opt=updateregid&user_id=" + userSessionManager.getUserId() + "&reg_id=" + token;
+        Log.i(TAG, pushurl);
+        Log.i(TAG, token);
+        Ion.with(getApplicationContext())
+                .load(url + pushurl)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+
+                        if (result == null) {
+                            Log.i(TAG, "not sending");
+                        } else {
+
+                            String status = result.get("status").getAsString().toLowerCase();
+                            if (status.equalsIgnoreCase("success")) {
+                                Log.i(TAG, "successfully registered");
+
+                            } else {
+                                Log.i(TAG, "successfully registered");
+                            }
+                        }
+
+                    }
+                });
     }
 
     private void login() {
@@ -414,7 +535,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mRequestQueue.add(stringRequest);
     }
 
-    private void updateWithToken(AccessToken currentAccessToken) {
+    private void updateWithToken(final AccessToken currentAccessToken) {
 
         if (currentAccessToken != null) {
             new Handler().postDelayed(new Runnable() {
@@ -425,6 +546,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     startActivity(i);
 
                     finish();*/
+               /*     facebooklogin(currentAccessToken.getUserId());*/
                 }
             }, SPLASH_TIME_OUT);
         } else {

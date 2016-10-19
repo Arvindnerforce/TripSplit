@@ -18,6 +18,7 @@
         android:visibility="visible">
 
         <EditText
+            android:inputType="textPersonName"
             android:id="@+id/etname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,6 +35,7 @@
             />
 
         <EditText
+            android:inputType="textEmailAddress"
             android:id="@+id/etemail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,6 +49,7 @@
 
 
         <EditText
+            android:inputType="textPostalAddress"
             android:id="@+id/etaddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -88,6 +91,7 @@
             android:textColorHint="@color/colorPrimary" />
 
         <EditText
+            android:inputType="textPassword"
             android:id="@+id/etpassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -100,6 +104,7 @@
             android:textColorHint="@color/colorPrimary" />
 
         <EditText
+            android:inputType="textPassword"
             android:id="@+id/etconfirmpassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -117,8 +122,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="@drawable/contact_background"
+            android:background="@color/colorPrimary"
             android:text="SIGN UP"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/white" />
     </LinearLayout>
 </LinearLayout>

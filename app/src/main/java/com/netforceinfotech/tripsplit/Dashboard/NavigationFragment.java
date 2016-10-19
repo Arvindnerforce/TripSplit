@@ -23,6 +23,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.NavigationView.Message.MessageFragment;
 import com.netforceinfotech.tripsplit.Profile.editprofile.EditPofileFragment;
@@ -30,6 +35,8 @@ import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.Search.SearchSplitFragment;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.netforceinfotech.tripsplit.posttrip.PostTripFragment;
+import com.netforceinfotech.tripsplit.preference.PreferenceFragment;
+import com.netforceinfotech.tripsplit.tutorial.DefaultIntro;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -59,9 +66,10 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
     public static SharedPreferences.Editor loginPrefsEditor;
     public static List<RowDataDrawer> list = new LinkedList<>();
     private Context context;
-    ImageView imageViewDp;
+    CircleImageView imageViewDp;
     TextView textViewName, textviewCountry;
     ProperRatingBar properRatingBar;
+    UserSessionManager userSessionManager;
 
     public NavigationFragment() {
         // Required empty public constructor
@@ -73,12 +81,58 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_navigation, container, false);
         initView();
+        getUserInfo();
         setupHomeFragment();
         return view;
     }
 
+    private void getUserInfo() {
+        //services.php?opt=viewprofile&user_id=11
+        String baseUrl = getString(R.string.url);
+        String viewProfile = "services.php?opt=viewprofile&user_id=" + userSessionManager.getUserId();
+        String url = baseUrl + viewProfile;
+        Ion.with(context)
+                .load(url)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        // do stuff with the result or error
+                        if (result != null) {
+                            Log.i("kresult", result.toString());
+                            setupUserData(result);
+                        }
+                    }
+                });
+    }
+
+    private void setupUserData(JsonObject result) {
+        if (result.get("status").getAsString().equalsIgnoreCase("success")) {
+            JsonArray data = result.getAsJsonArray("data");
+            JsonObject jsonObject = data.get(0).getAsJsonObject();
+            String name = jsonObject.get("firstname").getAsString();
+            String email = jsonObject.get("email").getAsString();
+            String profile_image = jsonObject.get("profile_image").getAsString();
+            String dob = jsonObject.get("dob").getAsString();
+            String country = jsonObject.get("country").getAsString();
+            String country_code = jsonObject.get("country_code").getAsString();
+            try {
+                Glide.with(context).load(profile_image).error(R.drawable.ic_error).into(imageViewDp);
+            } catch (Exception ex) {
+            }
+            if (country_code != null) {
+                textviewCountry.setText(country_code);
+            } else {
+                textviewCountry.setText("");
+            }
+
+            textViewName.setText(name);
+        }
+    }
+
     private void initView() {
-        imageViewDp = (ImageView) view.findViewById(R.id.imageViewDp);
+        userSessionManager = new UserSessionManager(context);
+        imageViewDp = (CircleImageView) view.findViewById(R.id.imageViewDp);
         textviewCountry = (TextView) view.findViewById(R.id.textviewCountry);
         textViewName = (TextView) view.findViewById(R.id.textviewName);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
@@ -250,7 +304,11 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
     }
 
     private void setupHiWFragment() {
-        showMessage("set up How it work Fragment");
+        Intent intent = new Intent(context, DefaultIntro.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("from", "menu");
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     private void setupGroupFragment() {
@@ -321,7 +379,9 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
     }
 
     private void setupPreferenceFragment() {
-        showMessage("set up preference");
+        PreferenceFragment preferenceFragment = new PreferenceFragment();
+        String tagName = preferenceFragment.getClass().getName();
+        replaceFragment(preferenceFragment, tagName);
     }
 
 

@@ -10,18 +10,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.netforceinfotech.tripsplit.tutorial.BaseIntro;
+import com.netforceinfotech.tripsplit.tutorial.DefaultIntro;
 
 public class OTPActivity extends AppCompatActivity implements View.OnClickListener {
 
     EditText etotp;
     Button buttonVerify;
     UserSessionManager userSessionManager;
+    private MaterialDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +36,14 @@ public class OTPActivity extends AppCompatActivity implements View.OnClickListen
     }
 
     private void initView() {
+        progressDialog = new MaterialDialog.Builder(this)
+                .title(R.string.progress_dialog)
+                .content(R.string.please_wait)
+                .progress(true, 0).build();
         etotp = (EditText) findViewById(R.id.etotp);
         buttonVerify = (Button) findViewById(R.id.buttonVerify);
         buttonVerify.setOnClickListener(this);
+        findViewById(R.id.buttonResend).setOnClickListener(this);
     }
 
     @Override
@@ -68,29 +76,65 @@ public class OTPActivity extends AppCompatActivity implements View.OnClickListen
                 }
                 verifyOTP(etotp.getText().toString().trim());
                 break;
+            case R.id.buttonResend:
+                resendOTP(userSessionManager.getUserId());
+                break;
         }
     }
 
-    private void verifyOTP(String trim) {
-
+    private void resendOTP(String userId) {
+        showProgressbar();
         /*
-        * services.php?opt=verifycustomer&otp=5018&id=1
+        * "
+services.php?opt=resendotp&id=11"
         * */
         String baseUrl = getString(R.string.url);
-        String url = baseUrl + "services.php?opt=verifycustomer&otp=" + trim + "&id=" + userSessionManager.getUserId();
+        String url = baseUrl + "services.php?opt=resendotp&id=" + userId;
         Ion.with(getApplicationContext())
                 .load(url)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
+                        dissmissProgressbar();
+                        if (result != null) {
+                            Log.i("kresult", result.toString());
+                            String status = result.get("status").getAsString();
+                            if (status.equalsIgnoreCase("success")) {
+                                showMessage("Otp send successfully\nCheck your email");
+                            } else {
+                                showMessage("Wrong otp. Please try again");
+                            }
+                        } else {
+                            showMessage("Something went wrong\nPlease registered again");
+                        }
+                    }
+                });
+    }
+
+    private void verifyOTP(String trim) {
+        showProgressbar();
+        /*
+        * services.php?opt=verifycustomer&otp=5018&id=1
+        * */
+        String baseUrl = getString(R.string.url);
+        String url = baseUrl + "services.php?opt=verifycustomer&otp=" + trim + "&id=" + userSessionManager.getUserId() + "&email=" + userSessionManager.getEmail();
+        Ion.with(getApplicationContext())
+                .load(url)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        dissmissProgressbar();
                         if (result != null) {
                             Log.i("kresult", result.toString());
                             String status = result.get("status").getAsString();
                             if (status.equalsIgnoreCase("success")) {
                                 showMessage("verified successfully");
-                                Intent intent = new Intent(OTPActivity.this, BaseIntro.class);
+                                Intent intent = new Intent(OTPActivity.this, DefaultIntro.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
+                                finish();
                             } else {
                                 showMessage("OTP does not match");
                             }
@@ -99,6 +143,14 @@ public class OTPActivity extends AppCompatActivity implements View.OnClickListen
                         }
                     }
                 });
+    }
+
+    private void dissmissProgressbar() {
+        progressDialog.dismiss();
+    }
+
+    private void showProgressbar() {
+        progressDialog.show();
     }
 
     private void showMessage(String s) {

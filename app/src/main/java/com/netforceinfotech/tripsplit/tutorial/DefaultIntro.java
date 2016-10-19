@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.netforceinfotech.tripsplit.Dashboard.DashboardActivity;
 import com.netforceinfotech.tripsplit.R;
+import com.netforceinfotech.tripsplit.general.UserSessionManager;
 
 import tyrantgit.explosionfield.ExplosionField;
 
@@ -19,11 +20,20 @@ public final class DefaultIntro extends BaseIntro {
     Bitmap icon;
     MaterialDialog dailog;
     ExplosionField mExplosionField;
+    UserSessionManager userSessionManager;
+    private String from = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            Bundle bundle = getIntent().getExtras();
+            from = bundle.getString("from");
 
+        } catch (Exception ex) {
+
+        }
+        userSessionManager = new UserSessionManager(getApplicationContext());
         addSlide(SampleSlide.newInstance(R.layout.activity_intro_first));
         addSlide(SampleSlide.newInstance(R.layout.activity_intro_second));
         addSlide(SampleSlide.newInstance(R.layout.activity_intro_three));
@@ -48,7 +58,11 @@ public final class DefaultIntro extends BaseIntro {
 
         // loadMainActivity();
 
-
+        if (from.equalsIgnoreCase("menu")) {
+            finish();
+            return;
+        }
+        userSessionManager.setIsFirstTime(false);
         Intent dashboard = new Intent(DefaultIntro.this, DashboardActivity.class);
         startActivity(dashboard);
         finish();

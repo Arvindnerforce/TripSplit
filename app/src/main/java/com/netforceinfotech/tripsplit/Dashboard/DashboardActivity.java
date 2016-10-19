@@ -1,6 +1,7 @@
 package com.netforceinfotech.tripsplit.Dashboard;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -11,17 +12,21 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.R;
+import com.netforceinfotech.tripsplit.general.UserSessionManager;
 
 public class DashboardActivity extends AppCompatActivity {
     //Defining Variables
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     NavigationFragment drawer;
+    UserSessionManager userSessionManager;
 
 
     @Override
@@ -31,6 +36,7 @@ public class DashboardActivity extends AppCompatActivity {
         AppEventsLogger.activateApp(getApplication());
         setContentView(R.layout.activity_dashboard);
         // Initializing Toolbar and setting it as the actionbar
+        userSessionManager = new UserSessionManager(getApplicationContext());
         setupToolbar();
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         setupNavigationCustom();
@@ -46,15 +52,38 @@ public class DashboardActivity extends AppCompatActivity {
         textViewLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    LoginManager.getInstance().logOut();
-                    finish();
-                } catch (Exception ex) {
+                showPopUp();
 
-                }
 
             }
         });
+    }
+
+    private void showPopUp() {
+        new MaterialDialog.Builder(this)
+                .title("Log out")
+                .content("Are you sure you want to Log out?")
+                .positiveText("Yes")
+                .negativeText("Cancel")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        userSessionManager.clearData();
+                        try {
+                            LoginManager.getInstance().logOut();
+                            finish();
+                        } catch (Exception ex) {
+
+                        }
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
     private void setupNavigationCustom() {

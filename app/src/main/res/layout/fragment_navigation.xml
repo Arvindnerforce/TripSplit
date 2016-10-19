@@ -29,10 +29,10 @@
 
                 >
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imageViewDp"
                     android:layout_width="120dp"
-                    android:layout_height="110dp"
+                    android:layout_height="120dp"
                     android:src="@drawable/ryan" />
 
                 <TextView
