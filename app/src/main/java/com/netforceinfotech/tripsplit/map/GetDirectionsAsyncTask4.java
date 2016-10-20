@@ -1,20 +1,17 @@
 package com.netforceinfotech.tripsplit.map;
 
-import java.util.ArrayList;
-import java.util.Map;
-
-import org.w3c.dom.Document;
-
 import android.app.ProgressDialog;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.netforceinfotech.tripsplit.posttrip.GMapV2Direction;
 import com.netforceinfotech.tripsplit.posttrip.GoogleMapActivity;
+
+import org.w3c.dom.Document;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 
 public class GetDirectionsAsyncTask4 extends AsyncTask<Map<String, String>, Object, ArrayList<LatLng>> {

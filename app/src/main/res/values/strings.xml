@@ -24,6 +24,14 @@
     <string name="pick_from_galary">Pick from galary</string>
     <string name="take_picture">Take picture</string>
     <string name="cancel">Cancel</string>
+    <string name="don_t_have_account_register_here"><u>Don\'t have account? Register here!</u></string>
+    <string name="editaddress">Address</string>
+    <string name="editcountry">Country</string>
+    <string name="url">https://netforcesales.com/tripesplit/mobileApp/api/</string>
+    <string name="progress_dialog">Please wait</string>
+    <string name="please_wait">Please wait for a moment</string>
+    <string name="appkey">abcd</string>
+    <string name="forgot_password"><u>Forgot password?</u></string>
 
 
 </resources>

@@ -20,7 +20,12 @@ public class UserSessionManager {
 
     private static final String THEME = "theme";
 
-    private  static  final String MUTEALL ="muteall";
+    private static final String MUTEALL = "muteall";
+    private static final String USER_ID = "user_id";
+    private static final String ISLOGGEDIN = "isloggedin";
+    private static final String RADIUS = "searchradius";
+    private static final String LOGINMODE = "loginmode";
+    private static final String PASSWORD = "password";
     // Shared Preferences reference
     SharedPreferences pref;
     // Editor reference for Shared preferences
@@ -32,26 +37,32 @@ public class UserSessionManager {
 
 
     // Constructor
-    public UserSessionManager(Context context)
-    {
+    public UserSessionManager(Context context) {
         this._context = context;
         pref = _context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
         editor = pref.edit();
     }
 
-    public String getRegId()
-    {
+    public String getUserId() {
+        return pref.getString(USER_ID, "");
+    }
+
+    public void setUserId(String regid) {
+        editor.putString(USER_ID, regid);
+        editor.commit();
+    }
+
+    public String getRegId() {
         return pref.getString(REG_ID, "");
     }
 
-    public void setRegId(String regid)
-    {
+    public void setRegId(String regid) {
         editor.putString(REG_ID, regid);
         editor.commit();
     }
 
-    public void setTeamNotification(String team_name , String sound)
-    {
+
+    public void setTeamNotification(String team_name, String sound) {
         editor.putString(team_name, sound);
         editor.commit();
 
@@ -80,35 +91,30 @@ public class UserSessionManager {
         return pref.getString(FBID, "");
     }
 
-    public void setFBID(String regid)
-    {
+    public void setFBID(String regid) {
         editor.putString(FBID, regid);
         editor.commit();
     }
 
-    public boolean getMuteAllNotification()
-    {
+    public boolean getMuteAllNotification() {
 
-        return  pref.getBoolean(MUTEALL,false);
+        return pref.getBoolean(MUTEALL, false);
     }
 
 
-    public void setMuteAllNotification(boolean mute)
-    {
+    public void setMuteAllNotification(boolean mute) {
 
         editor.putBoolean(MUTEALL, mute);
         editor.commit();
 
     }
 
-    public boolean getTeamNotification(String team_name)
-    {
+    public boolean getTeamNotification(String team_name) {
         return pref.getBoolean(team_name, false);
 
     }
 
-    public void setTeamNotification(String team_name, boolean sound)
-    {
+    public void setTeamNotification(String team_name, boolean sound) {
         editor.putBoolean(team_name, sound);
         editor.commit();
     }
@@ -119,8 +125,7 @@ public class UserSessionManager {
         return pref.getInt(THEME, 0);
     }
 
-    public void setTheme(int theme)
-    {
+    public void setTheme(int theme) {
         editor.putInt(THEME, theme);
         editor.commit();
     }
@@ -130,8 +135,7 @@ public class UserSessionManager {
         return pref.getString(EMAIL, "");
     }
 
-    public void setEmail(String regid)
-    {
+    public void setEmail(String regid) {
         editor.putString(EMAIL, regid);
         editor.commit();
     }
@@ -141,11 +145,49 @@ public class UserSessionManager {
         return pref.getString(NAME, "");
     }
 
-    public void setName(String regid)
-    {
+    public void setName(String regid) {
         editor.putString(NAME, regid);
         editor.commit();
     }
 
+    public void clearData() {
+        editor.clear().commit();
+    }
 
+
+    public boolean getIsLogedIn() {
+        return pref.getBoolean(ISLOGGEDIN, false);
+    }
+
+    public void setIsLoggedIn(boolean isloggedin) {
+        editor.putBoolean(ISLOGGEDIN, isloggedin);
+        editor.commit();
+    }
+
+    public int getSearchRadius() {
+        return pref.getInt(RADIUS, 5);
+    }
+
+    public void setSearchRaius(int radius) {
+        editor.putInt(RADIUS, radius);
+        editor.commit();
+    }
+
+    public void setLoginMode(int i) {
+        editor.putInt(LOGINMODE, i);
+        editor.commit();
+    }
+
+    public int getLoginMode() {
+        return pref.getInt(LOGINMODE, 0);
+    }
+
+    public String getpassword() {
+        return pref.getString(PASSWORD, "");
+
+    }
+    public void setPassword(String pw) {
+        editor.putString(PASSWORD, pw);
+        editor.commit();
+    }
 }

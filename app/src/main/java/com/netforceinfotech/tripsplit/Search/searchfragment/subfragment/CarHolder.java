@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.Search.searchfragment;
+package com.netforceinfotech.tripsplit.Search.searchfragment.subfragment;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

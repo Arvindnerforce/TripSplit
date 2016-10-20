@@ -3,16 +3,15 @@ package com.netforceinfotech.tripsplit.posttrip;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -38,9 +37,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.nlopez.smartlocation.OnLocationUpdatedListener;
-import io.nlopez.smartlocation.SmartLocation;
-
 public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
 
@@ -60,6 +56,8 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
     boolean source_place;
     String MY_PREFS_NAME = "preference_data";
     SharedPreferences.Editor editor;
+    String address = "";
+    AddressListner addressListner = null;
 
 
     @Override
@@ -84,15 +82,19 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                onBackPressed();
-
+                Intent intent = new Intent().putExtra("address", address);
+                setResult(RESULT_OK, intent);
+                finish();
             }
 
 
         });
 
 
+    }
+
+    public void setAddressListner(AddressListner addressListner) {
+        this.addressListner = addressListner;
     }
 
     public void onMapReady(GoogleMap map) {
@@ -130,28 +132,21 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
                 currentLatLng = latLng;
                 Log.i("address", strAddress);
                 clearMarker();
-                //  Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Selected Location"));
-
-                // Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Selected Location"));
                 try {
                     System.out.println("latitute =====" + latLng.toString());
 
                     if (source_place == true) {
-
+                        addressListner.gotAddress(strAddress, true);
                         Gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), 8.0f));
                         Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_location_green50)).title("Source"));
-
                         editor.putString("source_latitude", Double.toString(latLng.latitude));
                         editor.putString("destination_latitude", Double.toString(latLng.longitude));
                         editor.commit();
                     } else {
-
+                        addressListner.gotAddress(strAddress, false);
                         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-
                         source_lat = Double.parseDouble(prefs.getString("source_latitude", null));
-
                         source_log = Double.parseDouble(prefs.getString("destination_latitude", null));
-
                         Gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), 8.0f));
 
                         findDirections(source_lat, source_log,
@@ -179,23 +174,21 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
                         try {
 
                             String strAddress = place.description;
+                            GoogleMapActivity.this.address = strAddress;
                             latLng = getLocationFromAddress(getApplicationContext(), strAddress);
                             currentLatLng = latLng;
                             Log.i("address", strAddress);
                             clearMarker();
                             //  Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Selected Location"));
                             // Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Selected Location"));
-
                             if (source_place == true) {
-
                                 Gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), 8.0f));
                                 Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_location_green50)).title("Source"));
-
                                 editor.putString("source_latitude", Double.toString(latLng.latitude));
                                 editor.putString("destination_latitude", Double.toString(latLng.longitude));
                                 editor.commit();
+                                addressListner.gotAddress(strAddress, true);
                             } else {
-
                                 Gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), 8.0f));
                                 SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
                                 source_lat = Double.parseDouble(prefs.getString("source_latitude", null).toString());
@@ -203,7 +196,7 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
                                 findDirections(source_lat, source_log,
                                         latLng.latitude, latLng.longitude,
                                         GMapV2Direction.MODE_DRIVING);
-
+                                addressListner.gotAddress(strAddress, false);
                             }
 
 
@@ -215,23 +208,6 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
         );
 
     }
-
-    /*private void getLocation()
-    {
-        SmartLocation.with(context).location()
-                .oneFix()
-                .start(new OnLocationUpdatedListener() {
-
-                    public void onLocationUpdated(Location location) {
-                        LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
-                        Gmap.addMarker(new MarkerOptions().position(sydney).title("Hi"));
-                        Gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 5.0f));
-                        currentLatLng = sydney;
-
-                    }
-                });
-    }
-*/
 
 
     public LatLng getLocationFromAddress(Context context, String strAddress) {
@@ -365,5 +341,8 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
 
     }
 
+    public interface AddressListner {
+        void gotAddress(String address, boolean source);
+    }
 
 }

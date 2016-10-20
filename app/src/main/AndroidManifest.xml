@@ -27,22 +27,48 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".login.LoginActivity">
+        <activity
+            android:name=".login.LoginActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Profile.TripDetailsActivity" />
-        <activity android:name=".Home.HomeActivity" />
-        <activity android:name=".Dashboard.DashboardActivity" />
-        <activity android:name=".Search.SearchActivity" />
-        <activity android:name=".NavigationView.Message.writemessage.WriteMessageActivity" />
-        <activity android:name=".Review.ReviewListActivity" />
-        <activity android:name=".Review.ReviewDetails.ReviewDetails" />
-
-        <activity android:name=".posttrip.GoogleMapActivity" />
+        <activity
+            android:name=".Profile.TripDetailsActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Home.HomeActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Dashboard.DashboardActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Search.SearchActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".NavigationView.Message.writemessage.WriteMessageActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Review.ReviewListActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Review.ReviewDetails.ReviewDetails"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".posttrip.GoogleMapActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
@@ -52,15 +78,39 @@
             android:value="@integer/google_play_services_version"
             tools:replace="android:value" />
 
-        <activity android:name=".googlemap.MapGoogle" />
-        <activity android:name=".map.MapActivity"></activity>
+        <activity
+            android:name=".tutorial.TutorialActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".tutorial.DefaultIntro"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".login.SignUpActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".login.OTPActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
 
+        <service android:name=".general.firebasegcm.MyFirebaseIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".general.firebasegcm.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
-        <activity android:name=".tutorial.TutorialActivity"></activity>
-
-        <activity android:name=".tutorial.DefaultIntro"></activity>
-
-
+        <activity android:name=".login.ForgotPasswordActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            ></activity>
     </application>
 
 </manifest>

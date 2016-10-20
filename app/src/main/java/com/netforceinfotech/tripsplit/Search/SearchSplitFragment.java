@@ -14,24 +14,31 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
 
-public class SearchSplitFragment extends Fragment {
+public class SearchSplitFragment extends Fragment implements View.OnClickListener {
 
     WrapContentViewPager viewPager;
     Context context;
+    SearchPagerAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search_split, container, false);
         context = getActivity();
         setuptoolbar();
+        initView(view);
         setupTab(view);
 
         return view;
 
+    }
+
+    private void initView(View view) {
+        view.findViewById(R.id.linearlayoutSearch).setOnClickListener(this);
     }
 
     private void setuptoolbar() {
@@ -78,7 +85,7 @@ public class SearchSplitFragment extends Fragment {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
 
-        final SearchPagerAdapter adapter = new SearchPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
+        adapter = new SearchPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
 
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -107,4 +114,16 @@ public class SearchSplitFragment extends Fragment {
     }
 
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.linearlayoutSearch:
+                adapter.clicked(viewPager.getCurrentItem());
+                break;
+        }
+    }
+
+    private void showMessage(String clicked) {
+        Toast.makeText(context, clicked, Toast.LENGTH_SHORT).show();
+    }
 }

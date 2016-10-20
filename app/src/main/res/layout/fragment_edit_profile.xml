@@ -1,307 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/coordinatorlayout"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="10">
-
-
+    android:background="@color/background"
+    android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/linearlayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4"
-        >
+        android:layout_height="match_parent"
+        android:layout_above="@+id/buttonDone"
+        android:orientation="vertical"
+        android:weightSum="100">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:padding="15dp"
-            android:background="@drawable/post_trip_bg"
-            >
+            android:layout_height="0dp"
+            android:layout_weight="40">
 
-
-            <RelativeLayout
-                android:id="@+id/relativeedit"
+            <ImageView
+                android:id="@+id/imageviewDP"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                >
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/post_trip_bg" />
 
-                <Button
-                    android:id="@+id/editbutton"
-                    android:layout_width="70dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/ic_editplus_icon" />
-
-
-
-            </RelativeLayout>
+            <Button
+                android:id="@+id/buttonEditDp"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/ic_editplus_icon" />
 
         </RelativeLayout>
 
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="60"
+            android:orientation="vertical">
 
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="6"
-        android:orientation="vertical">
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+            <TextView
+                android:id="@+id/textviewName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:text="LKunsang"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:gravity="center_horizontal">
 
-                >
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <EditText
+                    android:id="@+id/etAge"
+                    android:layout_width="140dp"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:orientation="vertical">
-
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:orientation="vertical">
-
-
-                        <TextView
-                            android:id="@+id/name_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-
-                            android:text="Ryan,"
-                            android:textColor="@color/black"
-                            android:textSize="18dp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/age_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_toRightOf="@+id/name_text"
-                            android:text="36"
-                            android:textColor="@color/black"
-                            android:textSize="18dp" />
-
-
-                    </RelativeLayout>
-
-
-
-                 <RelativeLayout
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_gravity="center_horizontal"
-                     android:layout_marginTop="20dp"
-                     >
-
-
-                <LinearLayout
-                        android:id="@+id/linearlayoutemail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-                        android:background="@drawable/edit_black_background"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:weightSum="100">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="7dp"
-                            android:layout_weight="15"
-                            android:gravity="center">
-
-                            <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:src="@drawable/ic_age"
-                                android:padding="4dp"
-                                />
-                        </LinearLayout>
-
-                        <EditText
-                            android:id="@+id/email"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="85"
-                            android:background="@android:color/transparent"
-                            android:hint="Age"
-                            android:inputType="numberDecimal"
-                            android:paddingRight="5dp"
-                            android:layout_marginLeft="5dp"
-                            android:textSize="14dp"
-
-                           ></EditText>
-                    </LinearLayout>
-
-
-                 </RelativeLayout>
-
-
-                    <LinearLayout
-                        android:id="@+id/linearlayoutdob"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/linearlayoutemail"
-                        android:layout_marginLeft="32dp"
-                        android:layout_marginRight="32dp"
-                        android:layout_marginTop="15dp"
-                        android:background="@drawable/edit_black_background"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:weightSum="100">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:layout_weight="15"
-                            android:gravity="center">
-
-                            <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:src="@drawable/ic_birth" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/dob_txt"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="85"
-                            android:background="@android:color/transparent"
-                            android:hint="Date of Birth"
-
-                            android:textSize="14dp"
-                           ></TextView>
-                    </LinearLayout>
-
-
-
-                    <LinearLayout
-                        android:id="@+id/linearlayoutaddress"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/linearlayoutemail"
-                        android:layout_marginLeft="32dp"
-                        android:layout_marginRight="32dp"
-                        android:layout_marginTop="15dp"
-                        android:background="@drawable/edit_black_background"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:weightSum="100">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:layout_weight="15"
-                            android:gravity="center">
-
-                            <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:src="@drawable/ic_address" />
-                        </LinearLayout>
-
-                        <EditText
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="85"
-                            android:background="@android:color/transparent"
-                            android:hint="Address"
-                            android:inputType="text"
-                            android:textSize="14dp"
-                            ></EditText>
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:id="@+id/linearlayoutcountry"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/linearlayoutemail"
-                        android:layout_marginLeft="32dp"
-                        android:layout_marginRight="32dp"
-                        android:layout_marginTop="15dp"
-                        android:background="@drawable/edit_black_background"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:weightSum="100">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:layout_weight="15"
-                            android:gravity="center">
-
-                            <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:src="@drawable/ic_country" />
-                        </LinearLayout>
-
-                        <EditText
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="85"
-                            android:background="@android:color/transparent"
-                            android:hint="Country"
-                            android:inputType="text"
-                            android:textSize="14dp"
-                            ></EditText>
-                    </LinearLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/colorPrimary"
-                        android:layout_marginTop="20dp"
-
-
-                        >
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="Done"
-                            android:textColor="@color/white"
-                            android:textAlignment="center"
-                            android:padding="15dp"
-                            />
-
-
-
-                    </RelativeLayout>
-
-                </LinearLayout>
-
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/edit_black_background"
+                    android:drawableLeft="@drawable/ic_age"
+                    android:drawablePadding="12dp"
+                    android:enabled="false"
+                    android:padding="8dp"
+                    android:text="26 age" />
             </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
 
+            <EditText
+                android:id="@+id/etdob"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/edit_black_background"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_birth"
+                android:drawablePadding="12dp"
+                android:focusable="false"
+                android:padding="8dp" />
 
+            <EditText
+                android:id="@+id/etaddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/edit_black_background"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_address"
+                android:drawablePadding="12dp"
+                android:focusable="false"
+                android:padding="8dp" />
 
+            <EditText
+                android:id="@+id/etcountry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/edit_black_background"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_country"
+                android:drawablePadding="12dp"
+                android:focusable="false"
+                android:padding="8dp" />
 
         </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonDone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:text="Done"
+        android:textColor="@color/white" />
 
 
-
-
-</LinearLayout>
+</RelativeLayout>
