@@ -190,7 +190,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         String baseUrl = getString(R.string.url);
         String url = baseUrl + "services.php?opt=register&facebook=0&fb_token=&fb_id=&reg_id=" + userSessionManager.getRegId() + "&name=" + name
-                + "&email=" + email + "&dob=" + dob + "&country=" + country + "&country_code=" + country_code + "&send_otp=true&password=" + password + "&address=" + address;
+                + "&email=" + email + "&dob=" + dob + "&country=" + country + "&country_code=" + country_code + "&send_otp=true&password=" + password + "&address=" + address+"&send_otp=1";
         Log.i("kurl", url);
         Ion.with(context)
                 .load(url)

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,38 +32,27 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
-import com.facebook.login.LoginManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.koushikdutta.async.future.Cancellable;
 import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.async.http.AsyncHttpClientMiddleware;
 import com.koushikdutta.ion.Ion;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.netforceinfotech.tripsplit.login.CountryData;
-import com.shehabic.droppy.DroppyClickCallbackInterface;
-import com.shehabic.droppy.DroppyMenuItem;
-import com.shehabic.droppy.DroppyMenuPopup;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.ResponseHandler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 
@@ -107,6 +97,32 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
         return view;
     }
 
+    private File savebitmap(String filePath) {
+        File file = new File(filePath);
+        String extension = filePath.substring(filePath.lastIndexOf(".") + 1, filePath.length());
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath, bmOptions);
+        OutputStream outStream = null;
+        try {
+            // make a new bitmap from your file
+            outStream = new FileOutputStream(file);
+            if (extension.equalsIgnoreCase("png")) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 20, outStream);
+            } else if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg")) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 20, outStream);
+            } else {
+                return null;
+            }
+            outStream.flush();
+            outStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return file;
+
+
+    }
 
     private void initView(View view) {
         progressDialog = new MaterialDialog.Builder(context)
@@ -262,12 +278,17 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
                     });
         } else {
 
+            file = savebitmap(filePath);
+            if (file == null) {
+                showMessage("Image not valid");
+                return;
+            }
             Ion.with(context)
                     .load(url)
                     .setHeader("ENCTYPE", "multipart/form-data")
                     .setTimeout(60 * 60 * 1000)
                     .setMultipartParameter("goop", "noop")
-                    .setMultipartFile("upload", "image/*",  new File(filePath))
+                    .setMultipartFile("upload", "image/*", file)
                     .asJsonObject()
                     .setCallback(new FutureCallback<JsonObject>() {
                         @Override
@@ -427,7 +448,7 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
 
                     Uri uri = data.getData();
                     filePath = getPath(uri);
-                    Log.i("kresult",filePath);
+                    Log.i("kresult", filePath);
                     Glide.with(context).load(filePath).into(imageViewDp);
                 }
                 break;
@@ -450,19 +471,16 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
     }
 
 
-
-
     @SuppressLint("NewApi")
     private String getPath(Uri uri) {
-        if( uri == null ) {
+        if (uri == null) {
             return null;
         }
 
-        String[] projection = { MediaStore.Images.Media.DATA };
+        String[] projection = {MediaStore.Images.Media.DATA};
 
         Cursor cursor;
-        if(Build.VERSION.SDK_INT >19)
-        {
+        if (Build.VERSION.SDK_INT > 19) {
             // Will return "image:x*"
             String wholeID = DocumentsContract.getDocumentId(uri);
             // Split at colon, use second item in the array
@@ -471,22 +489,18 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
             String sel = MediaStore.Images.Media._ID + "=?";
 
             cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    projection, sel, new String[]{ id }, null);
-        }
-        else
-        {
+                    projection, sel, new String[]{id}, null);
+        } else {
             cursor = context.getContentResolver().query(uri, projection, null, null, null);
         }
         String path = null;
-        try
-        {
+        try {
             int column_index = cursor
                     .getColumnIndex(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             path = cursor.getString(column_index).toString();
             cursor.close();
-        }
-        catch(NullPointerException e) {
+        } catch (NullPointerException e) {
 
         }
         return path;
@@ -530,7 +544,7 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
             if (!jsonObject.get("profile_image").isJsonNull()) {
                 profile_image = jsonObject.get("profile_image").getAsString();
             }
-            if (jsonObject.get("dob").isJsonNull()) {
+            if (!jsonObject.get("dob").isJsonNull()) {
                 dob = jsonObject.get("dob").getAsString();
             }
             if (!jsonObject.get("country").isJsonNull()) {
@@ -596,12 +610,13 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
     private void showPopUp() {
         new MaterialDialog.Builder(context)
                 .title("Edit Profile")
-                .content("Are you sure you want to Edit you profile?")
+                .content("Are you sure you want to Edit your profile?")
                 .positiveText("Yes")
                 .negativeText("Cancel")
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
                         editProfile();
                     }
                 })

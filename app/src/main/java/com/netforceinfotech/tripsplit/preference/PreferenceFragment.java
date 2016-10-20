@@ -148,6 +148,7 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
     }
 
     private void logout() {
+        userSessionManager.setIsLoggedIn(false);
         userSessionManager.clearData();
         try {
             LoginManager.getInstance().logOut();

@@ -81,12 +81,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:9.6.1'
     compile 'com.kyleduo.switchbutton:library:1.4.1'
     compile 'com.github.mukeshsolanki:country-picker-android:1.1.6'
-    compile('org.apache.httpcomponents:httpmime:4.+') {
-        exclude module: "httpclient"
-    }
-    compile('org.apache.httpcomponents:httpcore:4.+') {
-        exclude module: "httpclient"
-    }
+
+
     testCompile 'junit:junit:4.12'
 }
 apply plugin: 'com.google.gms.google-services'

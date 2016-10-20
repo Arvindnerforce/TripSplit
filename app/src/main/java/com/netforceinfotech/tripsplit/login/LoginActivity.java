@@ -130,9 +130,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         textViewRegister.setOnClickListener(this);
         buttonCustomFB.setOnClickListener(this);
         buttonSignIn.setOnClickListener(this);
-        if (userSessionManager.getLoginMode() == 0) {
-            emailLogin(userSessionManager.getEmail(), userSessionManager.getpassword());
+        if (userSessionManager.getIsLogedIn()) {
+            Intent intent = new Intent(context, DashboardActivity.class);
+            startActivity(intent);
         }
+
         //  viewPager = (WrapContentViewPager) findViewById(R.id.viewPager);
 
     }
@@ -279,23 +281,33 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 JsonArray data = result.getAsJsonArray("data");
                                 JsonObject jsonObject = data.get(0).getAsJsonObject();
                                 String user_id = jsonObject.get("user_id").getAsString();
-                                userSessionManager.setUserId(user_id);
+                                String sendotp = "0";
+                                String error_code = "";
                                 try {
-                                    String error_code = jsonObject.get("error_code").getAsString();
-                                    if (error_code.equalsIgnoreCase("102") || error_code.equalsIgnoreCase("107")) {
-                                        userSessionManager.setIsLoggedIn(true);
-                                        userSessionManager.setLoginMode(1);
-                                        sendRegistrationToServer(userSessionManager.getRegId());
-                                        Intent intent = new Intent(context, DashboardActivity.class);
-                                        startActivity(intent);
+                                    error_code = jsonObject.get("error_code").getAsString();
+                                    if (error_code.equalsIgnoreCase("109")) {
+                                        showMessage("User Not Registered yet. Register Now");
                                         return;
                                     }
                                 } catch (Exception ex) {
 
                                 }
+                                try {
+                                    sendotp = jsonObject.get("send_otp").getAsString();
+                                } catch (Exception ex) {
 
-                                Intent intent = new Intent(context, OTPActivity.class);
-                                startActivity(intent);
+                                }
+                                userSessionManager.setUserId(user_id);
+                                userSessionManager.setIsLoggedIn(true);
+                                userSessionManager.setLoginMode(1);
+                                sendRegistrationToServer(userSessionManager.getRegId());
+                                if (sendotp.equalsIgnoreCase("0")) {
+                                    Intent intent = new Intent(context, DashboardActivity.class);
+                                    startActivity(intent);
+                                } else {
+                                    Intent intent = new Intent(context, OTPActivity.class);
+                                    startActivity(intent);
+                                }
 
                             } else if (result.get("status").getAsString().equalsIgnoreCase("failed")) {
                                 try {
@@ -464,6 +476,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 userSessionManager.setLoginMode(0);
                                 userSessionManager.setEmail(email);
                                 userSessionManager.setPassword(password);
+                                userSessionManager.setIsLoggedIn(true);
                                 JsonArray data = result.getAsJsonArray("data");
                                 JsonObject object = data.get(0).getAsJsonObject();
                                 String user_id = object.get("user_id").getAsString();
@@ -547,6 +560,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     finish();*/
                /*     facebooklogin(currentAccessToken.getUserId());*/
+
                 }
             }, SPLASH_TIME_OUT);
         } else {

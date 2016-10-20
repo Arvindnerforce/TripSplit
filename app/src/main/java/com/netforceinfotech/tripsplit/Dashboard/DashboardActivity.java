@@ -68,6 +68,7 @@ public class DashboardActivity extends AppCompatActivity {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        userSessionManager.setIsLoggedIn(false);
                         userSessionManager.clearData();
                         try {
                             LoginManager.getInstance().logOut();

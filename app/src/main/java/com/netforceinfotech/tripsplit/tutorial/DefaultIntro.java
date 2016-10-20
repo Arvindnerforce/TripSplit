@@ -63,6 +63,7 @@ public final class DefaultIntro extends BaseIntro {
             return;
         }
         userSessionManager.setIsFirstTime(false);
+        userSessionManager.setIsLoggedIn(true);
         Intent dashboard = new Intent(DefaultIntro.this, DashboardActivity.class);
         startActivity(dashboard);
         finish();
