@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.JsonObject;
@@ -119,6 +120,7 @@ services.php?opt=resendotp&id=11"
         * */
         String baseUrl = getString(R.string.url);
         String url = baseUrl + "services.php?opt=verifycustomer&otp=" + trim + "&id=" + userSessionManager.getUserId() + "&email=" + userSessionManager.getEmail();
+        Log.i("kresult",url);
         Ion.with(getApplicationContext())
                 .load(url)
                 .asJsonObject()
@@ -154,6 +156,6 @@ services.php?opt=resendotp&id=11"
     }
 
     private void showMessage(String s) {
-
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 }

@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -90,8 +92,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
         context = this;
         userSessionManager = new UserSessionManager(context);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setupToolbar();
+
         initView();
         new AccessTokenTracker() {
             @Override
@@ -102,6 +104,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         updateWithToken(AccessToken.getCurrentAccessToken());
         //  initViewPager();
         setupFacebook();
+    }
+
+    private void setupToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ImageView imageView = (ImageView) toolbar.findViewById(R.id.imageviewLogo);
+        Glide.with(context).load(R.drawable.trip_splitz_logo);
     }
 /*
 
@@ -460,6 +469,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         * services.php?opt=login&email=dileep@netforceinfotech.com&password=123456*/
         String baseUrl = getString(R.string.url);
         String url = baseUrl + "services.php?opt=login&email=" + email + "&password=" + password;
+        Log.i("kresult", url);
         Ion.with(getApplicationContext())
                 .load(url)
                 .asJsonObject()
@@ -490,6 +500,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 showMessage(msg);
                             }
                         } else {
+                            showMessage("error");
                             e.printStackTrace();
                         }
                     }

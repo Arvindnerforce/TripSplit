@@ -175,7 +175,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
     }
 
-    private void register(String name, String email, String password, String country, String address, String dob) {
+    private void register(String name, final String email, String password, String country, String address, String dob) {
         showProgressbar();
         try {
             name = URLEncoder.encode(name, "UTF-8");
@@ -206,6 +206,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                 JsonObject jsonObject = data.get(0).getAsJsonObject();
                                 String user_id = jsonObject.get("user_id").getAsString();
                                 userSessionManager.setUserId(user_id);
+                                userSessionManager.setEmail(email);
                                 Intent intent = new Intent(context, OTPActivity.class);
                                 startActivity(intent);
                                 finish();

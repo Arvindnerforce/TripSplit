@@ -5,8 +5,7 @@
     android:layout_height="?attr/actionBarSize"
     android:background="@color/colorPrimary"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-    app:theme="@style/AppTheme.AppBarOverlay"
-    >
+    app:theme="@style/AppTheme.AppBarOverlay">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,35 +14,36 @@
         >
 
         <LinearLayout
-            android:gravity="center_horizontal"
             android:id="@+id/linearlayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="-20dp"
+            android:gravity="center_horizontal"
 
             >
-        <ImageView
-            android:padding="10dp"
-            android:background="@color/colorPrimary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_splittrip_textlogo"
 
-            />
+            <ImageView
+                android:id="@+id/imageviewLogo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:padding="10dp"
+
+                />
         </LinearLayout>
-     <!--   <Button
+        <!--   <Button
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="LOGOUT"
-            android:layout_alignParentRight="true"
-             android:layout_marginTop="5dp"
-            android:background="@color/colorPrimary"
-            android:textColor="@color/white"
-            android:textSize="18dp"
-            android:textAllCaps="true"
-            />
--->
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="LOGOUT"
+               android:layout_alignParentRight="true"
+                android:layout_marginTop="5dp"
+               android:background="@color/colorPrimary"
+               android:textColor="@color/white"
+               android:textSize="18dp"
+               android:textAllCaps="true"
+               />
+   -->
     </RelativeLayout>
 
 </android.support.v7.widget.Toolbar>

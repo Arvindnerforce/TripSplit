@@ -38,6 +38,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
+import com.netforceinfotech.tripsplit.Dashboard.DashboardActivity;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.netforceinfotech.tripsplit.login.CountryData;
@@ -57,6 +58,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import static com.netforceinfotech.tripsplit.R.id.etcountry;
+import static com.netforceinfotech.tripsplit.R.id.start;
 
 public class EditPofileFragment extends Fragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
     View view;
@@ -268,8 +270,10 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
                                 Log.i("result_kunsang", result.toString());
                                 String status = result.get("status").getAsString();
                                 if (status.equalsIgnoreCase("success")) {
-                                    showMessage("Uploaded successfully");
-                                    getUserInfo();
+                                    Intent intent = new Intent(context, DashboardActivity.class);
+                                    startActivity(intent);
+                                    getActivity().finish();
+                                    showMessage("Profile edited successfully");
                                 } else {
                                     showMessage("something went wrong");
                                 }
@@ -300,7 +304,10 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
                                 Log.i("result_kunsang", result.toString());
                                 String status = result.get("status").getAsString();
                                 if (status.equalsIgnoreCase("success")) {
-                                    showMessage("uploaded successfully");
+                                    Intent intent = new Intent(context, DashboardActivity.class);
+                                    startActivity(intent);
+                                    getActivity().finish();
+                                    showMessage("Profile edited successfully");
                                 }
                             }
                         }

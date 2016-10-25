@@ -131,8 +131,9 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
                 }
                 if (range == 0) {
                     textViewRange.setText("Anywhere");
+                } else {
+                    textViewRange.setText(range + " km");
                 }
-                textViewRange.setText(range + " km");
             }
 
             @Override
