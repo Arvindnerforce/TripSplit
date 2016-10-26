@@ -31,7 +31,7 @@ import com.netforceinfotech.tripsplit.general.UserSessionManager;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PreferenceFragment extends Fragment implements View.OnClickListener {
+public class PreferenceFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     String TAG = "klog";
     Context context;
@@ -42,7 +42,7 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
     int range;
     Button buttonDeleteAccount;
     private MaterialDialog progressDialog;
-    SwitchButton switchButtonLogout;
+    SwitchButton switchButtonLogout, switchbuttonLoop, switchbuttonMessage, switchbuttonEmail, switchbuttonVibration;
 
     public PreferenceFragment() {
         // Required empty public constructor
@@ -62,6 +62,18 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
     }
 
     private void initview(View view) {
+        switchbuttonEmail = (SwitchButton) view.findViewById(R.id.switchbuttonEmail);
+        switchbuttonLoop = (SwitchButton) view.findViewById(R.id.switchbuttonLoop);
+        switchbuttonMessage = (SwitchButton) view.findViewById(R.id.switchbuttonMessage);
+        switchbuttonVibration = (SwitchButton) view.findViewById(R.id.switchbuttonVibration);
+        switchbuttonVibration.setOnCheckedChangeListener(this);
+        switchbuttonMessage.setOnCheckedChangeListener(this);
+        switchbuttonLoop.setOnCheckedChangeListener(this);
+        switchbuttonEmail.setOnCheckedChangeListener(this);
+        switchbuttonEmail.setChecked(userSessionManager.getEmailNotification());
+        switchbuttonLoop.setChecked(userSessionManager.getKeepMeInLoop());
+        switchbuttonVibration.setChecked(userSessionManager.getInAppVibration());
+        switchbuttonMessage.setChecked(userSessionManager.getMessageNotification());
         switchButtonLogout = (SwitchButton) view.findViewById(R.id.switchbuttonLogout);
         switchButtonLogout.setChecked(true);
         switchButtonLogout.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -264,4 +276,21 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
                 .show();
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        switch (compoundButton.getId()) {
+            case R.id.switchbuttonVibration:
+                userSessionManager.setInAppVibration(b);
+                break;
+            case R.id.switchbuttonEmail:
+                userSessionManager.setEmailNotification(b);
+                break;
+            case R.id.switchbuttonMessage:
+                userSessionManager.setMessageNotification(b);
+                break;
+            case R.id.switchbuttonLoop:
+                userSessionManager.setKeepMeInLoop(b);
+                break;
+        }
+    }
 }

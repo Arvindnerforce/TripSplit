@@ -62,22 +62,19 @@
                 android:textColor="#000000"
                 android:textStyle="bold" />
 
-
-            <io.techery.properratingbar.ProperRatingBar
-                android:id="@+id/lowerRatingBar"
-                android:layout_width="wrap_content"
-                android:layout_height="15dp"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/relativeedit"
-                android:layout_gravity="center_horizontal"
+            <LinearLayout
                 android:layout_marginBottom="15dp"
-                android:isIndicator="false"
-                app:prb_defaultRating="4"
-                app:prb_tickNormalDrawable="@drawable/star_outlineicon"
-                app:prb_tickSelectedDrawable="@drawable/star_icon"
-                app:prb_tickSpacing="0dp"
-                app:prb_totalTicks="5" />
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:rating="3.5" />
+            </LinearLayout>
 
         </LinearLayout>
 

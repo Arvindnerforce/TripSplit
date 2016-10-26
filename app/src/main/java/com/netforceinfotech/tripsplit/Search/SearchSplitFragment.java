@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
 
@@ -51,11 +53,29 @@ public class SearchSplitFragment extends Fragment implements View.OnClickListene
         textViewLogout.setVisibility(View.GONE);
         home.setVisibility(View.VISIBLE);
         icon.setVisibility(View.VISIBLE);
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setupHomeFragment();
+            }
+        });
 
         toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
     }
 
+
+    private void replaceFragment(Fragment newFragment, String tag) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame, newFragment, tag);
+        transaction.commit();
+    }
+
+    public void setupHomeFragment() {
+        HomeFragment dashboardFragment = new HomeFragment();
+        String tagName = dashboardFragment.getClass().getName();
+        replaceFragment(dashboardFragment, tagName);
+    }
 
     private void setupTab(View view) {
 

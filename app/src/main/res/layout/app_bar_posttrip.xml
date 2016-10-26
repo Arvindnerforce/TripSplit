@@ -22,7 +22,7 @@
         android:background="@color/colorPrimary"
         android:paddingBottom="9dp"
         android:paddingTop="9dp"
-        android:src="@drawable/ic_splittrip_textlogo" />
+        android:visibility="gone" />
 
     <FrameLayout
         android:layout_width="wrap_content"

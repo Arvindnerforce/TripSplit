@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,7 +22,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -130,6 +130,8 @@ public class FlightFragment extends Fragment implements View.OnClickListener, Ti
         space_txt = (TextView) view.findViewById(R.id.space_txt);
         textviewETA = (TextView) view.findViewById(R.id.textviewETA);
         textViewETD = (TextView) view.findViewById(R.id.textviewETD);
+        Typeface custom_font = Typeface.createFromAsset(context.getAssets(), "fonts/GothamRoundedBook.ttf");
+        textViewETD.setTypeface(custom_font);
         textviewETA.setOnClickListener(this);
         textViewETD.setOnClickListener(this);
         increamentPass.setOnClickListener(this);

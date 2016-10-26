@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ImageView imageView = (ImageView) toolbar.findViewById(R.id.imageviewLogo);
-        Glide.with(context).load(R.drawable.trip_splitz_logo);
+        Glide.with(context).load(R.drawable.trip_splitz_logo_red_bg).into(imageView);
     }
 /*
 
@@ -129,6 +129,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .title(R.string.progress_dialog)
                 .content(R.string.please_wait)
                 .progress(true, 0).build();
+        findViewById(R.id.linearlayoutFbLogin).setOnClickListener(this);
         textViewForgotPassword = (TextView) findViewById(R.id.textviewForgotPassword);
         textViewForgotPassword.setOnClickListener(this);
         editTextLEmail = (EditText) findViewById(R.id.etemail);
@@ -233,7 +234,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     fbGender = "";
                                     e.printStackTrace();
                                 }
-                                showMessage("facebook done. check it");
                                 String fbToken = accessToken.getToken();
                                 if (fbEmail.equalsIgnoreCase("") || fbEmail.length() == 0) {
                                     sendtOTP = true;
@@ -427,8 +427,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 finish();
                 break;
             case R.id.buttonCustomFB:
+            case R.id.linearlayoutFbLogin:
                 buttonFacebook.performClick();
-                showMessage("clicked");
                 //login();
                 break;
             case R.id.buttonSignIn:

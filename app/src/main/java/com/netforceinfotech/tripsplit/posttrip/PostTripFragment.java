@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 
 import android.support.v4.widget.DrawerLayout;
@@ -21,6 +22,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.Profile.PagerAdapter;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
@@ -50,6 +52,24 @@ public class PostTripFragment extends Fragment {
         home.setVisibility(View.VISIBLE);
         icon.setVisibility(View.VISIBLE);
         toolbar.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setupHomeFragment();
+            }
+        });
+    }
+
+    private void replaceFragment(Fragment newFragment, String tag) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame, newFragment, tag);
+        transaction.commit();
+    }
+
+    public void setupHomeFragment() {
+        HomeFragment dashboardFragment = new HomeFragment();
+        String tagName = dashboardFragment.getClass().getName();
+        replaceFragment(dashboardFragment, tagName);
     }
 
     private void setupTab(View v) {

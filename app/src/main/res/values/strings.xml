@@ -21,7 +21,7 @@
     <string name="drawer_close">Close</string>
     <string name="shareit">Share it</string>
     <string name="editpic">Pick Image</string>
-    <string name="pick_from_galary">Pick from galary</string>
+    <string name="pick_from_galary">Pick from gallery</string>
     <string name="take_picture">Take picture</string>
     <string name="cancel">Cancel</string>
     <string name="don_t_have_account_register_here"><u>Don\'t have account? Register here!</u></string>
@@ -32,6 +32,15 @@
     <string name="please_wait">Please wait for a moment</string>
     <string name="appkey">abcd</string>
     <string name="forgot_password"><u>Forgot password?</u></string>
+    <string name="choose_weather">Choose whether you
+would like to Post a Trip
+or Search Splitz….
+</string>
+    <string name="connect_with_fb">Connect with <b>Facebook</b></string>
+    <string name="third_tutorial">Got space to split? Want to find someone to take a trip with?</string>
+    <string name="second_tutorial">Meet in a public place try to choose mixed groups don\'t give away too much personal info when</string>
+    <string name="first_tutorial">Sign up and be apart of the next big thing in Social Travel</string>
+    <string name="fourth_tutorial">Save your hard earned cash. Split your cost with new travel buddies.</string>
 
 
 </resources>

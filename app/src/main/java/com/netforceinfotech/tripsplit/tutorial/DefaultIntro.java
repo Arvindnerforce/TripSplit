@@ -34,10 +34,14 @@ public final class DefaultIntro extends BaseIntro {
 
         }
         userSessionManager = new UserSessionManager(getApplicationContext());
-        addSlide(SampleSlide.newInstance(R.layout.activity_intro_first));
-        addSlide(SampleSlide.newInstance(R.layout.activity_intro_second));
-        addSlide(SampleSlide.newInstance(R.layout.activity_intro_three));
-        addSlide(SampleSlide.newInstance(R.layout.activity_intro_four));
+        AppIntrofirst appIntrofirst=new AppIntrofirst();
+        AppIntroSecoond appIntroSecoond=new AppIntroSecoond();
+        AppIntroThird appIntroThird=new AppIntroThird();
+        AppIntroFourth appIntroFourth=new AppIntroFourth();
+        addSlide(appIntrofirst);
+        addSlide(appIntroSecoond);
+        addSlide(appIntroThird);
+        addSlide(appIntroFourth);
 
         showSkipButton(false);
 

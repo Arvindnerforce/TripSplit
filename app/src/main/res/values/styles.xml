@@ -12,6 +12,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="android:typeface">serif</item>
 
     </style>
 
@@ -22,6 +23,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:typeface">serif</item>
 
     </style>
 

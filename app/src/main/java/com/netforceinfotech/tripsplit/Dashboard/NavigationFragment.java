@@ -68,7 +68,6 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
     private Context context;
     CircleImageView imageViewDp;
     TextView textViewName, textviewCountry;
-    ProperRatingBar properRatingBar;
     UserSessionManager userSessionManager;
 
     public NavigationFragment() {
@@ -154,7 +153,7 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
     private List<RowDataDrawer> setDrawer() {
         List<RowDataDrawer> list = new ArrayList<>();
 
-        String title[] = {"Home", "Preferences", "Edit Profile", "Invite Friends", "Search Split", "Create Trip", "Messages", "dummy", "Group", "How it works", "Support"};
+        String title[] = {"Home", "Preferences", "Edit Profile", "Invite Friends", "Search Splitz", "Post Trip", "Messages", "dummy", "Group", "How it works", "Support"};
         int drawableId[];
 
 
@@ -373,7 +372,7 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
     }
 
     public void setupHomeFragment() {
-        HomeFragment dashboardFragment = new HomeFragment(adapter);
+        HomeFragment dashboardFragment = new HomeFragment();
         String tagName = dashboardFragment.getClass().getName();
         replaceFragment(dashboardFragment, tagName);
     }

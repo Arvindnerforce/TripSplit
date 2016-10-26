@@ -26,6 +26,10 @@ public class UserSessionManager {
     private static final String RADIUS = "searchradius";
     private static final String LOGINMODE = "loginmode";
     private static final String PASSWORD = "password";
+    private static final String KEEPMEINLOOP = "keepmeinloop";
+    private static final String MESSAGENOTIFICATION = "messagenotification";
+    private static final String EMAILNOTIFICATION = "emailnitification";
+    private static final String INAPPVIBRATION = "inappvibration";
     // Shared Preferences reference
     SharedPreferences pref;
     // Editor reference for Shared preferences
@@ -186,8 +190,48 @@ public class UserSessionManager {
         return pref.getString(PASSWORD, "");
 
     }
+
     public void setPassword(String pw) {
         editor.putString(PASSWORD, pw);
         editor.commit();
     }
+
+    public boolean getKeepMeInLoop() {
+        return pref.getBoolean(KEEPMEINLOOP, true);
+
+    }
+
+    public void setKeepMeInLoop(boolean pw) {
+        editor.putBoolean(KEEPMEINLOOP, pw);
+        editor.commit();
+    }
+
+    public boolean getMessageNotification() {
+        return pref.getBoolean(MESSAGENOTIFICATION, true);
+
+    }
+
+    public void setMessageNotification(boolean pw) {
+        editor.putBoolean(MESSAGENOTIFICATION, pw);
+        editor.commit();
+    }
+    public boolean getEmailNotification() {
+        return pref.getBoolean(EMAILNOTIFICATION, true);
+
+    }
+
+    public void setEmailNotification(boolean pw) {
+        editor.putBoolean(EMAILNOTIFICATION, pw);
+        editor.commit();
+    }
+    public boolean getInAppVibration() {
+        return pref.getBoolean(INAPPVIBRATION, true);
+
+    }
+
+    public void setInAppVibration(boolean pw) {
+        editor.putBoolean(INAPPVIBRATION, pw);
+        editor.commit();
+    }
+
 }

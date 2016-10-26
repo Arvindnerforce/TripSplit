@@ -60,6 +60,7 @@
 
         >
         <TextView
+            android:gravity="center"
             android:id="@+id/footerTittle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

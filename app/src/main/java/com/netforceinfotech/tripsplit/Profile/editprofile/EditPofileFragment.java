@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -39,6 +40,7 @@ import com.koushikdutta.ion.Ion;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.netforceinfotech.tripsplit.Dashboard.DashboardActivity;
+import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.netforceinfotech.tripsplit.login.CountryData;
@@ -74,13 +76,14 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
     private static final int TAKE_PHOTO_CODE = 1235;
     private Uri fileUri;
     private String filePath;
-    private LinearLayout linearLayoutProgress, linearLayoutAddress;
+    private LinearLayout linearLayoutProgress;
     private String countryCode, country;
     private Uri imageToUploadUri;
     UserSessionManager userSessionManager;
     ArrayList<CountryData> countries = new ArrayList<>();
     private File finalFile;
     private MaterialDialog progressDialog;
+    LinearLayout linearLayoutAddress, linearLayoutCountry, linearLayoutBirthday;
 
     public EditPofileFragment() {
         // Required empty public constructor
@@ -131,6 +134,12 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
                 .title(R.string.progress_dialog)
                 .content(R.string.please_wait)
                 .progress(true, 0).build();
+        linearLayoutAddress = (LinearLayout) view.findViewById(R.id.linearlayoutAddress);
+        linearLayoutCountry = (LinearLayout) view.findViewById(R.id.linearlayoutCountry);
+        linearLayoutBirthday = (LinearLayout) view.findViewById(R.id.linearlayoutBirthday);
+        linearLayoutAddress.setOnClickListener(this);
+        linearLayoutCountry.setOnClickListener(this);
+        linearLayoutBirthday.setOnClickListener(this);
         buttonDone = (Button) view.findViewById(R.id.buttonDone);
         buttonEditDp = (Button) view.findViewById(R.id.buttonEditDp);
         etDoB = (EditText) view.findViewById(R.id.etdob);
@@ -156,8 +165,25 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
         home.setVisibility(View.VISIBLE);
         icon.setVisibility(View.VISIBLE);
         toolbar.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setupHomeFragment();
+            }
+        });
     }
 
+    private void replaceFragment(Fragment newFragment, String tag) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame, newFragment, tag);
+        transaction.commit();
+    }
+
+    public void setupHomeFragment() {
+        HomeFragment dashboardFragment = new HomeFragment();
+        String tagName = dashboardFragment.getClass().getName();
+        replaceFragment(dashboardFragment, tagName);
+    }
 
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         Date date2 = new Date();
@@ -179,12 +205,16 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
 
         switch (view.getId()) {
+  //          case R.id.etcountry:
+            case R.id.linearlayoutCountry:
             case R.id.etcountry:
                 showCountryPopUp();
                 break;
             case R.id.buttonDone:
                 showPopUp();
                 break;
+    //        case R.id.etaddress:
+            case R.id.linearlayoutAddress:
             case R.id.etaddress:
                 showEditAddressPopup();
                 break;
@@ -200,6 +230,8 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
                 pickPictureIntent();
                 dialogPic.dismiss();
                 break;
+//            case R.id.etdob:
+            case R.id.linearlayoutBirthday:
             case R.id.etdob:
                 Calendar now1 = Calendar.getInstance();
                 DatePickerDialog dpd1 = DatePickerDialog.newInstance(
@@ -565,7 +597,7 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
             }
 
             try {
-                Glide.with(context).load(profile_image).error(R.drawable.ic_error).into(imageViewDp);
+                Glide.with(context).load(profile_image).error(R.drawable.ic_no_image).into(imageViewDp);
             } catch (Exception ex) {
             }
             textviewName.setText(name);

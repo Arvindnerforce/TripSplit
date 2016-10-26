@@ -43,6 +43,7 @@
                             android:background="@drawable/ic_editplus_icon" />
 
                         <LinearLayout
+                            android:gravity="center"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
@@ -57,18 +58,39 @@
                                 android:text="NZ"
                                 android:textColor="@color/white" />
 
-                            <io.techery.properratingbar.ProperRatingBar
-                                android:id="@+id/lowerRatingBar"
-                                android:layout_width="40dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="7dp"
-                                android:orientation="vertical"
-                                app:prb_clickable="false"
-                                app:prb_defaultRating="3"
-                                app:prb_tickNormalDrawable="@drawable/star_outlineicon"
-                                app:prb_tickSelectedDrawable="@drawable/star_icon"
-                                app:prb_tickSpacing="5dp"
-                                app:prb_totalTicks="5" />
+                           <LinearLayout
+                               android:layout_marginTop="6dp"
+                               android:gravity="center"
+                               android:orientation="vertical"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content">
+                               <ImageView
+                                   android:layout_marginTop="6dp"
+                                   android:src="@drawable/star_icon"
+                                   android:layout_width="30dp"
+                                   android:layout_height="30dp" />
+                               <ImageView
+                                   android:layout_marginTop="6dp"
+                                   android:src="@drawable/star_icon"
+                                   android:layout_width="30dp"
+                                   android:layout_height="30dp" />
+                               <ImageView
+                                   android:layout_marginTop="6dp"
+                                   android:src="@drawable/star_icon"
+                                   android:layout_width="30dp"
+                                   android:layout_height="30dp" />
+                               <ImageView
+                                   android:layout_marginTop="6dp"
+                                   android:src="@drawable/star_icon"
+                                   android:layout_width="30dp"
+                                   android:layout_height="30dp" />
+                               <ImageView
+                                   android:layout_marginTop="6dp"
+                                   android:src="@drawable/star_outlineicon"
+                                   android:layout_width="30dp"
+                                   android:layout_height="30dp" />
+
+                           </LinearLayout>
                         </LinearLayout>
 
                     </RelativeLayout>
