@@ -5,9 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -45,6 +49,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     String name, email, password, confirmpassword, dob, country, address, country_code = "";
     ArrayList<CountryData> countries = new ArrayList<>();
     private MaterialDialog progressDialog;
+    Button buttonOk;
+    EditText etDay, etMonth, etYear;
+    private MaterialDialog dialogDoB;
+    private String dobString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,15 +151,23 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 register(name, email, password, country, address, dob);
                 break;
             case R.id.etdob:
-                Calendar now = Calendar.getInstance();
-                DatePickerDialog dpd = DatePickerDialog.newInstance(
-                        SignUpActivity.this,
-                        now.get(Calendar.YEAR),
-                        now.get(Calendar.MONTH),
-                        now.get(Calendar.DAY_OF_MONTH)
-                );
-                dpd.show(getFragmentManager(), "Datepickerdialog");
+                showEditDoBPopup();
                 break;
+            case R.id.buttonOk:
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date test = sdf.parse(etYear.getText().toString() + "-" + etMonth.getText().toString() + "-" + etDay.getText().toString());
+                } catch (ParseException pe) {
+                    //Date is invalid, try next format
+                    showMessage("Not valid date");
+                    return;
+                }
+
+                dobString = etDay.getText().toString() + "/" + etMonth.getText().toString() + "/" + etYear.getText().toString();
+                etdob.setText(dobString);
+                dialogDoB.dismiss();
+                break;
+
         }
 
     }
@@ -187,10 +203,16 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         } catch (Exception ex) {
 
         }
+        try {
+            country = URLEncoder.encode(country, "UTF-8");
+        } catch (Exception ex) {
 
+        }
+        password=password.trim();
+        dob = getServerDateFormat(dob);
         String baseUrl = getString(R.string.url);
         String url = baseUrl + "services.php?opt=register&facebook=0&fb_token=&fb_id=&reg_id=" + userSessionManager.getRegId() + "&name=" + name
-                + "&email=" + email + "&dob=" + dob + "&country=" + country + "&country_code=" + country_code + "&send_otp=true&password=" + password + "&address=" + address+"&send_otp=1";
+                + "&email=" + email + "&dob=" + dob + "&country=" + country + "&country_code=" + country_code + "&send_otp=true&password=" + password + "&address=" + address + "&send_otp=1";
         Log.i("kurl", url);
         Ion.with(context)
                 .load(url)
@@ -234,6 +256,129 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showEditDoBPopup() {
+
+        boolean wrapInScrollView = true;
+        dialogDoB = new MaterialDialog.Builder(context)
+                .title(R.string.editdob)
+                .customView(R.layout.editdob, wrapInScrollView)
+                .negativeText(R.string.cancel)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+        buttonOk = (Button) dialogDoB.findViewById(R.id.buttonOk);
+        etDay = (EditText) dialogDoB.findViewById(R.id.etDay);
+        etMonth = (EditText) dialogDoB.findViewById(R.id.etMonth);
+        etYear = (EditText) dialogDoB.findViewById(R.id.etYear);
+        buttonOk.setOnClickListener(this);
+        etDay.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (etDay.length() == 2) {
+                    int day = Integer.parseInt(etDay.getText().toString());
+                    if (day > 31) {
+                        showMessage("Invalid date");
+                        return;
+                    }
+                    etMonth.requestFocus();
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        etMonth.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (etMonth.length() == 2) {
+                    int day = Integer.parseInt(etMonth.getText().toString());
+                    if (day > 12) {
+                        showMessage("Invalid month");
+                        return;
+                    }
+                    etYear.requestFocus();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        etYear.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (etYear.length() == 4) {
+                    int dobYear = Integer.parseInt(etYear.getText().toString());
+                    Calendar c = Calendar.getInstance();
+                    int year = c.get(Calendar.YEAR);
+                    if (dobYear > year) {
+                        showMessage("DoB cannot be in future");
+                        return;
+                    }
+                    buttonOk.performClick();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
+    }
+
+    private String getFormattedDate(String dob) {
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = fmt.parse(dob);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat fmtOut = new SimpleDateFormat("dd/MM/yyyy");
+        return fmtOut.format(date);
+    }
+
+    private String getServerDateFormat(String s) {
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = null;
+        try {
+            date = fmt.parse(s);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat fmtOut = new SimpleDateFormat("yyyy-MM-dd");
+        return fmtOut.format(date);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.netforceinfotech.tripsplit.Home;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
 import com.netforceinfotech.tripsplit.Dashboard.NavigationFragment;
 import com.netforceinfotech.tripsplit.Dashboard.RecyclerAdapterDrawer;
 import com.netforceinfotech.tripsplit.R;
@@ -68,7 +70,11 @@ public class HomeFragment extends Fragment {
                 setupSearchSplitFramgent();
             }
         });
-        Glide.with(context).load(R.drawable.trip_splitz_logo).into(imageViewLogo);
+        Glide.with(context)
+                .fromResource()
+                .asBitmap()
+                .encoder(new BitmapEncoder(Bitmap.CompressFormat.PNG, 100))
+                .load(R.drawable.trip_splitz_logo).into(imageViewLogo);
 
     }
 

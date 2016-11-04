@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.netforceinfotech.tripsplit.tutorial.AppIntroSecoond">
+    tools:context="com.netforceinfotech.tripsplit.tutorial.AppIntroFourth">
 
     <RelativeLayout
         android:id="@+id/main"
@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="32dp"
-            android:text="Post a Tripz"
+            android:text="Post a Trip"
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold" />

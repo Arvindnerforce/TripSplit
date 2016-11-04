@@ -14,10 +14,10 @@ import com.netforceinfotech.tripsplit.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AppIntroSecoond extends Fragment {
+public class AppIntroSecond extends Fragment {
 
 
-    public AppIntroSecoond() {
+    public AppIntroSecond() {
         // Required empty public constructor
     }
 
@@ -26,9 +26,9 @@ public class AppIntroSecoond extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_app_intro_secoond, container, false);
+        View view= inflater.inflate(R.layout.fragment_app_intro_fourth, container, false);
         ImageView imageView = (ImageView) view.findViewById(R.id.imageview);
-        Glide.with(getActivity()).load(R.drawable.second_tutorial).into(imageView);
+        Glide.with(getActivity()).load(R.drawable.fourth_tutorial).into(imageView);
         return view;
     }
 

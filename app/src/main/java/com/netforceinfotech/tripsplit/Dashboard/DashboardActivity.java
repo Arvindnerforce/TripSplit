@@ -1,10 +1,13 @@
 package com.netforceinfotech.tripsplit.Dashboard;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
@@ -49,9 +53,13 @@ public class DashboardActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView textViewLogout = (TextView) toolbar.findViewById(R.id.textviewLogout);
         ImageView homeButton = (ImageView) toolbar.findViewById(R.id.homeButton);
-        ImageView image_appicon= (ImageView) toolbar.findViewById(R.id.image_appicon);
+        ImageView image_appicon = (ImageView) toolbar.findViewById(R.id.image_appicon);
         image_appicon.setVisibility(View.GONE);
-        Glide.with(this).load(R.drawable.trip_splitz_logo_red_bg).into(image_appicon);
+        Glide.with(this)
+                .fromResource()
+                .asBitmap()
+                .encoder(new BitmapEncoder(Bitmap.CompressFormat.PNG, 100))
+                .load(R.drawable.trip_splitz_logo_red_bg).into(image_appicon);
         homeButton.setVisibility(View.GONE);
         textViewLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +109,9 @@ public class DashboardActivity extends AppCompatActivity {
         if (NavigationFragment.POSITION != 0) {
             drawerLayout.closeDrawers();
             drawer.setupHomeFragment();
+            NavigationFragment.POSITION = 0;
         } else {
+            ActivityCompat.finishAffinity(this);
             super.onBackPressed();
         }
 

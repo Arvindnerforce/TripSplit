@@ -23,7 +23,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_margin="30dp"
             android:orientation="vertical">
 
             <com.facebook.login.widget.LoginButton
@@ -36,6 +36,7 @@
                 android:visibility="gone" />
 
             <TextView
+                android:textSize="17sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -133,6 +134,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -148,7 +150,7 @@
                     android:drawablePadding="4dp"
                     android:hint="Email"
                     android:inputType="textEmailAddress"
-                    android:padding="8dp"
+                    android:padding="10dp"
                     android:textColorHint="@color/colorPrimary"
                     android:textSize="14sp" />
 
@@ -157,13 +159,13 @@
                     android:id="@+id/etpassWord"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="7dp"
                     android:background="@drawable/contact_background"
                     android:drawableLeft="@drawable/ic_lock"
                     android:drawablePadding="6dp"
                     android:hint="Password"
                     android:inputType="textPassword"
-                    android:padding="8dp"
+                    android:padding="10dp"
                     android:textColorHint="@color/colorPrimary"
                     android:textSize="14sp" />
 
@@ -172,7 +174,7 @@
                     android:id="@+id/buttonSignIn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="7dp"
                     android:background="@drawable/contact_background"
                     android:text="Sign In"
                     android:textColor="@color/red" />
@@ -180,9 +182,10 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="6dp">
+                    android:layout_margin="16dp">
 
                     <TextView
+                        android:textSize="14sp"
                         android:id="@+id/textviewForgotPassword"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -197,63 +200,68 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp">
+
                 <LinearLayout
                     android:id="@+id/linearlayoutFbLogin"
-                    android:padding="3dp"
-                    android:gravity="center"
-                    android:weightSum="102"
-                    android:orientation="horizontal"
-                    android:background="@color/com_facebook_blue"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@color/com_facebook_blue"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="3dp"
+                    android:weightSum="102">
+
                     <LinearLayout
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:layout_weight="25"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content">
-                    <ImageView
-                        android:src="@drawable/ic_facebook"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp" />
+                        android:layout_height="wrap_content"
+                        android:layout_weight="20"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/ic_facebook" />
 
                     </LinearLayout>
+
                     <LinearLayout
-                        android:layout_weight="2"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2">
+
                         <View
-                            android:background="@color/white"
                             android:layout_width="1dp"
-                            android:layout_height="40dp"></View>
+                            android:layout_height="40dp"
+                            android:background="@color/white"></View>
 
                     </LinearLayout>
 
                     <TextView
-                        android:textColor="@color/white"
+                        android:id="@+id/textView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_weight="80"
                         android:gravity="center"
                         android:text="@string/connect_with_fb"
-                        android:layout_width="0dp"
-                        android:layout_weight="75"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/textView" />
+                        android:textColor="@color/white" />
                 </LinearLayout>
 
 
             </com.balysv.materialripple.MaterialRippleLayout>
 
             <Button
-                android:visibility="gone"
-                android:drawablePadding="6dp"
-                android:drawableLeft="@drawable/ic_facebook"
-                android:textColor="@color/white"
                 android:id="@+id/buttonCustomFB"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:text="@string/connect_with_fb"
                 android:background="@color/com_facebook_blue"
-                />
+                android:drawableLeft="@drawable/ic_facebook"
+                android:drawablePadding="6dp"
+                android:text="@string/connect_with_fb"
+                android:textColor="@color/white"
+                android:visibility="gone" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -261,11 +269,11 @@
                 android:background="@color/dark_gray"></View>
 
             <TextView
+                android:textSize="14sp"
                 android:id="@+id/textViewRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/don_t_have_account_register_here"
                 android:textColor="@color/white" />
         </LinearLayout>

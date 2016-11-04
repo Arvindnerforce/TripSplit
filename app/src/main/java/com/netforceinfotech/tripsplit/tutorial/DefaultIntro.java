@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.netforceinfotech.tripsplit.Dashboard.DashboardActivity;
-import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 
 import tyrantgit.explosionfield.ExplosionField;
@@ -35,11 +34,11 @@ public final class DefaultIntro extends BaseIntro {
         }
         userSessionManager = new UserSessionManager(getApplicationContext());
         AppIntrofirst appIntrofirst=new AppIntrofirst();
-        AppIntroSecoond appIntroSecoond=new AppIntroSecoond();
+        AppIntroFourth appIntroFourth =new AppIntroFourth();
         AppIntroThird appIntroThird=new AppIntroThird();
-        AppIntroFourth appIntroFourth=new AppIntroFourth();
+        AppIntroSecond appIntroSecond =new AppIntroSecond();
         addSlide(appIntrofirst);
-        addSlide(appIntroSecoond);
+        addSlide(appIntroSecond);
         addSlide(appIntroThird);
         addSlide(appIntroFourth);
 

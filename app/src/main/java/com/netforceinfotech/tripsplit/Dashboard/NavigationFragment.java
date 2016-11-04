@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.hedgehog.ratingbar.RatingBar;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.tripsplit.Home.HomeFragment;
@@ -69,6 +70,8 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
     CircleImageView imageViewDp;
     TextView textViewName, textviewCountry;
     UserSessionManager userSessionManager;
+    RatingBar ratingBar;
+
 
     public NavigationFragment() {
         // Required empty public constructor
@@ -130,6 +133,8 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
     }
 
     private void initView() {
+        ratingBar = (RatingBar) view.findViewById(R.id.ratingbar);
+        ratingBar.setStar(3.5f);
         userSessionManager = new UserSessionManager(context);
         imageViewDp = (CircleImageView) view.findViewById(R.id.imageViewDp);
         textviewCountry = (TextView) view.findViewById(R.id.textviewCountry);
@@ -159,7 +164,7 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
 
         drawableId = new int[]
                 {
-                        R.drawable.ic_home_menu, R.drawable.ic_prefrence, R.drawable.ic_edit_profile, R.drawable.ic_invite_frnd, R.drawable.ic_search, R.drawable.ic_create_trip, R.drawable.ic_message,
+                        R.drawable.ic_home_menu, R.drawable.ic_prefrence, R.drawable.ic_edit_profile, R.drawable.ic_invite_frnd, R.drawable.ic_search_custom, R.drawable.ic_create_trip, R.drawable.ic_message,
                         R.drawable.ic_group, R.drawable.ic_group, R.drawable.ic_help, R.drawable.ic_community
                 };
 

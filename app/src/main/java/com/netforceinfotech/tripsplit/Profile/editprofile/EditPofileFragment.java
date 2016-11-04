@@ -19,6 +19,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +34,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.balysv.materialripple.MaterialRippleLayout;
 import com.bumptech.glide.Glide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -59,13 +62,21 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import static com.netforceinfotech.tripsplit.R.id.cancel;
+import static com.netforceinfotech.tripsplit.R.id.etDay;
+import static com.netforceinfotech.tripsplit.R.id.etaddress;
 import static com.netforceinfotech.tripsplit.R.id.etcountry;
+import static com.netforceinfotech.tripsplit.R.id.etdob;
 import static com.netforceinfotech.tripsplit.R.id.start;
 
 public class EditPofileFragment extends Fragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
     View view;
     Context context;
-    EditText etAge, etDoB, etAddress, etCountry, etaddressPopUp;
+    EditText etAge;
+    TextView etDoB;
+    TextView etAddress;
+    TextView etCountry;
+    EditText etaddressPopUp;
     ImageView imageViewDp;
     Button buttonEditDp, buttonDone;
     TextView textviewName;
@@ -84,6 +95,11 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
     private File finalFile;
     private MaterialDialog progressDialog;
     LinearLayout linearLayoutAddress, linearLayoutCountry, linearLayoutBirthday;
+    private MaterialDialog dialogDoB;
+    Button buttonOk;
+    EditText etDay, etMonth, etYear;
+    private String dobString = "";
+    MaterialRippleLayout rippleLayoutDob, rippleLayoutAddress, rippleLayoutCountry;
 
     public EditPofileFragment() {
         // Required empty public constructor
@@ -134,6 +150,12 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
                 .title(R.string.progress_dialog)
                 .content(R.string.please_wait)
                 .progress(true, 0).build();
+        rippleLayoutCountry = (MaterialRippleLayout) view.findViewById(R.id.rippleCountry);
+        rippleLayoutAddress = (MaterialRippleLayout) view.findViewById(R.id.rippleAddress);
+        rippleLayoutDob = (MaterialRippleLayout) view.findViewById(R.id.rippleDob);
+        rippleLayoutCountry.setOnClickListener(this);
+        rippleLayoutAddress.setOnClickListener(this);
+        rippleLayoutDob.setOnClickListener(this);
         linearLayoutAddress = (LinearLayout) view.findViewById(R.id.linearlayoutAddress);
         linearLayoutCountry = (LinearLayout) view.findViewById(R.id.linearlayoutCountry);
         linearLayoutBirthday = (LinearLayout) view.findViewById(R.id.linearlayoutBirthday);
@@ -142,9 +164,9 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
         linearLayoutBirthday.setOnClickListener(this);
         buttonDone = (Button) view.findViewById(R.id.buttonDone);
         buttonEditDp = (Button) view.findViewById(R.id.buttonEditDp);
-        etDoB = (EditText) view.findViewById(R.id.etdob);
-        etAddress = (EditText) view.findViewById(R.id.etaddress);
-        etCountry = (EditText) view.findViewById(etcountry);
+        etDoB = (TextView) view.findViewById(R.id.etdob);
+        etAddress = (TextView) view.findViewById(R.id.etaddress);
+        etCountry = (TextView) view.findViewById(etcountry);
         etAge = (EditText) view.findViewById(R.id.etAge);
         textviewName = (TextView) view.findViewById(R.id.textviewName);
         imageViewDp = (ImageView) view.findViewById(R.id.imageviewDP);
@@ -205,17 +227,19 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
 
         switch (view.getId()) {
-  //          case R.id.etcountry:
+            //          case R.id.etcountry:
             case R.id.linearlayoutCountry:
             case R.id.etcountry:
+            case R.id.rippleCountry:
                 showCountryPopUp();
                 break;
             case R.id.buttonDone:
                 showPopUp();
                 break;
-    //        case R.id.etaddress:
+            //        case R.id.etaddress:
             case R.id.linearlayoutAddress:
             case R.id.etaddress:
+            case R.id.rippleAddress:
                 showEditAddressPopup();
                 break;
             case R.id.buttonEditDp:
@@ -233,18 +257,25 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
 //            case R.id.etdob:
             case R.id.linearlayoutBirthday:
             case R.id.etdob:
-                Calendar now1 = Calendar.getInstance();
-                DatePickerDialog dpd1 = DatePickerDialog.newInstance(
-                        EditPofileFragment.this,
-                        now1.get(Calendar.YEAR),
-                        now1.get(Calendar.MONTH),
-                        now1.get(Calendar.DAY_OF_MONTH)
-                );
-                dpd1.show(getActivity().getFragmentManager(), "Datepickerdialog");
+            case R.id.rippleDob:
+                showEditDoBPopup();
                 break;
             case R.id.buttonAddressDone:
                 etAddress.setText(etaddressPopUp.getText());
                 dialogAddress.dismiss();
+                break;
+            case R.id.buttonOk:
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    Date test = sdf.parse(etYear.getText().toString() + "-" + etMonth.getText().toString() + "-" + etYear.getText().toString());
+                } catch (ParseException pe) {
+                    //Date is invalid, try next format
+                    showMessage("Not valid date");
+                    return;
+                }
+
+                etDoB.setText(etDay.getText().toString() + "/" + etMonth.getText().toString() + "/" + etYear.getText().toString());
+                dialogDoB.dismiss();
                 break;
 
 
@@ -274,15 +305,15 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
         // &dob=1987-09-12&country=India&country_code=91&address=J 207 Ist Floor
         String addressString = etAddress.getText().toString();
         try {
-            addressString = URLEncoder.encode(addressString, "UTF-8");
+            addressString = URLEncoder.encode(etAddress.getText().toString(), "UTF-8");
         } catch (UnsupportedEncodingException e) {
             addressString = "";
             showMessage("address parsing address");
         }
-
         String url = getResources().getString(R.string.url);
+        String dateToSend = getServerDateFormat(etDoB.getText().toString());
         String uploadurl = "services.php?opt=updateprofile&user_id=" + userSessionManager.getUserId() + "&country_code="
-                + countryCode + "&country=" + etCountry.getText().toString() + "&dob=" + etDoB.getText().toString() + "&address=" + addressString;
+                + countryCode + "&country=" + etCountry.getText().toString() + "&dob=" + dateToSend + "&address=" + addressString;
         url = url + uploadurl;
 
         Log.i("result_url", url);
@@ -348,6 +379,7 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
 
     }
 
+
     private void pickPictureIntent() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -406,11 +438,110 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
         linearLayoutProgress.setVisibility(View.GONE);
         linearLayoutAddress.setVisibility(View.VISIBLE);
         etaddressPopUp = (EditText) dialogAddress.findViewById(R.id.etaddressPopUp);
+        etaddressPopUp.setText(etAddress.getText().toString());
         dialogAddress.findViewById(R.id.buttonAddressDone).setOnClickListener(this);
 
 
     }
 
+    private void showEditDoBPopup() {
+     /*   getPermission();
+        getLocation(0);
+     */
+        boolean wrapInScrollView = true;
+        dialogDoB = new MaterialDialog.Builder(context)
+                .title(R.string.editdob)
+                .customView(R.layout.editdob, wrapInScrollView)
+                .negativeText(R.string.cancel)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+        buttonOk = (Button) dialogDoB.findViewById(R.id.buttonOk);
+        etDay = (EditText) dialogDoB.findViewById(R.id.etDay);
+        etMonth = (EditText) dialogDoB.findViewById(R.id.etMonth);
+        etYear = (EditText) dialogDoB.findViewById(R.id.etYear);
+        buttonOk.setOnClickListener(this);
+        etDay.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (etDay.length() == 2) {
+                    int day = Integer.parseInt(etDay.getText().toString());
+                    if (day > 31) {
+                        showMessage("Invalid date");
+                        return;
+                    }
+                    etMonth.requestFocus();
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        etMonth.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (etMonth.length() == 2) {
+                    int day = Integer.parseInt(etMonth.getText().toString());
+                    if (day > 12) {
+                        showMessage("Invalid month");
+                        return;
+                    }
+                    etYear.requestFocus();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        etYear.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (etYear.length() == 4) {
+                    int dobYear = Integer.parseInt(etYear.getText().toString());
+                    Calendar c = Calendar.getInstance();
+                    int year = c.get(Calendar.YEAR);
+                    if (dobYear > year) {
+                        showMessage("DoB cannot be in future");
+                        return;
+                    }
+                    buttonOk.performClick();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
+    }
 
     private void showMessage(String s) {
         Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
@@ -572,7 +703,7 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
     private void setupUserData(JsonObject result) {
         if (result.get("status").getAsString().equalsIgnoreCase("success")) {
             JsonArray data = result.getAsJsonArray("data");
-            String name = "", email = "", profile_image = "", dob = "", country = "", country_code = "", address = "";
+            String name = "", email = "", profile_image = "", dob = "", country = "", address = "";
             JsonObject jsonObject = data.get(0).getAsJsonObject();
             if (!jsonObject.get("firstname").isJsonNull()) {
                 name = jsonObject.get("firstname").getAsString();
@@ -590,23 +721,50 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
                 country = jsonObject.get("country").getAsString();
             }
             if (!jsonObject.get("country_code").isJsonNull()) {
-                country_code = jsonObject.get("country_code").getAsString();
+                countryCode = jsonObject.get("country_code").getAsString();
             }
             if (!jsonObject.get("address").isJsonNull()) {
                 address = jsonObject.get("address").getAsString();
             }
 
             try {
-                Glide.with(context).load(profile_image).error(R.drawable.ic_no_image).into(imageViewDp);
+                Glide.with(context).load(profile_image).error(R.drawable.ic_error).into(imageViewDp);
             } catch (Exception ex) {
             }
             textviewName.setText(name);
-            etDoB.setText(dob);
+            String fortmatedDate = getFormattedDate(dob);
+            etDoB.setText(fortmatedDate);
             etAddress.setText(address);
             etCountry.setText(country);
             setAge(dob);
 
         }
+    }
+
+    private String getFormattedDate(String dob) {
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = fmt.parse(dob);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat fmtOut = new SimpleDateFormat("dd/MM/yyyy");
+        return fmtOut.format(date);
+    }
+
+    private String getServerDateFormat(String s) {
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = null;
+        try {
+            date = fmt.parse(s);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat fmtOut = new SimpleDateFormat("yyyy-MM-dd");
+        return fmtOut.format(date);
     }
 
     private void setAge(String dob) {

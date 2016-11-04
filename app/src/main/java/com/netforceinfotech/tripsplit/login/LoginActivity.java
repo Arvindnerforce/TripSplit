@@ -143,6 +143,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (userSessionManager.getIsLogedIn()) {
             Intent intent = new Intent(context, DashboardActivity.class);
             startActivity(intent);
+            finish();
         }
 
         //  viewPager = (WrapContentViewPager) findViewById(R.id.viewPager);
@@ -313,6 +314,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 if (sendotp.equalsIgnoreCase("0")) {
                                     Intent intent = new Intent(context, DashboardActivity.class);
                                     startActivity(intent);
+                                    finish();
                                 } else {
                                     Intent intent = new Intent(context, OTPActivity.class);
                                     startActivity(intent);
@@ -493,9 +495,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 userSessionManager.setUserId(user_id);
                                 Intent intent = new Intent(context, DashboardActivity.class);
                                 startActivity(intent);
+                                finish();
                             } else if (status.equalsIgnoreCase("failed")) {
                                 JsonArray data = result.getAsJsonArray("data");
                                 JsonObject jsonObject = data.get(0).getAsJsonObject();
+                                String error_code = jsonObject.get("error_code").getAsString();
+                                if (error_code.equalsIgnoreCase("103")) {
+                                    String user_id = jsonObject.get("user_id").getAsString();
+                                    userSessionManager.setUserId(user_id);
+                                    userSessionManager.setLoginMode(0);
+                                    userSessionManager.setEmail(email);
+                                    userSessionManager.setPassword(password);
+                                    Intent intent = new Intent(context, OTPActivity.class);
+                                    startActivity(intent);
+                                }
                                 String msg = jsonObject.get("msg").getAsString();
                                 showMessage(msg);
                             }

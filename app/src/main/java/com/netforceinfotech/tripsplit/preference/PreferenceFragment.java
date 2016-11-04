@@ -212,6 +212,7 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
                             String status = result.get("status").getAsString().toLowerCase();
                             if (status.equalsIgnoreCase("success")) {
                                 Log.i(TAG, "successfully Deleted");
+                                userSessionManager.setIsLoggedIn(false);
                                 showMessage("Account Successfully Deleted");
                                 try {
                                     LoginManager.getInstance().logOut();

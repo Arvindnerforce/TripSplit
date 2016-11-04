@@ -18,11 +18,11 @@
         android:id="@+id/linearlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="100"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
+        android:weightSum="100">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -63,13 +63,12 @@
                 android:textStyle="bold" />
 
             <LinearLayout
-                android:layout_marginBottom="6dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
                 android:gravity="center_horizontal">
 
                 <LinearLayout
-                    android:padding="6dp"
                     android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
@@ -78,6 +77,7 @@
                     android:background="@drawable/edit_black_background"
                     android:gravity="center"
                     android:orientation="horizontal"
+                    android:padding="6dp"
                     android:weightSum="100">
 
                     <LinearLayout
@@ -94,137 +94,157 @@
                     </LinearLayout>
 
                     <EditText
-                        android:background="@android:color/transparent"
                         android:id="@+id/etAge"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="6dp"
                         android:layout_weight="65"
+                        android:background="@android:color/transparent"
                         android:enabled="false" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
-
-            <LinearLayout
-                android:id="@+id/linearlayoutBirthday"
+            <com.balysv.materialripple.MaterialRippleLayout
+                android:id="@+id/rippleDob"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/edit_black_background"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="6dp"
-                android:weightSum="100">
+                android:layout_marginTop="10dp">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/linearlayoutBirthday"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="20"
-                    android:gravity="center">
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_birth"
-                        android:id="@+id/imageView3" />
+                    android:background="@drawable/edit_black_background"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="6dp"
+                    android:weightSum="100">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="20"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/imageView3"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/ic_birth" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/etdob"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:layout_weight="80"
+                        android:textColor="@color/black"
+                        android:background="@android:color/transparent"
+                        android:clickable="true"
+                        android:enabled="false"
+                        android:focusable="false" />
 
                 </LinearLayout>
+            </com.balysv.materialripple.MaterialRippleLayout>
 
-                <EditText
-                    android:background="@android:color/transparent"
-                    android:id="@+id/etdob"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
-                    android:layout_weight="80"
-                    android:clickable="true"
-                    android:enabled="false"
-                    android:focusable="false" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linearlayoutAddress"
+            <com.balysv.materialripple.MaterialRippleLayout
+                android:id="@+id/rippleAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/edit_black_background"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="6dp"
-                android:weightSum="100">
+                android:layout_marginTop="10dp">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/linearlayoutAddress"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="20"
-                    android:gravity="center">
+                    android:background="@drawable/edit_black_background"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="6dp"
+                    android:weightSum="100">
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_address" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="20"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/ic_address" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:textColor="@color/black"
+                        android:id="@+id/etaddress"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:layout_weight="80"
+                        android:background="@android:color/transparent"
+                        android:clickable="true"
+                        android:enabled="false"
+                        android:focusable="false" />
 
                 </LinearLayout>
+            </com.balysv.materialripple.MaterialRippleLayout>
 
-                <EditText
-                    android:background="@android:color/transparent"
-                    android:id="@+id/etaddress"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
-                    android:layout_weight="80"
-                    android:clickable="true"
-                    android:enabled="false"
-                    android:focusable="false" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linearlayoutCountry"
+            <com.balysv.materialripple.MaterialRippleLayout
+                android:id="@+id/rippleCountry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/edit_black_background"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="6dp"
-                android:weightSum="100">
+                android:layout_marginTop="10dp">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/linearlayoutCountry"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="20"
-                    android:gravity="center">
+                    android:background="@drawable/edit_black_background"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="6dp"
+                    android:weightSum="100">
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_country" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="20"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/ic_country" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:textColor="@color/black"
+                        android:id="@+id/etcountry"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:layout_weight="80"
+                        android:background="@android:color/transparent"
+                        android:clickable="true"
+                        android:enabled="false"
+                        android:focusable="false" />
 
                 </LinearLayout>
-
-                <EditText
-                    android:background="@android:color/transparent"
-                    android:id="@+id/etcountry"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
-                    android:layout_weight="80"
-                    android:clickable="true"
-                    android:enabled="false"
-                    android:focusable="false" />
-
-            </LinearLayout>
-
+            </com.balysv.materialripple.MaterialRippleLayout>
         </LinearLayout>
     </LinearLayout>
 
