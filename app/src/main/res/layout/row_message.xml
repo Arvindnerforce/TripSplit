@@ -29,7 +29,6 @@
                 android:id="@+id/profile_image"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@drawable/david"
 
                 android:layout_centerVertical="true"
                 android:layout_margin="5dp"

@@ -33,7 +33,7 @@
                     android:id="@+id/imageViewDp"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:src="@drawable/ryan" />
+                    />
 
                 <TextView
                     android:id="@+id/textviewCountry"
@@ -45,7 +45,7 @@
                     android:layout_marginRight="4dp"
                     android:background="@drawable/circular_bg_fill"
                     android:gravity="center"
-                    android:text="NY"
+                    android:text=""
                     android:textColor="@color/white" />
 
 
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:padding="5dp"
-                android:text="Ryan"
+                android:text=""
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="#000000"
                 android:textStyle="bold" />

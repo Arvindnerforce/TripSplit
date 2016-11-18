@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -100,6 +101,8 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
     EditText etDay, etMonth, etYear;
     private String dobString = "";
     MaterialRippleLayout rippleLayoutDob, rippleLayoutAddress, rippleLayoutCountry;
+    LinearLayout linearLayoutMain;
+
 
     public EditPofileFragment() {
         // Required empty public constructor
@@ -146,6 +149,7 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
     }
 
     private void initView(View view) {
+        linearLayoutMain= (LinearLayout) view.findViewById(R.id.linearlayoutMain);
         progressDialog = new MaterialDialog.Builder(context)
                 .title(R.string.progress_dialog)
                 .content(R.string.please_wait)
@@ -310,10 +314,17 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
             addressString = "";
             showMessage("address parsing address");
         }
+        try {
+            country = URLEncoder.encode(etCountry.getText().toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            addressString = "";
+            showMessage("address parsing address");
+        }
+
         String url = getResources().getString(R.string.url);
         String dateToSend = getServerDateFormat(etDoB.getText().toString());
         String uploadurl = "services.php?opt=updateprofile&user_id=" + userSessionManager.getUserId() + "&country_code="
-                + countryCode + "&country=" + etCountry.getText().toString() + "&dob=" + dateToSend + "&address=" + addressString;
+                + countryCode + "&country=" + country + "&dob=" + dateToSend + "&address=" + addressString;
         url = url + uploadurl;
 
         Log.i("result_url", url);
@@ -354,7 +365,6 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
                     .load(url)
                     .setHeader("ENCTYPE", "multipart/form-data")
                     .setTimeout(60 * 60 * 1000)
-                    .setMultipartParameter("goop", "noop")
                     .setMultipartFile("upload", "image/*", file)
                     .asJsonObject()
                     .setCallback(new FutureCallback<JsonObject>() {
@@ -677,6 +687,7 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
     }
 
     private void getUserInfo() {
+        hideContent();
         progressDialog.show();
         //services.php?opt=viewprofile&user_id=11
         String baseUrl = getString(R.string.url);
@@ -689,6 +700,7 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
                         progressDialog.dismiss();
+                        showContent();
                         // do stuff with the result or error
                         if (result != null) {
                             Log.i("kresult", result.toString());
@@ -698,6 +710,16 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
                         }
                     }
                 });
+    }
+
+    private void showContent() {
+        linearLayoutMain.setVisibility(View.GONE);
+        buttonDone.setVisibility(View.VISIBLE);
+    }
+
+    private void hideContent() {
+        linearLayoutMain.setVisibility(View.VISIBLE);
+        buttonDone.setVisibility(View.GONE);
     }
 
     private void setupUserData(JsonObject result) {

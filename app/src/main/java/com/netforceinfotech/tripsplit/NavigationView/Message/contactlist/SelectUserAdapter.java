@@ -83,10 +83,10 @@ public class SelectUserAdapter extends BaseAdapter {
             if (data.getThumb() != null) {
                 v.imageView.setImageBitmap(data.getThumb());
             } else {
-                v.imageView.setImageResource(R.drawable.ryan);
+                v.imageView.setImageResource(R.drawable.ic_error);
             }
             // Seting round image
-            Bitmap bm = BitmapFactory.decodeResource(view.getResources(), R.drawable.ryan); // Load default image
+            Bitmap bm = BitmapFactory.decodeResource(view.getResources(), R.drawable.ic_error); // Load default image
 
             v.imageView.setImageBitmap(bm);
         } catch (OutOfMemoryError e) {

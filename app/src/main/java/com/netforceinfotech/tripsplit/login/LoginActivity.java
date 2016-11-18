@@ -520,7 +520,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
     }
 
-    private void sendRegistrationToServer(String token) {
+    private void sendRegistrationToServer(final String token) {
         // TODO: Implement this method to send token to your app server.
         //services.php?opt=updateregid&user_id=11&reg_id=11
         String url = getResources().getString(R.string.url);
@@ -543,7 +543,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 Log.i(TAG, "successfully registered");
 
                             } else {
-                                Log.i(TAG, "successfully registered");
+                                Log.i(TAG, "successfully registered :"+token);
                             }
                         }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,6 +26,7 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.kyleduo.switchbutton.SwitchButton;
+import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 
@@ -180,8 +182,25 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
         home.setVisibility(View.VISIBLE);
         icon.setVisibility(View.VISIBLE);
         toolbar.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setupHomeFragment();
+            }
+        });
     }
 
+    private void replaceFragment(Fragment newFragment, String tag) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame, newFragment, tag);
+        transaction.commit();
+    }
+
+    public void setupHomeFragment() {
+        HomeFragment dashboardFragment = new HomeFragment();
+        String tagName = dashboardFragment.getClass().getName();
+        replaceFragment(dashboardFragment, tagName);
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()) {

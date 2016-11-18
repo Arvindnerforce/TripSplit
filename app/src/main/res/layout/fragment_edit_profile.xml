@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical">
+
 
     <Button
         android:id="@+id/buttonDone"
@@ -33,8 +35,7 @@
                 android:id="@+id/imageviewDP"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/post_trip_bg" />
+                android:scaleType="centerCrop" />
 
             <Button
                 android:id="@+id/buttonEditDp"
@@ -58,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                android:text="LKunsang"
+                android:text=""
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -145,11 +146,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="6dp"
                         android:layout_weight="80"
-                        android:textColor="@color/black"
                         android:background="@android:color/transparent"
                         android:clickable="true"
                         android:enabled="false"
-                        android:focusable="false" />
+                        android:focusable="false"
+                        android:textColor="@color/black" />
 
                 </LinearLayout>
             </com.balysv.materialripple.MaterialRippleLayout>
@@ -186,7 +187,6 @@
                     </LinearLayout>
 
                     <TextView
-                        android:textColor="@color/black"
                         android:id="@+id/etaddress"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -195,7 +195,8 @@
                         android:background="@android:color/transparent"
                         android:clickable="true"
                         android:enabled="false"
-                        android:focusable="false" />
+                        android:focusable="false"
+                        android:textColor="@color/black" />
 
                 </LinearLayout>
             </com.balysv.materialripple.MaterialRippleLayout>
@@ -232,7 +233,6 @@
                     </LinearLayout>
 
                     <TextView
-                        android:textColor="@color/black"
                         android:id="@+id/etcountry"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -241,12 +241,19 @@
                         android:background="@android:color/transparent"
                         android:clickable="true"
                         android:enabled="false"
-                        android:focusable="false" />
+                        android:focusable="false"
+                        android:textColor="@color/black" />
 
                 </LinearLayout>
             </com.balysv.materialripple.MaterialRippleLayout>
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/linearlayoutMain"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></LinearLayout>
 
 </RelativeLayout>
