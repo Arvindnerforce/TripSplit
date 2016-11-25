@@ -1,13 +1,12 @@
 package com.netforceinfotech.tripsplit.Search;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.netforceinfotech.tripsplit.Profile.flight.FlightFragment;
-import com.netforceinfotech.tripsplit.Search.searchfragment.CarFragment;
+import com.netforceinfotech.tripsplit.Search.searchfragment.SearchFragment;
 
 /**
  * Created by John on 8/29/2016.
@@ -17,12 +16,14 @@ public class SearchPagerAdapter extends FragmentStatePagerAdapter {
 
 
     int mNumOfTabs;
-    private CarFragment carFragment1, carFragment2, carFragment3, carFragment4;
+    private SearchFragment searchFragment;
     public int currentpage = 0;
+    private Bundle bundle;
 
     public SearchPagerAdapter(FragmentManager fm, int NumOfTabs) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
+        bundle = new Bundle();
     }
 
 
@@ -31,17 +32,25 @@ public class SearchPagerAdapter extends FragmentStatePagerAdapter {
         switch (position) {
 
             case 0:
-                carFragment1 = new CarFragment();
-                return carFragment1;
+                searchFragment = new SearchFragment();
+                bundle.putString("type", "aeroplane");
+                searchFragment.setArguments(bundle);
+                return searchFragment;
             case 1:
-                carFragment2 = new CarFragment();
-                return carFragment2;
+                searchFragment = new SearchFragment();
+                bundle.putString("type", "car");
+                searchFragment.setArguments(bundle);
+                return searchFragment;
             case 2:
-                carFragment3 = new CarFragment();
-                return carFragment3;
+                searchFragment = new SearchFragment();
+                bundle.putString("type", "bus");
+                searchFragment.setArguments(bundle);
+                return searchFragment;
             case 3:
-                carFragment4 = new CarFragment();
-                return carFragment4;
+                searchFragment = new SearchFragment();
+                bundle.putString("type", "ship");
+                searchFragment.setArguments(bundle);
+                return searchFragment;
             default:
                 return null;
 
@@ -56,22 +65,7 @@ public class SearchPagerAdapter extends FragmentStatePagerAdapter {
 
     public void clicked(int currentItem) {
         Log.i("kclicked", "clicked" + currentpage);
-        switch (currentItem) {
-
-            case 0:
-
-                carFragment1.clicked();
-                break;
-            case 1:
-                carFragment2.clicked();
-                break;
-            case 2:
-                carFragment3.clicked();
-                break;
-            case 3:
-                carFragment4.clicked();
-                break;
-        }
+        searchFragment.clicked();
     }
 
 

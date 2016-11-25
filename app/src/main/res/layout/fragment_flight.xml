@@ -275,6 +275,16 @@
 
                 >
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
+                    android:text="ETD"
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:id="@+id/textView2" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -353,12 +363,23 @@
                     android:textColorHint="@color/red" />
 
 
-                <EditText
+                <TextView
+                    android:id="@+id/textViewDepartureAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/editext_background"
-                    android:hint=" Departure Address"
+                    android:hint="@string/departure_address"
+                    android:padding="8dp"
+                    android:textColorHint="@color/red" />
+
+                <TextView
+                    android:id="@+id/textViewDestinationAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/editext_background"
+                    android:hint="@string/destination_address"
                     android:padding="8dp"
                     android:textColorHint="@color/red" />
 
@@ -366,15 +387,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="20dp"
-                        android:text="ETD"
-                        android:textColor="@color/black"
-                        android:textSize="18dp" />
 
                     <TextView
                         android:id="@+id/textviewETD"

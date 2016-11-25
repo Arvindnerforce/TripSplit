@@ -42,6 +42,8 @@ or Search Splitz….
     <string name="first_tutorial">Sign up and be apart of the next big thing in Social Travel</string>
     <string name="fourth_tutorial">Save your hard earned cash. Split your cost with new travel buddies.</string>
     <string name="editdob">Date of Birth</string>
+    <string name="departure_address">Departure Address</string>
+    <string name="destination_address">Destination Address</string>
 
 
 </resources>

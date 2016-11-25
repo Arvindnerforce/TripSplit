@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.Search.SearchData;
 import com.netforceinfotech.tripsplit.Search.searchfragment.subfragment.CarAdapter;
-import com.netforceinfotech.tripsplit.Search.searchfragment.subfragment.CarData;
 import com.netforceinfotech.tripsplit.Search.searchfragment.subfragment.RecyclerViewFragment;
 import com.netforceinfotech.tripsplit.posttrip.GoogleMapActivity;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
@@ -30,12 +29,11 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 
-public class CarFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, GoogleMapActivity.AddressListner {
+public class SearchFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, GoogleMapActivity.AddressListner {
 
 
     private Calendar calendar;
@@ -51,7 +49,7 @@ public class CarFragment extends Fragment implements View.OnClickListener, TimeP
     private SearchClickedListner searchClickedListner;
     private RecyclerViewFragment dashboardFragment;
 
-    public CarFragment() {
+    public SearchFragment() {
         // Required empty public constructor
     }
 
@@ -65,7 +63,7 @@ public class CarFragment extends Fragment implements View.OnClickListener, TimeP
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_car, container, false);
+        View view = inflater.inflate(R.layout.search_fragment, container, false);
         context = getActivity();
         initView(view);
 
@@ -112,7 +110,7 @@ public class CarFragment extends Fragment implements View.OnClickListener, TimeP
                 break;
             case R.id.textviewETD:
                 Calendar now = Calendar.getInstance();
-                DatePickerDialog dpd = DatePickerDialog.newInstance(CarFragment.this, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+                DatePickerDialog dpd = DatePickerDialog.newInstance(SearchFragment.this, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
 
                 dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
                 break;
