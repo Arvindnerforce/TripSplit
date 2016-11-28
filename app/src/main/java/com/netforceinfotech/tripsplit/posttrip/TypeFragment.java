@@ -27,6 +27,11 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.appyvet.rangebar.RangeBar;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
@@ -44,6 +49,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 
 public class TypeFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
@@ -53,6 +61,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     private static final int TAKE_PHOTO_CODE = 1235;
     private static final int DESTINATION = 420;
     private static final int SOURCE = 421;
+    private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
     Context context;
     TextView textViewETD, pass_txt, space_txt, textviewETA, textviewAgeGroup;
@@ -67,7 +76,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     RangeBar rangeBar;
     TextView textViewDepartureAddress, textViewDestinationAddress;
     private Intent google_intent;
-
+    String TAG="googleplace";
     public TypeFragment() {
         // Required empty public constructor
     }
@@ -155,10 +164,20 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
 
         switch (view.getId()) {
             case R.id.textViewDestinationAddress:
-                google_intent = new Intent(getActivity(), GoogleMapActivity.class);
+                try {
+                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                                    .build(getActivity());
+                    startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+                } catch (GooglePlayServicesRepairableException e) {
+                    // TODO: Handle the error.
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    // TODO: Handle the error.
+                }
+
+                /*   google_intent = new Intent(getActivity(), GoogleMapActivity.class);
                 google_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 google_intent.putExtra("choose_source", false);
-                startActivityForResult(google_intent, DESTINATION);
+                startActivityForResult(google_intent, DESTINATION);*/
                 break;
             case R.id.textViewDepartureAddress:
                 google_intent = new Intent(getActivity(), GoogleMapActivity.class);
@@ -530,7 +549,35 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                     String address = data.getStringExtra("address");
                     textViewDepartureAddress.setText(address);
                 }
+/*
+*  if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+        if (resultCode == RESULT_OK) {
+            Place place = PlaceAutocomplete.getPlace(this, data);
+            Log.i(TAG, "Place: " + place.getName());
+        } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+            Status status = PlaceAutocomplete.getStatus(this, data);
+            // TODO: Handle the error.
+            Log.i(TAG, status.getStatusMessage());
 
+        } else if (resultCode == RESULT_CANCELED) {
+            // The user canceled the operation.
+        }
+    }
+*
+* */
+                break;
+            case PLACE_AUTOCOMPLETE_REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+                    Log.i(TAG, "Place: " + place.getName());
+                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                    Status status = PlaceAutocomplete.getStatus(getActivity(), data);
+                    // TODO: Handle the error.
+                    Log.i(TAG, status.getStatusMessage());
+
+                } else if (resultCode == RESULT_CANCELED) {
+                    // The user canceled the operation.
+                }
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
