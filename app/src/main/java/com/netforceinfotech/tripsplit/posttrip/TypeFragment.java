@@ -872,13 +872,13 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 if(b) {
                     returnFlag = false;
                     linearLayoutReturn.setVisibility(View.GONE);
-                    imageViewOneWay.setImageResource(R.drawable.unchecked);
-                    imageViewReturn.setImageResource(R.drawable.checked);
+                    imageViewOneWay.setImageResource(R.drawable.checked);
+                    imageViewReturn.setImageResource(R.drawable.unchecked);
                 }else {
                     returnFlag = true;
                     linearLayoutReturn.setVisibility(View.VISIBLE);
-                    imageViewOneWay.setImageResource(R.drawable.checked);
-                    imageViewReturn.setImageResource(R.drawable.unchecked);
+                    imageViewOneWay.setImageResource(R.drawable.unchecked);
+                    imageViewReturn.setImageResource(R.drawable.checked);
                 }
                 break;
             case R.id.radioButtonReturn:
@@ -886,14 +886,14 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
 
                 if(b) {
                     linearLayoutReturn.setVisibility(View.VISIBLE);
-                    imageViewOneWay.setImageResource(R.drawable.checked);
-                    imageViewReturn.setImageResource(R.drawable.unchecked);
+                    imageViewOneWay.setImageResource(R.drawable.unchecked);
+                    imageViewReturn.setImageResource(R.drawable.checked);
                     returnFlag = true;
                 }else {
                     returnFlag = false;
                     linearLayoutReturn.setVisibility(View.GONE);
-                    imageViewOneWay.setImageResource(R.drawable.unchecked);
-                    imageViewReturn.setImageResource(R.drawable.checked);
+                    imageViewOneWay.setImageResource(R.drawable.checked);
+                    imageViewReturn.setImageResource(R.drawable.unchecked);
                 }
                 break;
 
