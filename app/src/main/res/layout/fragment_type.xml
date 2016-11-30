@@ -1,6 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:materialdesign="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E3E4E6"
@@ -275,15 +273,6 @@
 
                 >
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="20dp"
-                    android:text="ETD"
-                    android:textColor="@color/black"
-                    android:textSize="18dp"
-                    android:id="@+id/textView2" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -300,11 +289,27 @@
                         android:layout_marginLeft="2dp"
                         android:layout_weight="50">
 
-                        <CheckBox
-                            android:id="@+id/onecheck"
+                        <RadioGroup
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone">
+
+                            <RadioButton
+                                android:id="@+id/radioButtonOneway"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                            <RadioButton
+                                android:id="@+id/radioButtonReturn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </RadioGroup>
+
+                        <ImageView
+                            android:src="@drawable/unchecked"
+                            android:id="@+id/imageViewOneway"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:button="@xml/custom_checkbox"
 
                             />
 
@@ -313,7 +318,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="5dp"
-                            android:layout_toRightOf="@+id/onecheck"
+                            android:layout_toRightOf="@+id/imageViewOneway"
                             android:text="One Way"
                             android:textColor="@color/colorPrimary"
                             android:textSize="16dp"
@@ -328,12 +333,13 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="50">
 
-                        <CheckBox
-                            android:id="@+id/returncheck"
+                        <ImageView
+                            android:src="@drawable/unchecked"
+                            android:id="@+id/imageViewReturn"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:layout_marginLeft="10dp"
-                            android:button="@xml/custom_checkbox" />
+                            />
 
 
                         <TextView
@@ -341,7 +347,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="5dp"
-                            android:layout_toRightOf="@+id/returncheck"
+                            android:layout_toRightOf="@+id/imageViewReturn"
                             android:text="Return"
                             android:textColor="@color/colorPrimary"
                             android:textSize="14dp"
@@ -383,53 +389,140 @@
                     android:padding="8dp"
                     android:textColorHint="@color/red" />
 
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/mapView"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:layout_marginTop="16dp"
+                    android:visibility="visible" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/textviewETD"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="7dp"
-                        android:background="@drawable/iteninary_editext_border"
-                        android:hint="Select Date and Time"
-                        android:padding="10dp"
-                        android:textColor="@color/colorPrimary"
-                        android:textColorHint="@color/colorPrimary"
-                        android:textSize="18dp" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="20dp"
+                            android:text="ETD"
+                            android:textColor="@color/black"
+                            android:textSize="18dp" />
+
+                        <TextView
+                            android:id="@+id/textviewETD"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/editext_background"
+                            android:hint="@string/select_date_and_time"
+                            android:padding="8dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textColorHint="@color/colorPrimary"
+                            android:textSize="18dp" />
+
+                    </LinearLayout>
 
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="20dp"
+                            android:text="ETA"
+                            android:textColor="@color/black"
+                            android:textSize="18dp" />
+
+                        <TextView
+                            android:id="@+id/textviewETA"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="7dp"
+                            android:background="@drawable/editext_background"
+                            android:hint="@string/select_date_and_time"
+                            android:padding="8dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textColorHint="@color/colorPrimary"
+                            android:textSize="18dp" />
+
+
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/linearlayoutReturn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="20dp"
-                        android:text="ETA"
-                        android:textColor="@color/black"
-                        android:textSize="18dp" />
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/textviewETA"
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/return_etd"
+                            android:textColor="@color/black"
+                            android:textSize="18dp" />
+
+                        <TextView
+                            android:id="@+id/textviewReturnETD"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/editext_background"
+                            android:hint="@string/select_date_and_time"
+                            android:padding="8dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textColorHint="@color/colorPrimary"
+                            android:textSize="18dp" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="7dp"
-                        android:background="@drawable/iteninary_editext_border"
-                        android:hint="Select Date and Time"
-                        android:padding="10dp"
-                        android:textColor="@color/colorPrimary"
-                        android:textColorHint="@color/colorPrimary"
-                        android:textSize="18dp" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/return_eta"
+                            android:textColor="@color/black"
+                            android:textSize="18dp" />
+
+                        <TextView
+                            android:id="@+id/textviewReturnETA"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="7dp"
+                            android:background="@drawable/editext_background"
+                            android:hint="@string/select_date_and_time"
+                            android:padding="8dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textColorHint="@color/colorPrimary"
+                            android:textSize="18dp" />
 
 
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -475,7 +568,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Total Cost"
+                    android:text="@string/total_cost"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
 
@@ -493,7 +586,9 @@
                         android:layout_marginRight="5dp"
                         android:layout_weight="60"
                         android:background="@drawable/iteninary_editext_border"
-                        android:minLines="3" />
+                        android:inputType="numberDecimal"
+                        android:minLines="3"
+                        android:padding="6dp" />
 
                     <Button
                         android:id="@+id/buttonCurrency"

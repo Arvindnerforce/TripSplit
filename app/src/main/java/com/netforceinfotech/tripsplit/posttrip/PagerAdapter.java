@@ -23,7 +23,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
         switch (position) {
             case 0:
                 typeFragment = new TypeFragment();
-                bundle.putString("type", "aeroplane");
+                bundle.putString("type", "aeroplane");//aeroplane,car,bus,ship
                 typeFragment.setArguments(bundle);
                 return typeFragment;
             case 1:

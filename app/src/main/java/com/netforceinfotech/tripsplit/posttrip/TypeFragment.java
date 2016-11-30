@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
@@ -21,22 +22,42 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.appyvet.rangebar.RangeBar;
+import com.directions.route.AbstractRouting;
+import com.directions.route.Route;
+import com.directions.route.RouteException;
+import com.directions.route.Routing;
+import com.directions.route.RoutingListener;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.mukesh.countrypicker.fragments.CountryPicker;
+import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
-import com.shehabic.droppy.DroppyClickCallbackInterface;
-import com.shehabic.droppy.DroppyMenuItem;
-import com.shehabic.droppy.DroppyMenuPopup;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -45,15 +66,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Currency;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
-public class TypeFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+public class TypeFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, OnMapReadyCallback, GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraMoveCanceledListener, RoutingListener, CompoundButton.OnCheckedChangeListener {
 
     private static final String IMAGE_DIRECTORY_NAME = "tripsplit";
 
@@ -62,9 +87,12 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     private static final int DESTINATION = 420;
     private static final int SOURCE = 421;
     private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-
+    AbstractRouting.TravelMode mode;
+    private PolylineOptions polylineOptions = new PolylineOptions();
+    private ArrayList<LatLng> arrayPoints = new ArrayList<>();
+    LinearLayout linearLayoutReturn;
     Context context;
-    TextView textViewETD, pass_txt, space_txt, textviewETA, textviewAgeGroup;
+    TextView textViewETD, pass_txt, space_txt, textviewETA, textviewAgeGroup, textViewReturnETA, textViewReturnETD;
     Button increamentPass, decreamentPass, increamentSpace, decreamentSpace, male, female, mixed, buttonPost, buttonAddImage;
     int pass_number = 1;
     int space_number = 1;
@@ -74,9 +102,22 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     private MaterialDialog dialog;
     Button buttonCurrency;
     RangeBar rangeBar;
+    RadioButton radioButtonOneway, radioButtonReturn;
     TextView textViewDepartureAddress, textViewDestinationAddress;
     private Intent google_intent;
-    String TAG="googleplace";
+    String TAG = "googleplace";
+    private MapView mMapView;
+    private boolean mapReady = false;
+    private LatLng destinationLatLang, sourceLatLng;
+    private boolean destinationFlag = false, sourceFlag = false;
+    private Place place;
+    private List<Polyline> polylines = new ArrayList<>();
+    private static final int[] COLORS = new int[]{R.color.colorPrimaryDark, R.color.colorPrimary, R.color.colorPrimaryLight, R.color.colorAccent, R.color.primary_dark_material_light};
+    private GoogleMap mMap;
+    String type = "car";
+    ImageView imageViewOneWay, imageViewReturn;
+    private boolean returnFlag = true;
+
     public TypeFragment() {
         // Required empty public constructor
     }
@@ -91,35 +132,58 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_flight, container, false);
+        View view = inflater.inflate(R.layout.fragment_type, container, false);
         context = getActivity();
+        mMapView = (MapView) view.findViewById(R.id.mapView);
+        context = getActivity();
+        try {
+            type = this.getArguments().getString("type");
+            ////aeroplane,car,bus,ship
+
+        } catch (Exception ex) {
+            showMessage("bundle error");
+            Log.i("kunsang_exception", "paramenter not yet set");
+        }
+        mMapView.onCreate(savedInstanceState);
+
+        mMapView.onResume(); // needed to get the map to display immediately
+
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        mMapView.getMapAsync(this);
         initView(view);
         return view;
     }
 
     private void initView(View view) {
+        linearLayoutReturn = (LinearLayout) view.findViewById(R.id.linearlayoutReturn);
+        textViewReturnETA = (TextView) view.findViewById(R.id.textviewReturnETA);
+        textViewReturnETD = (TextView) view.findViewById(R.id.textviewReturnETD);
         textViewDepartureAddress = (TextView) view.findViewById(R.id.textViewDepartureAddress);
         textViewDestinationAddress = (TextView) view.findViewById(R.id.textViewDestinationAddress);
         textViewDestinationAddress.setOnClickListener(this);
         textViewDepartureAddress.setOnClickListener(this);
+        imageViewOneWay = (ImageView) view.findViewById(R.id.imageViewOneway);
+        imageViewReturn = (ImageView) view.findViewById(R.id.imageViewReturn);
+        imageViewOneWay.setOnClickListener(this);
+        imageViewReturn.setOnClickListener(this);
+        radioButtonOneway = (RadioButton) view.findViewById(R.id.radioButtonOneway);
+        radioButtonReturn = (RadioButton) view.findViewById(R.id.radioButtonReturn);
+        radioButtonOneway.setOnCheckedChangeListener(this);
+        radioButtonReturn.setOnCheckedChangeListener(this);
+        radioButtonOneway.setChecked(false);
+        radioButtonOneway.setChecked(true);
 
         rangeBar = (RangeBar) view.findViewById(R.id.rangebar);
         textviewAgeGroup = (TextView) view.findViewById(R.id.textviewAgeGroup);
         buttonCurrency = (Button) view.findViewById(R.id.buttonCurrency);
         buttonCurrency.setOnClickListener(this);
         final String currency[] = {"INR", "USD", "EURO", "YEN"};
-        DroppyMenuPopup.Builder droppyBuilder = new DroppyMenuPopup.Builder(context, buttonCurrency);
-        droppyBuilder.addMenuItem(new DroppyMenuItem("INR"))
-                .addMenuItem(new DroppyMenuItem("USD"))
-                .addMenuItem(new DroppyMenuItem("EURO"))
-                .addMenuItem(new DroppyMenuItem("YEN"));
-        droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
-            @Override
-            public void call(View v, int id) {
-                buttonCurrency.setText(currency[id]);
-            }
-        });
-        droppyBuilder.build();
+
         rangeBar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
             public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex,
@@ -166,24 +230,26 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
             case R.id.textViewDestinationAddress:
                 try {
                     Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-                                    .build(getActivity());
-                    startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+                            .build(getActivity());
+                    startActivityForResult(intent, DESTINATION);
                 } catch (GooglePlayServicesRepairableException e) {
                     // TODO: Handle the error.
                 } catch (GooglePlayServicesNotAvailableException e) {
                     // TODO: Handle the error.
                 }
 
-                /*   google_intent = new Intent(getActivity(), GoogleMapActivity.class);
-                google_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                google_intent.putExtra("choose_source", false);
-                startActivityForResult(google_intent, DESTINATION);*/
+
                 break;
             case R.id.textViewDepartureAddress:
-                google_intent = new Intent(getActivity(), GoogleMapActivity.class);
-                google_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                google_intent.putExtra("choose_source", true);
-                startActivityForResult(google_intent, SOURCE);
+                try {
+                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                            .build(getActivity());
+                    startActivityForResult(intent, SOURCE);
+                } catch (GooglePlayServicesRepairableException e) {
+                    // TODO: Handle the error.
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    // TODO: Handle the error.
+                }
                 break;
             case R.id.buttonAddImage:
                 showEditPicPopup();
@@ -296,6 +362,15 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
             case R.id.linearLayoutGalary:
                 pickPictureIntent();
                 dialog.dismiss();
+                break;
+            case R.id.buttonCurrency:
+                showCountryPopUp();
+                break;
+            case R.id.imageViewOneway:
+                radioButtonOneway.performClick();
+                break;
+            case R.id.imageViewReturn:
+                radioButtonReturn.performClick();
                 break;
         }
 
@@ -512,6 +587,72 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         return Uri.fromFile(getOutputMediaFile());
     }
 
+    private void setupSourceDestinationMarker() {
+        switch (type) {
+            case "aeroplane":
+                mode = Routing.TravelMode.TRANSIT;
+                break;
+            case "car":
+                mode = Routing.TravelMode.DRIVING;
+                break;
+            case "ship":
+                mode = Routing.TravelMode.TRANSIT;
+                break;
+            case "bus":
+                mode = Routing.TravelMode.TRANSIT;
+                break;
+        }
+        Routing routing = new Routing.Builder()
+                .travelMode(mode)
+                .withListener(this)
+                .waypoints(sourceLatLng, destinationLatLang)
+                .build();
+        routing.execute();
+
+        MarkerOptions options = new MarkerOptions();
+        options.position(sourceLatLng);
+        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_source_location));
+        mMap.addMarker(options);
+        options.position(destinationLatLang);
+        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_destination_location));
+        mMap.addMarker(options);
+        CameraUpdate center =
+                CameraUpdateFactory.newLatLng(sourceLatLng);
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+
+        mMap.moveCamera(center);
+        mMap.animateCamera(zoom);
+        showMessage(center.toString());
+        double dummy_radius = distance(sourceLatLng.latitude, sourceLatLng.longitude, destinationLatLang.latitude, destinationLatLang.longitude);
+        dummy_radius = dummy_radius / 2;
+        double circleRad = dummy_radius * 1000;//multiply by 1000 to make units in KM
+        float zoomLevel = getZoomLevel(circleRad);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sourceLatLng, zoomLevel));
+
+    }
+
+    private int getZoomLevel(double radius) {
+        double scale = radius / 500;
+        return ((int) (16 - Math.log(scale) / Math.log(2)));
+    }
+
+    private double distance(double lat1, double lon1, double lat2, double lon2) {
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515;
+        return (dist);
+    }
+
+    private double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    private double rad2deg(double rad) {
+        return (rad * 180.0 / Math.PI);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -539,36 +680,44 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 }
                 break;
             case DESTINATION:
+                destinationFlag = true;
                 if (resultCode == getActivity().RESULT_OK) {
-                    String address = data.getStringExtra("address");
-                    textViewDestinationAddress.setText(address);
+                    place = PlaceAutocomplete.getPlace(getApplicationContext(), data);
+                    textViewDestinationAddress.setText(place.getName());
+                    destinationLatLang = place.getLatLng();
+                    if (sourceFlag) {
+                        setupSourceDestinationMarker();
+                    }
+                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                    Status status = PlaceAutocomplete.getStatus(getActivity(), data);
+                    // TODO: Handle the error.
+                    Log.i(TAG, status.getStatusMessage());
+
+                } else if (resultCode == RESULT_CANCELED) {
+                    // The user canceled the operation.
                 }
                 break;
             case SOURCE:
-                if (resultCode == getActivity().RESULT_OK) {
-                    String address = data.getStringExtra("address");
-                    textViewDepartureAddress.setText(address);
-                }
-/*
-*  if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-        if (resultCode == RESULT_OK) {
-            Place place = PlaceAutocomplete.getPlace(this, data);
-            Log.i(TAG, "Place: " + place.getName());
-        } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-            Status status = PlaceAutocomplete.getStatus(this, data);
-            // TODO: Handle the error.
-            Log.i(TAG, status.getStatusMessage());
+                sourceFlag = true;
+                if (resultCode == RESULT_OK) {
+                    place = PlaceAutocomplete.getPlace(getApplicationContext(), data);
+                    textViewDepartureAddress.setText(place.getName());
+                    sourceLatLng = place.getLatLng();
+                    if (destinationFlag) {
+                        setupSourceDestinationMarker();
+                    }
+                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                    Status status = PlaceAutocomplete.getStatus(getActivity(), data);
+                    // TODO: Handle the error.
+                    Log.i(TAG, status.getStatusMessage());
 
-        } else if (resultCode == RESULT_CANCELED) {
-            // The user canceled the operation.
-        }
-    }
-*
-* */
+                } else if (resultCode == RESULT_CANCELED) {
+                    // The user canceled the operation.
+                }
                 break;
             case PLACE_AUTOCOMPLETE_REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
-                    Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+                    place = PlaceAutocomplete.getPlace(getActivity(), data);
                     Log.i(TAG, "Place: " + place.getName());
                 } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                     Status status = PlaceAutocomplete.getStatus(getActivity(), data);
@@ -581,5 +730,173 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void drawPolyLine() {
+        arrayPoints.clear();
+        arrayPoints.add(sourceLatLng);
+        arrayPoints.add(destinationLatLang);
+        polylineOptions.color(Color.RED);
+        polylineOptions.width(5);
+        polylineOptions.addAll(arrayPoints);
+        mMap.addPolyline(polylineOptions);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(arrayPoints.get(0), 15));
+        // Zoom in, animating the camera.
+        mMap.animateCamera(CameraUpdateFactory.zoomIn());
+        // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mapReady = true;
+        mMap = googleMap;
+        // Add a marker in Sydney and move the camera
+        mMap.getUiSettings().setRotateGesturesEnabled(false);
+        mMap.getUiSettings().setAllGesturesEnabled(true);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+    }
+
+    @Override
+    public void onCameraIdle() {
+
+    }
+
+    @Override
+    public void onCameraMoveStarted(int i) {
+
+    }
+
+    @Override
+    public void onCameraMove() {
+
+    }
+
+    @Override
+    public void onCameraMoveCanceled() {
+
+    }
+
+    @Override
+    public void onRoutingFailure(RouteException e) {
+        if (e != null) {
+            Toast.makeText(context, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(context, "Something went wrong, Try again", Toast.LENGTH_SHORT).show();
+        }
+        drawPolyLine();
+    }
+
+    @Override
+    public void onRoutingStart() {
+
+    }
+
+    @Override
+    public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex) {
+
+
+        if (polylines.size() > 0) {
+            for (Polyline poly : polylines) {
+                poly.remove();
+            }
+        }
+
+
+        for (int i = 0; i < route.size(); i++) {
+
+            //In case of more than 5 alternative routes
+            int colorIndex = i % COLORS.length;
+
+            PolylineOptions polyOptions = new PolylineOptions();
+            polyOptions.color(ContextCompat.getColor(context, COLORS[colorIndex]));
+            polyOptions.width(10 + i * 3);
+            polyOptions.addAll(route.get(i).getPoints());
+            Polyline polyline = mMap.addPolyline(polyOptions);
+            polylines.add(polyline);
+
+            Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    @Override
+    public void onRoutingCancelled() {
+
+    }
+
+    public LatLng midPoint(double lat1, double lon1, double lat2, double lon2) {
+
+        double dLon = Math.toRadians(lon2 - lon1);
+
+        //convert to radians
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+        lon1 = Math.toRadians(lon1);
+
+        double Bx = Math.cos(lat2) * Math.cos(dLon);
+        double By = Math.cos(lat2) * Math.sin(dLon);
+        double lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + Bx) * (Math.cos(lat1) + Bx) + By * By));
+        double lon3 = lon1 + Math.atan2(By, Math.cos(lat1) + Bx);
+
+        return new LatLng(lat3, lon3);
+    }
+
+    private void showCountryPopUp() {
+        final CountryPicker picker = CountryPicker.newInstance("Select Country");
+        picker.show(getChildFragmentManager(), "COUNTRY_PICKER");
+        picker.setListener(new CountryPickerListener() {
+            @Override
+            public void onSelectCountry(String name, String code, String dialCode, int flagDrawableResID) {
+                // Implement your code here
+                try {
+                    Currency currency = picker.getCurrencyCode(code);
+                    String currencyCode = currency.getCurrencyCode();
+                    String currencySymbol = currency.getSymbol();
+                    buttonCurrency.setText(currencySymbol + "   " + currencyCode);
+                } catch (Exception ex) {
+                    showMessage(getString(R.string.currency_not_found));
+                }
+                picker.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        switch (compoundButton.getId()) {
+            case R.id.radioButtonOneway:
+                showMessage("called radioOneway "+b);
+                if(b) {
+                    returnFlag = false;
+                    linearLayoutReturn.setVisibility(View.GONE);
+                    imageViewOneWay.setImageResource(R.drawable.unchecked);
+                    imageViewReturn.setImageResource(R.drawable.checked);
+                }else {
+                    returnFlag = true;
+                    linearLayoutReturn.setVisibility(View.VISIBLE);
+                    imageViewOneWay.setImageResource(R.drawable.checked);
+                    imageViewReturn.setImageResource(R.drawable.unchecked);
+                }
+                break;
+            case R.id.radioButtonReturn:
+                showMessage("called radioReturn "+b);
+
+                if(b) {
+                    linearLayoutReturn.setVisibility(View.VISIBLE);
+                    imageViewOneWay.setImageResource(R.drawable.checked);
+                    imageViewReturn.setImageResource(R.drawable.unchecked);
+                    returnFlag = true;
+                }else {
+                    returnFlag = false;
+                    linearLayoutReturn.setVisibility(View.GONE);
+                    imageViewOneWay.setImageResource(R.drawable.unchecked);
+                    imageViewReturn.setImageResource(R.drawable.checked);
+                }
+                break;
+
+        }
     }
 }
