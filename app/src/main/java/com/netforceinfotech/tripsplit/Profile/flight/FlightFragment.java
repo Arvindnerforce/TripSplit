@@ -126,8 +126,8 @@ public class FlightFragment extends Fragment implements View.OnClickListener, Ti
         mixed = (Button) view.findViewById(R.id.mixedButton);
         mixed.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         mixed.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
-        pass_txt = (TextView) view.findViewById(R.id.pass_txt);
-        space_txt = (TextView) view.findViewById(R.id.space_txt);
+        pass_txt = (TextView) view.findViewById(R.id.textviewPax);
+        space_txt = (TextView) view.findViewById(R.id.textviewSpace);
         textviewETA = (TextView) view.findViewById(R.id.textviewETA);
         textViewETD = (TextView) view.findViewById(R.id.textviewETD);
         Typeface custom_font = Typeface.createFromAsset(context.getAssets(), "fonts/GothamRoundedBook.ttf");

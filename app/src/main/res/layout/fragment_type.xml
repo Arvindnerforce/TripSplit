@@ -30,7 +30,7 @@
                 android:padding="15dp">
 
                 <TextView
-                    android:id="@+id/pass_txt"
+                    android:id="@+id/textviewPax"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
-                    android:layout_toRightOf="@+id/pass_txt"
+                    android:layout_toRightOf="@+id/textviewPax"
                     android:gravity="center_vertical"
                     android:text="Passanger"
                     android:textColor="@color/black"
@@ -92,7 +92,7 @@
                 android:padding="15dp">
 
                 <TextView
-                    android:id="@+id/space_txt"
+                    android:id="@+id/textviewSpace"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -107,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
-                    android:layout_toRightOf="@+id/space_txt"
+                    android:layout_toRightOf="@+id/textviewSpace"
                     android:gravity="center_vertical"
                     android:text="Spaces"
                     android:textColor="@color/black"
@@ -359,6 +359,7 @@
                 </LinearLayout>
 
                 <EditText
+                    android:id="@+id/et_vehicleType"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -540,12 +541,14 @@
 
 
                     <EditText
+                        android:id="@+id/et_itenarary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:background="@drawable/iteninary_editext_border"
                         android:padding="10dp"
-                        android:text="@string/about_me_txt" />
+                        android:lines="6"
+                        />
 
                 </LinearLayout>
 
@@ -581,6 +584,7 @@
 
 
                     <EditText
+                        android:id="@+id/et_totalCost"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="5dp"

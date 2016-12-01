@@ -18,9 +18,11 @@ import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
 
+import xyz.santeri.wvp.WrappingViewPager;
+
 public class PostTripFragment extends Fragment {
 
-    WrapContentViewPager viewPager;
+    WrappingViewPager viewPager;
     Context context;
 
 
@@ -65,8 +67,7 @@ public class PostTripFragment extends Fragment {
 
     private void setupTab(View v) {
 
-        viewPager = (WrapContentViewPager) v.findViewById(R.id.pager);
-        viewPager.setPagingEnabled(true);
+        viewPager = (WrappingViewPager) v.findViewById(R.id.pager);
 
         TabLayout tabLayout = (TabLayout) v.findViewById(R.id.tab_layout);
 
@@ -91,7 +92,7 @@ public class PostTripFragment extends Fragment {
         viewPager.setAdapter(adapter);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
+        viewPager.setCurrentItem(0);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 

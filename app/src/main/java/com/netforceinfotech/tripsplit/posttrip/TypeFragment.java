@@ -22,8 +22,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -54,6 +54,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.netforceinfotech.tripsplit.R;
@@ -88,11 +91,12 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     private static final int SOURCE = 421;
     private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     AbstractRouting.TravelMode mode;
+    String group = "male";
     private PolylineOptions polylineOptions = new PolylineOptions();
     private ArrayList<LatLng> arrayPoints = new ArrayList<>();
     LinearLayout linearLayoutReturn;
     Context context;
-    TextView textViewETD, pass_txt, space_txt, textviewETA, textviewAgeGroup, textViewReturnETA, textViewReturnETD;
+    TextView textViewETD, textviewPax, textviewSpace, textviewETA, textviewAgeGroup, textViewReturnETA, textViewReturnETD;
     Button increamentPass, decreamentPass, increamentSpace, decreamentSpace, male, female, mixed, buttonPost, buttonAddImage;
     int pass_number = 1;
     int space_number = 1;
@@ -117,6 +121,11 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     String type = "car";
     ImageView imageViewOneWay, imageViewReturn;
     private boolean returnFlag = true;
+    UserSessionManager userSessionManager;
+    private String upperLimit, lowerLimit;
+    private String trip = "0";
+    EditText editTextVehicleType, editTextItenarary, editTextTotalCost;
+    private String currencyCode;
 
     public TypeFragment() {
         // Required empty public constructor
@@ -134,6 +143,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
 
         View view = inflater.inflate(R.layout.fragment_type, container, false);
         context = getActivity();
+        userSessionManager = new UserSessionManager(context);
         mMapView = (MapView) view.findViewById(R.id.mapView);
         context = getActivity();
         try {
@@ -160,6 +170,9 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     }
 
     private void initView(View view) {
+        editTextTotalCost = (EditText) view.findViewById(R.id.et_totalCost);
+        editTextItenarary = (EditText) view.findViewById(R.id.et_itenarary);
+        editTextVehicleType = (EditText) view.findViewById(R.id.et_vehicleType);
         linearLayoutReturn = (LinearLayout) view.findViewById(R.id.linearlayoutReturn);
         textViewReturnETA = (TextView) view.findViewById(R.id.textviewReturnETA);
         textViewReturnETD = (TextView) view.findViewById(R.id.textviewReturnETD);
@@ -190,6 +203,8 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                                               int rightPinIndex,
                                               String leftPinValue, String rightPinValue) {
                 textviewAgeGroup.setText(leftPinValue + "-" + rightPinValue);
+                lowerLimit = leftPinValue;
+                upperLimit = rightPinValue;
             }
         });
         buttonAddImage = (Button) view.findViewById(R.id.buttonAddImage);
@@ -205,8 +220,8 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         mixed = (Button) view.findViewById(R.id.mixedButton);
         mixed.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         mixed.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
-        pass_txt = (TextView) view.findViewById(R.id.pass_txt);
-        space_txt = (TextView) view.findViewById(R.id.space_txt);
+        textviewPax = (TextView) view.findViewById(R.id.textviewPax);
+        textviewSpace = (TextView) view.findViewById(R.id.textviewSpace);
         textviewETA = (TextView) view.findViewById(R.id.textviewETA);
         textViewETD = (TextView) view.findViewById(R.id.textviewETD);
         Typeface custom_font = Typeface.createFromAsset(context.getAssets(), "fonts/GothamRoundedBook.ttf");
@@ -288,7 +303,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
 
                 pass_number = pass_number + 1;
                 String p_n = String.valueOf(pass_number);
-                pass_txt.setText(p_n);
+                textviewPax.setText(p_n);
 
 
                 break;
@@ -298,7 +313,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 if (pass_number >= 1) {
                     pass_number = pass_number - 1;
                     String dp_n = String.valueOf(pass_number);
-                    pass_txt.setText(dp_n);
+                    textviewPax.setText(dp_n);
                 }
                 break;
 
@@ -306,7 +321,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
 
                 space_number = space_number + 1;
                 String sp_n = String.valueOf(space_number);
-                space_txt.setText(sp_n);
+                textviewSpace.setText(sp_n);
 
                 break;
 
@@ -314,13 +329,14 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 if (space_number >= 1) {
                     space_number = space_number - 1;
                     String dsp_n = String.valueOf(space_number);
-                    space_txt.setText(dsp_n);
+                    textviewSpace.setText(dsp_n);
                 }
 
                 break;
 
             case R.id.maleButton:
 
+                group = "male";
                 female.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.border_image));
                 mixed.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.border_image2));
                 male.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
@@ -332,7 +348,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 break;
 
             case R.id.femaleButton:
-
+                group = "female";
                 male.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.border_image));
                 mixed.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.border_image2));
                 female.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
@@ -345,6 +361,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 break;
 
             case R.id.mixedButton:
+                group = "mixed";
 
                 male.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.border_image));
                 female.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.border_image));
@@ -378,11 +395,91 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     }
 
     private void postTrip() {
-        validateDate();
+        if (validateDate()) {
+            String baseUrl = getString(R.string.url);
+            // https://netforcesales.com/tripesplit/mobileApp/api/services.php?opt=posttrip
+            String url = baseUrl + "services.php?opt=posttrip";
+            if (filePath != null) {
+
+                Ion.with(getApplicationContext())
+                        .load("POST", url)
+                        .setMultipartParameter("user_id", userSessionManager.getUserId())
+                        .setMultipartParameter("type", type)
+                        .setMultipartParameter("pax", textviewPax.getText().toString().trim())
+                        .setMultipartParameter("group", group)
+                        .setMultipartParameter("age_group_upper", upperLimit)
+                        .setMultipartParameter("age_group_lower", lowerLimit)
+                        .setMultipartParameter("trip", trip)
+                        .setMultipartParameter("vehicle_type", editTextVehicleType.getText().toString().trim())
+                        .setMultipartParameter("depart_address", textViewDepartureAddress.getText().toString())
+                        .setMultipartParameter("dest_address", textViewDestinationAddress.getText().toString())
+                        .setMultipartParameter("depart_lat", sourceLatLng.latitude + "")
+                        .setMultipartParameter("depart_lon", sourceLatLng.longitude + "")
+                        .setMultipartParameter("dest_lat", destinationLatLang.latitude + "")
+                        .setMultipartParameter("dest_lon", destinationLatLang.longitude + "")
+                        .setMultipartParameter("etd", textViewETD.getText().toString())
+                        .setMultipartParameter("eta", textviewETA.getText().toString())
+                        .setMultipartParameter("return_etd", textViewReturnETD.getText().toString())
+                        .setMultipartParameter("return_eta", textViewReturnETA.getText().toString())
+                        .setMultipartParameter("iteinerary", editTextItenarary.getText().toString().trim())
+                        .setMultipartParameter("total_cost", editTextTotalCost.getText().toString())
+                        //currency
+                        .setMultipartParameter("currency", currencyCode)
+                        .setMultipartFile("archive", "application/zip", new File("/sdcard/filename.zip"))
+                        .asJsonObject()
+                        .setCallback(new FutureCallback<JsonObject>() {
+                            @Override
+                            public void onCompleted(Exception e, JsonObject result) {
+                                if (result == null) {
+                                    e.printStackTrace();
+                                } else {
+                                    Log.i("result", result.toString());
+                                }
+                            }
+                        });
+            } else {
+                Ion.with(getApplicationContext())
+                        .load("POST", url)
+                        .setMultipartParameter("user_id", userSessionManager.getUserId())
+                        .setMultipartParameter("type", type)
+                        .setMultipartParameter("pax", textviewPax.getText().toString().trim())
+                        .setMultipartParameter("group", group)
+                        .setMultipartParameter("age_group_upper", upperLimit)
+                        .setMultipartParameter("age_group_lower", lowerLimit)
+                        .setMultipartParameter("trip", trip)
+                        .setMultipartParameter("vehicle_type", editTextVehicleType.getText().toString().trim())
+                        .setMultipartParameter("depart_address", textViewDepartureAddress.getText().toString())
+                        .setMultipartParameter("dest_address", textViewDestinationAddress.getText().toString())
+                        .setMultipartParameter("depart_lat", sourceLatLng.latitude + "")
+                        .setMultipartParameter("depart_lon", sourceLatLng.longitude + "")
+                        .setMultipartParameter("dest_lat", destinationLatLang.latitude + "")
+                        .setMultipartParameter("dest_lon", destinationLatLang.longitude + "")
+                        .setMultipartParameter("etd", textViewETD.getText().toString())
+                        .setMultipartParameter("eta", textviewETA.getText().toString())
+                        .setMultipartParameter("return_etd", textViewReturnETD.getText().toString())
+                        .setMultipartParameter("return_eta", textViewReturnETA.getText().toString())
+                        .setMultipartParameter("iteinerary", editTextItenarary.getText().toString().trim())
+                        .setMultipartParameter("total_cost", editTextTotalCost.getText().toString())
+                        //currency
+                        .setMultipartParameter("currency", currencyCode)
+                        .asJsonObject()
+                        .setCallback(new FutureCallback<JsonObject>() {
+                            @Override
+                            public void onCompleted(Exception e, JsonObject result) {
+                                if (result == null) {
+                                    e.printStackTrace();
+                                } else {
+                                    Log.i("result", result.toString());
+                                }
+                            }
+                        });
+            }
+
+        }
     }
 
-    private void validateDate() {
-        Date etd, eta;
+    private boolean validateDate() {
+        Date etd, eta, returnetd, returneta;
         String date1 = textViewETD.getText().toString();
         String date2 = textviewETA.getText().toString();
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE dd MMM yy HH:mm");
@@ -391,19 +488,50 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
             etd = dateFormat.parse(date1);
         } catch (ParseException e) {
             showMessage("Departure date not set");
-            return;
+            return false;
         }
         try {
             eta = dateFormat.parse(date2);
         } catch (ParseException e) {
             showMessage("Arival date not set");
-            return;
+            return false;
         }
         Log.i("datecheck", etd.toString() + ":" + eta.toString());
         if (etd.after(eta)) {
 
             showMessage("Arival time should be after Departure time");
         }
+
+        if (returnFlag) {
+            String date3 = textViewReturnETD.getText().toString();
+            String date4 = textViewReturnETA.getText().toString();
+            try {
+                returnetd = dateFormat.parse(date3);
+            } catch (ParseException e) {
+                showMessage("Departure date not set");
+                return false;
+            }
+            try {
+                returneta = dateFormat.parse(date4);
+            } catch (ParseException e) {
+                showMessage("Arival date not set");
+                return false;
+            }
+            Log.i("datecheck", returnetd.toString() + ":" + returneta.toString());
+            if (returnetd.after(returneta)) {
+
+                showMessage("Arival time should be after Departure time");
+                return false;
+            }
+            if (etd.after(returnetd)) {
+                showMessage("Return time should be after out trip time");
+                return false;
+            }
+
+        }
+        return true;
+
+
     }
 
     private void showMessage(String s) {
@@ -853,7 +981,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 // Implement your code here
                 try {
                     Currency currency = picker.getCurrencyCode(code);
-                    String currencyCode = currency.getCurrencyCode();
+                    currencyCode = currency.getCurrencyCode();
                     String currencySymbol = currency.getSymbol();
                     buttonCurrency.setText(currencySymbol + "   " + currencyCode);
                 } catch (Exception ex) {
@@ -868,13 +996,14 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()) {
             case R.id.radioButtonOneway:
-                showMessage("called radioOneway "+b);
-                if(b) {
+                if (b) {
                     returnFlag = false;
+                    trip = "0";
                     linearLayoutReturn.setVisibility(View.GONE);
                     imageViewOneWay.setImageResource(R.drawable.checked);
                     imageViewReturn.setImageResource(R.drawable.unchecked);
-                }else {
+                } else {
+                    trip = "1";
                     returnFlag = true;
                     linearLayoutReturn.setVisibility(View.VISIBLE);
                     imageViewOneWay.setImageResource(R.drawable.unchecked);
@@ -882,14 +1011,15 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 }
                 break;
             case R.id.radioButtonReturn:
-                showMessage("called radioReturn "+b);
 
-                if(b) {
+                if (b) {
+                    trip = "1";
                     linearLayoutReturn.setVisibility(View.VISIBLE);
                     imageViewOneWay.setImageResource(R.drawable.unchecked);
                     imageViewReturn.setImageResource(R.drawable.checked);
                     returnFlag = true;
-                }else {
+                } else {
+                    trip = "0";
                     returnFlag = false;
                     linearLayoutReturn.setVisibility(View.GONE);
                     imageViewOneWay.setImageResource(R.drawable.checked);
