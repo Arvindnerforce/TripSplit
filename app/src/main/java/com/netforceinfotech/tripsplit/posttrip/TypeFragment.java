@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,7 +17,9 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +36,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.appyvet.rangebar.RangeBar;
+import com.bumptech.glide.Glide;
 import com.directions.route.AbstractRouting;
 import com.directions.route.Route;
 import com.directions.route.RouteException;
@@ -51,6 +55,8 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -59,6 +65,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
+import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -92,6 +99,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     AbstractRouting.TravelMode mode;
     String group = "male";
+    float zoomlevel = 16f;
     private PolylineOptions polylineOptions = new PolylineOptions();
     private ArrayList<LatLng> arrayPoints = new ArrayList<>();
     LinearLayout linearLayoutReturn;
@@ -119,13 +127,18 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     private static final int[] COLORS = new int[]{R.color.colorPrimaryDark, R.color.colorPrimary, R.color.colorPrimaryLight, R.color.colorAccent, R.color.primary_dark_material_light};
     private GoogleMap mMap;
     String type = "car";
-    ImageView imageViewOneWay, imageViewReturn;
+    ImageView imageViewOneWay, imageViewReturn, image;
     private boolean returnFlag = true;
     UserSessionManager userSessionManager;
-    private String upperLimit, lowerLimit;
+    private String upperLimit="100", lowerLimit="0";
     private String trip = "0";
     EditText editTextVehicleType, editTextItenarary, editTextTotalCost;
     private String currencyCode;
+    private Calendar now;
+    private DatePickerDialog dpd;
+    private boolean returnetdclicked;
+    private MaterialDialog progressDialog;
+    private Marker destinationMarker, sournceMarker;
 
     public TypeFragment() {
         // Required empty public constructor
@@ -170,6 +183,12 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     }
 
     private void initView(View view) {
+        image = (ImageView) view.findViewById(R.id.image);
+        image.setVisibility(View.GONE);
+        progressDialog = new MaterialDialog.Builder(context)
+                .title(R.string.progress_dialog)
+                .content(R.string.please_wait)
+                .progress(true, 0).build();
         editTextTotalCost = (EditText) view.findViewById(R.id.et_totalCost);
         editTextItenarary = (EditText) view.findViewById(R.id.et_itenarary);
         editTextVehicleType = (EditText) view.findViewById(R.id.et_vehicleType);
@@ -180,6 +199,8 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         textViewDestinationAddress = (TextView) view.findViewById(R.id.textViewDestinationAddress);
         textViewDestinationAddress.setOnClickListener(this);
         textViewDepartureAddress.setOnClickListener(this);
+        textViewReturnETA.setOnClickListener(this);
+        textViewReturnETD.setOnClickListener(this);
         imageViewOneWay = (ImageView) view.findViewById(R.id.imageViewOneway);
         imageViewReturn = (ImageView) view.findViewById(R.id.imageViewReturn);
         imageViewOneWay.setOnClickListener(this);
@@ -193,6 +214,8 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
 
         rangeBar = (RangeBar) view.findViewById(R.id.rangebar);
         textviewAgeGroup = (TextView) view.findViewById(R.id.textviewAgeGroup);
+        textviewAgeGroup.setText(lowerLimit + "-" + upperLimit);
+
         buttonCurrency = (Button) view.findViewById(R.id.buttonCurrency);
         buttonCurrency.setOnClickListener(this);
         final String currency[] = {"INR", "USD", "EURO", "YEN"};
@@ -244,19 +267,28 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         switch (view.getId()) {
             case R.id.textViewDestinationAddress:
                 try {
-                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-                            .build(getActivity());
+                    Intent intent = new Intent(context, GoogleMapActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("choose_source", false);
+                    intent.putExtras(bundle);
                     startActivityForResult(intent, DESTINATION);
-                } catch (GooglePlayServicesRepairableException e) {
-                    // TODO: Handle the error.
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    // TODO: Handle the error.
+                } catch (Exception ex) {
+                    showMessage("google map exception");
+                    ex.printStackTrace();
                 }
-
-
                 break;
             case R.id.textViewDepartureAddress:
                 try {
+                    Intent intent = new Intent(context, GoogleMapActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("choose_source", true);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, SOURCE);
+                } catch (Exception ex) {
+                    showMessage("google map exception");
+                    ex.printStackTrace();
+                }
+              /*  try {
                     Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
                             .build(getActivity());
                     startActivityForResult(intent, SOURCE);
@@ -264,7 +296,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                     // TODO: Handle the error.
                 } catch (GooglePlayServicesNotAvailableException e) {
                     // TODO: Handle the error.
-                }
+                }*/
                 break;
             case R.id.buttonAddImage:
                 showEditPicPopup();
@@ -274,8 +306,10 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 break;
             case R.id.textviewETD:
                 etdclicked = true;
-                Calendar now = Calendar.getInstance();
-                DatePickerDialog dpd = DatePickerDialog.newInstance(
+                returnetdclicked = false;
+
+                now = Calendar.getInstance();
+                dpd = DatePickerDialog.newInstance(
                         TypeFragment.this,
                         now.get(Calendar.YEAR),
                         now.get(Calendar.MONTH),
@@ -287,15 +321,44 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 break;
             case R.id.textviewETA:
                 etdclicked = false;
-                Calendar now1 = Calendar.getInstance();
-                DatePickerDialog dpd1 = DatePickerDialog.newInstance(
-                        TypeFragment.this,
-                        now1.get(Calendar.YEAR),
-                        now1.get(Calendar.MONTH),
-                        now1.get(Calendar.DAY_OF_MONTH)
-                );
-                dpd1.show(getActivity().getFragmentManager(), "Datepickerdialog");
+                returnetdclicked = false;
 
+                now = Calendar.getInstance();
+                dpd = DatePickerDialog.newInstance(
+                        TypeFragment.this,
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DAY_OF_MONTH)
+                );
+                dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+
+
+                break;
+            case R.id.textviewReturnETA:
+                etdclicked = false;
+                returnetdclicked = true;
+                now = Calendar.getInstance();
+                dpd = DatePickerDialog.newInstance(
+                        TypeFragment.this,
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DAY_OF_MONTH)
+                );
+                dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+
+                break;
+            case R.id.textviewReturnETD:
+                etdclicked = false;
+                returnetdclicked = true;
+
+                now = Calendar.getInstance();
+                dpd = DatePickerDialog.newInstance(
+                        TypeFragment.this,
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DAY_OF_MONTH)
+                );
+                dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
 
                 break;
 
@@ -399,6 +462,8 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
             String baseUrl = getString(R.string.url);
             // https://netforcesales.com/tripesplit/mobileApp/api/services.php?opt=posttrip
             String url = baseUrl + "services.php?opt=posttrip";
+            Log.i("url",url);
+            progressDialog.show();
             if (filePath != null) {
 
                 Ion.with(getApplicationContext())
@@ -425,14 +490,21 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                         .setMultipartParameter("total_cost", editTextTotalCost.getText().toString())
                         //currency
                         .setMultipartParameter("currency", currencyCode)
-                        .setMultipartFile("archive", "application/zip", new File("/sdcard/filename.zip"))
+                        .setMultipartFile("image", new File(filePath))
                         .asJsonObject()
                         .setCallback(new FutureCallback<JsonObject>() {
                             @Override
                             public void onCompleted(Exception e, JsonObject result) {
+                                progressDialog.dismiss();
                                 if (result == null) {
                                     e.printStackTrace();
+                                    showMessage("Error in Posting new Trip!!! Try again");
                                 } else {
+                                    if (result.get("status").getAsString().equalsIgnoreCase("success")) {
+                                        result.toString();
+                                        showMessage("New Trip Posted Successfully");
+                                        setupDashboardFragment();
+                                    }
                                     Log.i("result", result.toString());
                                 }
                             }
@@ -466,9 +538,14 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                         .setCallback(new FutureCallback<JsonObject>() {
                             @Override
                             public void onCompleted(Exception e, JsonObject result) {
+                                progressDialog.dismiss();
                                 if (result == null) {
                                     e.printStackTrace();
+                                    showMessage("Error in Posting new Trip!!! Try again");
                                 } else {
+                                    if (result.get("status").getAsString().equalsIgnoreCase("success")) {
+                                        showMessage("New Trip Posted Successfully");
+                                    }
                                     Log.i("result", result.toString());
                                 }
                             }
@@ -543,10 +620,14 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         String minuteString = minute < 10 ? "0" + minute : "" + minute;
         String secondString = second < 10 ? "0" + second : "" + second;
         String time = "You picked the following time: " + hourString + "h" + minuteString + "m" + secondString + "s";
-        if (etdclicked) {
+        if (etdclicked && !returnetdclicked) {
             textViewETD.append(" " + hourString + ":" + minuteString);
-        } else {
+        } else if (!etdclicked && !returnetdclicked) {
             textviewETA.append(" " + hourString + ":" + minuteString);
+        } else if (etdclicked && returnetdclicked) {
+            textViewReturnETA.append(" " + hourString + ":" + minuteString);
+        } else {
+            textViewReturnETD.append(" " + hourString + ":" + minuteString);
         }
     }
 
@@ -562,10 +643,14 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
 
         SimpleDateFormat outDate = new SimpleDateFormat("EEE dd MMM yy");
 
-        if (etdclicked) {
+        if (etdclicked && !returnetdclicked) {
             textViewETD.setText(outDate.format(date2));
-        } else {
+        } else if (!etdclicked && !returnetdclicked) {
             textviewETA.setText(outDate.format(date2));
+        } else if (etdclicked && returnetdclicked) {
+            textViewReturnETD.setText(outDate.format(date2));
+        } else {
+            textViewReturnETA.setText(outDate.format(date2));
         }
         Calendar now = Calendar.getInstance();
         TimePickerDialog tpd = TimePickerDialog.newInstance(
@@ -788,6 +873,8 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 if (resultCode == getActivity().RESULT_OK) {
                     Log.i("result picture", "clicked");
                     buttonAddImage.setText(filePath);
+                    image.setVisibility(View.VISIBLE);
+                    Glide.with(context).load(new File(filePath)).error(R.drawable.ic_error).into(image);
                 }
                 break;
             case PICK_IMAGE:
@@ -804,43 +891,50 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    image.setVisibility(View.VISIBLE);
+                    Glide.with(context).load(new File(filePath)).error(R.drawable.ic_error).into(image);
+
                     Log.i("result picture", "picked");
                 }
                 break;
             case DESTINATION:
                 destinationFlag = true;
-                if (resultCode == getActivity().RESULT_OK) {
-                    place = PlaceAutocomplete.getPlace(getApplicationContext(), data);
-                    textViewDestinationAddress.setText(place.getName());
-                    destinationLatLang = place.getLatLng();
-                    if (sourceFlag) {
-                        setupSourceDestinationMarker();
-                    }
-                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                    Status status = PlaceAutocomplete.getStatus(getActivity(), data);
-                    // TODO: Handle the error.
-                    Log.i(TAG, status.getStatusMessage());
+                if (resultCode == RESULT_OK) {
+                    double lat = data.getDoubleExtra("lat", 0);
+                    double lon = data.getDoubleExtra("lon", 0);
+                    String address = data.getStringExtra("address");
+                    textViewDestinationAddress.setText(address);
+                    destinationLatLang = new LatLng(lat, lon);
+                    try {
+                        destinationMarker.remove();
+                    } catch (Exception ex) {
 
-                } else if (resultCode == RESULT_CANCELED) {
-                    // The user canceled the operation.
+                    }
+                    destinationMarker = mMap.addMarker(new MarkerOptions().title(address).position(destinationLatLang));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destinationLatLang, zoomlevel));
+                    if (sourceFlag) {
+                        zoomInTwoPoint();
+                    }
+
                 }
                 break;
             case SOURCE:
                 sourceFlag = true;
                 if (resultCode == RESULT_OK) {
-                    place = PlaceAutocomplete.getPlace(getApplicationContext(), data);
-                    textViewDepartureAddress.setText(place.getName());
-                    sourceLatLng = place.getLatLng();
-                    if (destinationFlag) {
-                        setupSourceDestinationMarker();
-                    }
-                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                    Status status = PlaceAutocomplete.getStatus(getActivity(), data);
-                    // TODO: Handle the error.
-                    Log.i(TAG, status.getStatusMessage());
+                    double lat = data.getDoubleExtra("lat", 0);
+                    double lon = data.getDoubleExtra("lon", 0);
+                    String address = data.getStringExtra("address");
+                    textViewDepartureAddress.setText(address);
+                    sourceLatLng = new LatLng(lat, lon);
+                    try {
+                        sournceMarker.remove();
+                    } catch (Exception ex) {
 
-                } else if (resultCode == RESULT_CANCELED) {
-                    // The user canceled the operation.
+                    }
+                    sournceMarker = mMap.addMarker(new MarkerOptions().title(address).position(sourceLatLng));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sourceLatLng, zoomlevel));
+
+
                 }
                 break;
             case PLACE_AUTOCOMPLETE_REQUEST_CODE:
@@ -858,6 +952,17 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void zoomInTwoPoint() {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(sourceLatLng);
+        builder.include(destinationLatLang);
+        LatLngBounds bounds = builder.build();
+        int padding = 10; // offset from edges of the map in pixels
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+        mMap.animateCamera(cu);
+
     }
 
     private void drawPolyLine() {
@@ -884,7 +989,15 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         // Add a marker in Sydney and move the camera
         mMap.getUiSettings().setRotateGesturesEnabled(false);
         mMap.getUiSettings().setAllGesturesEnabled(true);
-        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.getUiSettings().setMapToolbarEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                zoomlevel = mMap.getCameraPosition().zoom;
+            }
+        });
     }
 
     @Override
@@ -1028,5 +1141,18 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 break;
 
         }
+    }
+
+    private void replaceFragment(Fragment newFragment, String tag) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame, newFragment, tag);
+        transaction.commit();
+    }
+
+    private void setupDashboardFragment() {
+        HomeFragment dashboardFragment = new HomeFragment();
+        String tagName = dashboardFragment.getClass().getName();
+        replaceFragment(dashboardFragment, tagName);
+
     }
 }

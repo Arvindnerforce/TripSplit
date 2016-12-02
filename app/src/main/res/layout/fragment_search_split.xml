@@ -80,7 +80,7 @@
                     app:tabSelectedTextColor="@color/black"
                     app:tabTextColor="@color/white" />
 
-                <com.netforceinfotech.tripsplit.general.WrapContentViewPager
+                <xyz.santeri.wvp.WrappingViewPager
                     android:id="@+id/pager"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

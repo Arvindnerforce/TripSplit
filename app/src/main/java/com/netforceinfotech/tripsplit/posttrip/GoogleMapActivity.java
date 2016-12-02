@@ -8,33 +8,42 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.map.GetDirectionsAsyncTask4;
-import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
-import com.seatgeek.placesautocomplete.PlacesAutocompleteTextView;
-import com.seatgeek.placesautocomplete.model.Place;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -42,9 +51,8 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
 
     private static final int PERMISSION_REQUEST_CODE_LOCATION = 1;
     static final LatLng TutorialsPoint = new LatLng(21, 57);
-    PlacesAutocompleteTextView placesAutocomplete;
     LatLng currentLatLng;
-    public GoogleMap Gmap;
+    public GoogleMap mMap;
     Context context;
     static double source_latitude, source_lat;
     static double source_longitude, source_log;
@@ -56,9 +64,13 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
     boolean source_place;
     String MY_PREFS_NAME = "preference_data";
     SharedPreferences.Editor editor;
-    String address = "";
+    String address = "Address not found";
+    Marker marker;
     AddressListner addressListner = null;
-
+    private PlaceAutocompleteFragment autocompleteFragment;
+    String TAG = "google_place";
+    private float zoomLevel = 16;
+    private LocationManager mLocationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +80,41 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
 
         editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
         context = this;
-
         source_place = getIntent().getExtras().getBoolean("choose_source");
+        if (source_place) {
+            setupToolBar(getString(R.string.choose_source));
+        } else {
+            setupToolBar(getString(R.string.choose_destination));
+        }
+        autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+
+            @Override
+            public void onPlaceSelected(Place place) {
+                Log.i(TAG, "Place: " + place.getName());
+                try {
+                    try {
+                        marker.remove();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    marker = mMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getAddress().toString()));
+                    currentLatLng = place.getLatLng();
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), zoomLevel));
+                    address = place.getAddress().toString();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
 
         System.out.println("gsdysugd============" + source_place);
 
@@ -82,13 +127,36 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent().putExtra("address", address);
+                /*
+                * Intent intent = new Intent();
+                intent.putExtra("friendsid", friendsidstring);
+                intent.putExtra("frindstring", frindstring);
                 setResult(RESULT_OK, intent);
                 finish();
+                * */
+                try {
+                    Intent intent = new Intent().putExtra("address", address).putExtra("lat", currentLatLng.latitude).putExtra("lon", currentLatLng.longitude);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
             }
 
 
         });
+
+
+    }
+
+    private void setupToolBar(String app_name) {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(app_name);
 
 
     }
@@ -98,117 +166,163 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     public void onMapReady(GoogleMap map) {
-        Gmap = map;
+        mMap = map;
         if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, getApplicationContext(), GoogleMapActivity.this)) {
 
-            Gmap.getUiSettings().setRotateGesturesEnabled(false);
+            mMap.getUiSettings().setRotateGesturesEnabled(false);
             // getLocation();
 
         } else {
             requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, PERMISSION_REQUEST_CODE_LOCATION, getApplicationContext(), GoogleMapActivity.this);
         }
 
-        Gmap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+
+            @Override
+            public void onCameraMove() {
+                GoogleMapActivity.this.zoomLevel = mMap.getCameraPosition().zoom;
+            }
+        });
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
 
-                clearMarker();
-                Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Selected Location"));
-                currentLatLng = latLng;
-
-
-            }
-        });
-
-        placesAutocomplete = (PlacesAutocompleteTextView) findViewById(R.id.places_autocomplete);
-        search = (Button) findViewById(R.id.search_button);
-        search.setOnClickListener(new View.OnClickListener() {
-
-
-            @Override
-            public void onClick(View view) {
-                String strAddress = placesAutocomplete.getText().toString();
-                latLng = getLocationFromAddress(getApplicationContext(), strAddress);
-                currentLatLng = latLng;
-                Log.i("address", strAddress);
-                clearMarker();
                 try {
-                    System.out.println("latitute =====" + latLng.toString());
-
-                    if (source_place == true) {
-                        addressListner.gotAddress(strAddress, true);
-                        Gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), 8.0f));
-                        Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_location_green50)).title("Source"));
-                        editor.putString("source_latitude", Double.toString(latLng.latitude));
-                        editor.putString("destination_latitude", Double.toString(latLng.longitude));
-                        editor.commit();
-                    } else {
-                        addressListner.gotAddress(strAddress, false);
-                        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-                        source_lat = Double.parseDouble(prefs.getString("source_latitude", null));
-                        source_log = Double.parseDouble(prefs.getString("destination_latitude", null));
-                        Gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), 8.0f));
-
-                        findDirections(source_lat, source_log,
-                                latLng.latitude, latLng.longitude,
-                                GMapV2Direction.MODE_DRIVING);
-                    }
-                } catch (Exception e) {
-
-                    e.printStackTrace();
-
-                    Toast.makeText(getApplicationContext(), "please enter correct destination", Toast.LENGTH_SHORT).show();
+                    marker.remove();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
+                marker = mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.selected_place)));
+                currentLatLng = latLng;
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+                setCompleteAddress(latLng);
 
 
             }
         });
 
-        placesAutocomplete.setOnPlaceSelectedListener(
-                new OnPlaceSelectedListener() {
-                    @Override
-                    public void onPlaceSelected(final Place place) {
+        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-                        // do something awesome with the selected place
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000,
+                10, mLocationListener);
+        search = (Button) findViewById(R.id.search_button);
 
-                        try {
-
-                            String strAddress = place.description;
-                            GoogleMapActivity.this.address = strAddress;
-                            latLng = getLocationFromAddress(getApplicationContext(), strAddress);
-                            currentLatLng = latLng;
-                            Log.i("address", strAddress);
-                            clearMarker();
-                            //  Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Selected Location"));
-                            // Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Selected Location"));
-                            if (source_place == true) {
-                                Gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), 8.0f));
-                                Gmap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_location_green50)).title("Source"));
-                                editor.putString("source_latitude", Double.toString(latLng.latitude));
-                                editor.putString("destination_latitude", Double.toString(latLng.longitude));
-                                editor.commit();
-                                addressListner.gotAddress(strAddress, true);
-                            } else {
-                                Gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latLng.latitude, latLng.longitude), 8.0f));
-                                SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-                                source_lat = Double.parseDouble(prefs.getString("source_latitude", null).toString());
-                                source_log = Double.parseDouble(prefs.getString("destination_latitude", null).toString());
-                                findDirections(source_lat, source_log,
-                                        latLng.latitude, latLng.longitude,
-                                        GMapV2Direction.MODE_DRIVING);
-                                addressListner.gotAddress(strAddress, false);
-                            }
-
-
-                        } catch (Exception e) {
-                        }
-
-                    }
-                }
-        );
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        try {
+            mLocationManager.removeUpdates(mLocationListener);
+            mLocationManager = null;
+
+        } catch (Exception ex) {
+
+        }
+    }
+
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(final Location location) {
+            //your code here
+            try {
+                marker.remove();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            marker = mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.selected_place)));
+            currentLatLng = latLng;
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+            setCompleteAddress(latLng);
+
+
+        }
+
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String s) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String s) {
+
+        }
+    };
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setCompleteAddress(LatLng latLng) {
+
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(this, Locale.getDefault());
+        StringBuilder completeAddress = new StringBuilder();
+        try {
+            addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+        } catch (Exception ex) {
+            return;
+        }
+        try {
+            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            completeAddress.append(address);
+        } catch (Exception ex) {
+            completeAddress.append("");
+        }
+        try {
+            String city = addresses.get(0).getLocality();
+            completeAddress.append(city);
+
+        } catch (Exception ex) {
+            completeAddress.append("");
+
+        }
+        try {
+            String state = addresses.get(0).getAdminArea();
+            completeAddress.append(state);
+        } catch (Exception ex) {
+            completeAddress.append("");
+        }
+        try {
+            String knownName = addresses.get(0).getFeatureName();
+            completeAddress.append(knownName);
+        } catch (Exception ex) {
+            completeAddress.append("");
+        }
+        try {
+            marker.remove();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        marker = mMap.addMarker(new MarkerOptions().position(latLng).title(completeAddress.toString()));
+        currentLatLng = latLng;
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+        GoogleMapActivity.this.address = completeAddress.toString();
+    }
 
     public LatLng getLocationFromAddress(Context context, String strAddress) {
 
@@ -238,7 +352,7 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
 
     private void clearMarker() {
         try {
-            Gmap.clear();
+            mMap.clear();
         } catch (Exception ex) {
 
         }
@@ -279,7 +393,7 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
             case PERMISSION_REQUEST_CODE_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    Gmap.getUiSettings().setRotateGesturesEnabled(false);
+                    mMap.getUiSettings().setRotateGesturesEnabled(false);
                     //getLocation();
 
                 } else {
@@ -326,7 +440,7 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
             newPolyline.remove();
         }
 
-        newPolyline = Gmap.addPolyline(rectLine);
+        newPolyline = mMap.addPolyline(rectLine);
 
         MarkerOptions marker2 = new MarkerOptions().position(
                 new LatLng(source_lat, source_log)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_location_green50)).title(
@@ -336,8 +450,8 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
                 new LatLng(latLng.latitude, latLng.longitude)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_location_red50)).title(
                 "Dehradun");
 
-        Gmap.addMarker(marker2);
-        Gmap.addMarker(marker3);
+        mMap.addMarker(marker2);
+        mMap.addMarker(marker3);
 
     }
 

@@ -64,7 +64,6 @@ dependencies {
     compile 'com.minimize.library:seekbar-compat:0.2.5'
     compile 'com.jaredrummler:material-spinner:1.1.0'
     compile 'com.codinguser.android:contactpicker:3.0.0@aar'
-    compile 'com.seatgeek:placesautocomplete:0.2-SNAPSHOT'
     compile 'com.cleveroad:slidingtutorial:0.9.5'
     compile 'com.daimajia.androidanimations:library:1.1.3@aar'
     compile 'tyrantgit:explosionfield:1.0.1'

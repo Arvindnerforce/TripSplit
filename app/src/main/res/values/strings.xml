@@ -50,6 +50,13 @@ or Search Splitz….
     <string name="currency_not_found">Currency not found</string>
     <string name="return_etd">Return ETD</string>
     <string name="return_eta">Return ETA</string>
+    <string name="passenger">Passenger</string>
+    <string name="vehicle_type">Vehicle Type</string>
+    <string name="selected_place">Selected Place</string>
+    <string name="choose_source">Choose Source</string>
+    <string name="choose_destination">Choose Destination</string>
+    <string name="itinerary">Itinerary</string>
+    <string name="add_image">Add Image</string>
 
 
 </resources>

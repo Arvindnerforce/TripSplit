@@ -112,6 +112,12 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
+
+
+    private void showMessage(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
     private void setupDashboardFragment()
     {
         if (homeFragment == null)

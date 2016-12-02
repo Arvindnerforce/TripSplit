@@ -21,9 +21,11 @@ import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
 
+import xyz.santeri.wvp.WrappingViewPager;
+
 public class SearchSplitFragment extends Fragment implements View.OnClickListener {
 
-    WrapContentViewPager viewPager;
+    WrappingViewPager viewPager;
     Context context;
     SearchPagerAdapter adapter;
 
@@ -79,8 +81,7 @@ public class SearchSplitFragment extends Fragment implements View.OnClickListene
 
     private void setupTab(View view) {
 
-        viewPager = (WrapContentViewPager) view.findViewById(R.id.pager);
-        viewPager.setPagingEnabled(true);
+        viewPager = (WrappingViewPager) view.findViewById(R.id.pager);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         WindowManager windowmanager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowmanager.getDefaultDisplay().getMetrics(displayMetrics);

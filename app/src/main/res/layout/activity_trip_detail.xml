@@ -126,7 +126,7 @@
 
 
                         <TextView
-                            android:id="@+id/name_text"
+                            android:id="@+id/textviewName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
@@ -136,20 +136,20 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/age_text"
+                            android:id="@+id/textviewAge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
-                            android:layout_toRightOf="@+id/name_text"
+                            android:layout_toRightOf="@+id/textviewName"
                             android:text="36"
                             android:textColor="@color/black"
                             android:textSize="18dp" />
 
                         <TextView
-                            android:id="@+id/addredss_text"
+                            android:id="@+id/textviewAddress"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/name_text"
+                            android:layout_below="@+id/textviewName"
                             android:layout_marginLeft="10dp"
                             android:text="Thailand, Phuket"
                             android:textColor="@color/black"
