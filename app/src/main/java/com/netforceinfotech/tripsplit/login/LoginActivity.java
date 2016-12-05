@@ -93,7 +93,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         context = this;
         userSessionManager = new UserSessionManager(context);
         setupToolbar();
-
         initView();
         new AccessTokenTracker() {
             @Override

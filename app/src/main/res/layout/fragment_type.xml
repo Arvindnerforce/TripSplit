@@ -1,6 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:materialdesign="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E3E4E6"
@@ -32,7 +30,7 @@
                 android:padding="15dp">
 
                 <TextView
-                    android:id="@+id/pass_txt"
+                    android:id="@+id/textviewPax"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -47,9 +45,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
-                    android:layout_toRightOf="@+id/pass_txt"
+                    android:layout_toRightOf="@+id/textviewPax"
                     android:gravity="center_vertical"
-                    android:text="Passanger"
+                    android:text="@string/passenger"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
 
@@ -94,7 +92,7 @@
                 android:padding="15dp">
 
                 <TextView
-                    android:id="@+id/space_txt"
+                    android:id="@+id/textviewSpace"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -109,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
-                    android:layout_toRightOf="@+id/space_txt"
+                    android:layout_toRightOf="@+id/textviewSpace"
                     android:gravity="center_vertical"
                     android:text="Spaces"
                     android:textColor="@color/black"
@@ -275,15 +273,6 @@
 
                 >
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="20dp"
-                    android:text="ETD"
-                    android:textColor="@color/black"
-                    android:textSize="18dp"
-                    android:id="@+id/textView2" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -300,11 +289,27 @@
                         android:layout_marginLeft="2dp"
                         android:layout_weight="50">
 
-                        <CheckBox
-                            android:id="@+id/onecheck"
+                        <RadioGroup
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone">
+
+                            <RadioButton
+                                android:id="@+id/radioButtonOneway"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                            <RadioButton
+                                android:id="@+id/radioButtonReturn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </RadioGroup>
+
+                        <ImageView
+                            android:id="@+id/imageViewOneway"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:button="@xml/custom_checkbox"
+                            android:src="@drawable/unchecked"
 
                             />
 
@@ -313,7 +318,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="5dp"
-                            android:layout_toRightOf="@+id/onecheck"
+                            android:layout_toRightOf="@+id/imageViewOneway"
                             android:text="One Way"
                             android:textColor="@color/colorPrimary"
                             android:textSize="16dp"
@@ -328,12 +333,12 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="50">
 
-                        <CheckBox
-                            android:id="@+id/returncheck"
+                        <ImageView
+                            android:id="@+id/imageViewReturn"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:layout_marginLeft="10dp"
-                            android:button="@xml/custom_checkbox" />
+                            android:src="@drawable/unchecked" />
 
 
                         <TextView
@@ -341,7 +346,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="5dp"
-                            android:layout_toRightOf="@+id/returncheck"
+                            android:layout_toRightOf="@+id/imageViewReturn"
                             android:text="Return"
                             android:textColor="@color/colorPrimary"
                             android:textSize="14dp"
@@ -353,13 +358,16 @@
                 </LinearLayout>
 
                 <EditText
+                    android:id="@+id/et_vehicleType"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/editext_background"
-                    android:drawablePadding="10dp"
-                    android:hint="Vehical Type"
-                    android:padding="8dp"
+                    android:hint="@string/vehicle_type"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="17dp"
+                    android:paddingRight="17dp"
+                    android:paddingTop="8dp"
                     android:textColorHint="@color/red" />
 
 
@@ -370,7 +378,11 @@
                     android:layout_marginTop="20dp"
                     android:background="@drawable/editext_background"
                     android:hint="@string/departure_address"
-                    android:padding="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="17dp"
+                    android:paddingRight="17dp"
+                    android:paddingTop="8dp"
+
                     android:textColorHint="@color/red" />
 
                 <TextView
@@ -380,56 +392,165 @@
                     android:layout_marginTop="20dp"
                     android:background="@drawable/editext_background"
                     android:hint="@string/destination_address"
-                    android:padding="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="17dp"
+                    android:paddingRight="17dp"
+                    android:paddingTop="8dp"
                     android:textColorHint="@color/red" />
+
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/mapView"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:layout_marginTop="16dp"
+                    android:visibility="visible" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/textviewETD"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="7dp"
-                        android:background="@drawable/iteninary_editext_border"
-                        android:hint="Select Date and Time"
-                        android:padding="10dp"
-                        android:textColor="@color/colorPrimary"
-                        android:textColorHint="@color/colorPrimary"
-                        android:textSize="18dp" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="20dp"
+                            android:text="ETD"
+                            android:textColor="@color/black"
+                            android:textSize="18dp" />
+
+                        <TextView
+                            android:id="@+id/textviewETD"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/editext_background"
+                            android:hint="@string/select_date_and_time"
+                            android:paddingBottom="8dp"
+                            android:paddingLeft="17dp"
+                            android:paddingRight="17dp"
+                            android:paddingTop="8dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textColorHint="@color/colorPrimary"
+                            android:textSize="18dp" />
+
+                    </LinearLayout>
 
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="20dp"
+                            android:text="ETA"
+                            android:textColor="@color/black"
+                            android:textSize="18dp" />
+
+                        <TextView
+                            android:id="@+id/textviewETA"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="7dp"
+                            android:background="@drawable/editext_background"
+                            android:hint="@string/select_date_and_time"
+                            android:paddingBottom="8dp"
+                            android:paddingLeft="17dp"
+                            android:paddingRight="17dp"
+                            android:paddingTop="8dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textColorHint="@color/colorPrimary"
+                            android:textSize="18dp" />
+
+
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/linearlayoutReturn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="20dp"
-                        android:text="ETA"
-                        android:textColor="@color/black"
-                        android:textSize="18dp" />
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/textviewETA"
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/return_etd"
+                            android:textColor="@color/black"
+                            android:textSize="18dp" />
+
+                        <TextView
+                            android:id="@+id/textviewReturnETD"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="7dp"
+
+                            android:layout_marginRight="7dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@drawable/editext_background"
+                            android:hint="@string/select_date_and_time"
+                            android:paddingBottom="8dp"
+                            android:paddingLeft="17dp"
+                            android:paddingRight="17dp"
+                            android:paddingTop="8dp"
+
+                            android:textColor="@color/colorPrimary"
+                            android:textColorHint="@color/colorPrimary"
+                            android:textSize="18dp" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="7dp"
-                        android:background="@drawable/iteninary_editext_border"
-                        android:hint="Select Date and Time"
-                        android:padding="10dp"
-                        android:textColor="@color/colorPrimary"
-                        android:textColorHint="@color/colorPrimary"
-                        android:textSize="18dp" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="20dp"
+                            android:text="@string/return_eta"
+                            android:textColor="@color/black"
+                            android:textSize="18dp" />
+
+                        <TextView
+                            android:id="@+id/textviewReturnETA"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="7dp"
+                            android:background="@drawable/editext_background"
+                            android:hint="@string/select_date_and_time"
+                            android:paddingBottom="8dp"
+                            android:paddingLeft="17dp"
+                            android:paddingRight="17dp"
+                            android:paddingTop="8dp"
+
+                            android:textColor="@color/colorPrimary"
+                            android:textColorHint="@color/colorPrimary"
+                            android:textSize="18dp" />
 
 
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -441,18 +562,22 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Itenarary"
+                        android:text="@string/itinerary"
                         android:textColor="@color/black"
                         android:textSize="18dp" />
 
 
                     <EditText
+                        android:id="@+id/et_itenarary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:background="@drawable/iteninary_editext_border"
-                        android:padding="10dp"
-                        android:text="@string/about_me_txt" />
+                        android:lines="6"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="17dp"
+                        android:paddingRight="17dp"
+                        android:paddingTop="8dp" />
 
                 </LinearLayout>
 
@@ -460,22 +585,28 @@
                 <Button
                     android:id="@+id/buttonAddImage"
                     android:layout_width="match_parent"
-                    android:layout_height="32dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_weight="30"
                     android:background="@drawable/iteninary_editext_border"
                     android:drawableRight="@drawable/ic_arrow"
                     android:padding="5dp"
-
-                    android:text="Add Image"
-
+                    android:text="@string/add_image"
                     android:textAllCaps="false" />
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:layout_margin="16dp"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Total Cost"
+                    android:text="@string/total_cost"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
 
@@ -488,12 +619,18 @@
 
 
                     <EditText
+                        android:id="@+id/et_totalCost"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="5dp"
                         android:layout_weight="60"
                         android:background="@drawable/iteninary_editext_border"
-                        android:minLines="3" />
+                        android:inputType="numberDecimal"
+                        android:minLines="3"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="17dp"
+                        android:paddingRight="17dp"
+                        android:paddingTop="8dp" />
 
                     <Button
                         android:id="@+id/buttonCurrency"

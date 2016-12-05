@@ -1,8 +1,11 @@
 package com.netforceinfotech.tripsplit.general;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.os.Build;
 import android.os.Parcelable;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -12,6 +15,8 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 
 /**
  * Created by Netforce on 8/10/2016.
@@ -27,6 +32,7 @@ public class WrapContentViewPager extends ViewPager {
     private int rightHeight;
     private int leftHeight;
     private int scrollingPosition = -1;
+    private boolean mAnimStarted=false;
 
     public WrapContentViewPager(Context context) {
         super(context);
@@ -93,41 +99,70 @@ public class WrapContentViewPager extends ViewPager {
      * @param widthMeasureSpec  with measured
      * @param heightMeasureSpec height measured
      */
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        widthMeasuredSpec = widthMeasureSpec;
-        int mode = MeasureSpec.getMode(heightMeasureSpec);
-
-        if (mode == MeasureSpec.UNSPECIFIED || mode == MeasureSpec.AT_MOST) {
-            if (height == 0) {
-                // measure vertical decor (i.e. PagerTitleStrip) based on ViewPager implementation
-                decorHeight = 0;
-                for (int i = 0; i < getChildCount(); i++) {
-                    View child = getChildAt(i);
-                    LayoutParams lp = (LayoutParams) child.getLayoutParams();
-                    if (lp != null && lp.isDecor) {
-                        int vgrav = lp.gravity & Gravity.VERTICAL_GRAVITY_MASK;
-                        boolean consumeVertical = vgrav == Gravity.TOP || vgrav == Gravity.BOTTOM;
-                        if (consumeVertical) {
-                            decorHeight += child.getMeasuredHeight();
-                        }
-                    }
+        if(!mAnimStarted && null != getAdapter()) {
+            int height = 0;
+            View child = ((FragmentStatePagerAdapter) getAdapter()).getItem(getCurrentItem()).getView();
+            if (child != null) {
+                child.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+                height = child.getMeasuredHeight();
+                if (VersionUtils.isJellyBean() && height < getMinimumHeight()) {
+                    height = getMinimumHeight();
                 }
-
-                // make sure that we have an height (not sure if this is necessary because it seems that onPageScrolled is called right after
-                int position = getCurrentItem();
-                View child = getViewAtPosition(position);
-                if (child != null) {
-                    height = measureViewHeight(child);
-                }
-                Log.d(TAG, "onMeasure height:" + height + " decor:" + decorHeight);
-
             }
-            int totalHeight = height + decorHeight + getPaddingBottom() + getPaddingTop();
-            heightMeasureSpec = MeasureSpec.makeMeasureSpec(totalHeight, MeasureSpec.EXACTLY);
-            Log.d(TAG, "onMeasure total height:" + totalHeight);
+
+            // Not the best place to put this animation, but it works pretty good.
+            int newHeight = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+            if (getLayoutParams().height != 0 && heightMeasureSpec != newHeight) {
+                final int targetHeight = height;
+                final int currentHeight = getLayoutParams().height;
+                final int heightChange = targetHeight - currentHeight;
+
+                Animation a = new Animation() {
+                    @Override
+                    protected void applyTransformation(float interpolatedTime, Transformation t) {
+                        if (interpolatedTime >= 1) {
+                            getLayoutParams().height = targetHeight;
+                        } else {
+                            int stepHeight = (int) (heightChange * interpolatedTime);
+                            getLayoutParams().height = currentHeight + stepHeight;
+                        }
+                        requestLayout();
+                    }
+
+                    @Override
+                    public boolean willChangeBounds() {
+                        return true;
+                    }
+                };
+
+                a.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        mAnimStarted = true;
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        mAnimStarted = false;
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+                });
+
+                a.setDuration(1000);
+                startAnimation(a);
+                mAnimStarted = true;
+            } else {
+                heightMeasureSpec = newHeight;
+            }
         }
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);

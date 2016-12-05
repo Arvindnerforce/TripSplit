@@ -1,37 +1,214 @@
 package com.netforceinfotech.tripsplit.posttrip;
 
+import android.Manifest;
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+import com.netforceinfotech.tripsplit.Dashboard.NavigationFragment;
 import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.R;
-import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
+import com.netforceinfotech.tripsplit.general.UserSessionManager;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import xyz.santeri.wvp.WrappingViewPager;
 
 public class PostTripFragment extends Fragment {
 
-    WrapContentViewPager viewPager;
+    WrappingViewPager viewPager;
     Context context;
+    private MaterialDialog progressDialog;
+    UserSessionManager userSessionManager;
+    ImageView imageViewDp;
+    TextView textViewCountryCode, textViewName, textViewAge, textViewAddress;
+    private String countryCode = "";
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_profile, container, false);
         context = getActivity();
+        userSessionManager = new UserSessionManager(context);
+        NavigationFragment.POSITION=5;
+        initView(view);
+        getPermission();
         setuptoolbar();
         setupTab(view);
+        getUserInfo();
         return view;
 
+    }
+    private void getPermission() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            String[] permission = {
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            };
+
+            ActivityCompat.requestPermissions(getActivity(),
+                    permission, 1);
+
+
+        }
+    }
+
+    private void initView(View view) {
+        progressDialog = new MaterialDialog.Builder(context)
+                .title(R.string.progress_dialog)
+                .content(R.string.please_wait)
+                .progress(true, 0).build();
+        imageViewDp = (ImageView) view.findViewById(R.id.imageViewDp);
+        textViewCountryCode = (TextView) view.findViewById(R.id.textViewCountryCode);
+        textViewName = (TextView) view.findViewById(R.id.textviewName);
+        textViewAddress = (TextView) view.findViewById(R.id.textviewAddress);
+        textViewAge = (TextView) view.findViewById(R.id.textviewAge);
+    }
+
+    private void getUserInfo() {
+        String baseUrl = getString(R.string.url);
+        String viewProfile = "services.php?opt=viewprofile&user_id=" + userSessionManager.getUserId();
+        String url = baseUrl + viewProfile;
+        Log.i("url",url);
+        Ion.with(context)
+                .load(url)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        progressDialog.dismiss();
+                        // do stuff with the result or error
+                        if (result != null) {
+                            Log.i("kresult", result.toString());
+                            setupUserData(result);
+                        } else {
+                            showMessage("Something went wrong");
+                        }
+                    }
+                });
+    }
+
+    private void showMessage(String s) {
+        Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+    }
+
+    private void setupUserData(JsonObject result) {
+        if (result.get("status").getAsString().equalsIgnoreCase("success")) {
+            JsonArray data = result.getAsJsonArray("data");
+            String name = "", email = "", profile_image = "", dob = "", country = "", address = "";
+            JsonObject jsonObject = data.get(0).getAsJsonObject();
+            if (!jsonObject.get("firstname").isJsonNull()) {
+                name = jsonObject.get("firstname").getAsString();
+            }
+            if (!jsonObject.get("email").isJsonNull()) {
+                email = jsonObject.get("email").getAsString();
+            }
+            if (!jsonObject.get("profile_image").isJsonNull()) {
+                profile_image = jsonObject.get("profile_image").getAsString();
+            }
+            if (!jsonObject.get("dob").isJsonNull()) {
+                dob = jsonObject.get("dob").getAsString();
+            }
+            if (!jsonObject.get("country").isJsonNull()) {
+                country = jsonObject.get("country").getAsString();
+            }
+            if (!jsonObject.get("country_code").isJsonNull()) {
+                countryCode = jsonObject.get("country_code").getAsString();
+            }
+            if (!jsonObject.get("address").isJsonNull()) {
+                address = jsonObject.get("address").getAsString();
+            }
+
+            try {
+                Glide.with(context).load(profile_image).error(R.drawable.ic_error).into(imageViewDp);
+            } catch (Exception ex) {
+                showMessage("some error in pic");
+                ex.printStackTrace();
+            }
+            textViewName.setText(name);
+            String fortmatedDate = getFormattedDate(dob);
+            textViewAddress.setText(address);
+            textViewCountryCode.setText(countryCode);
+            setAge(dob);
+
+        }
+    }
+
+    private void setAge(String dob) {
+        if (dob.equalsIgnoreCase("0000-00-00")) {
+            textViewAge.setText("NA");
+        } else {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(simpleDateFormat.parse(dob));// all done
+                String age = getAge(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+                textViewAge.setText(age);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+    }
+
+    private String getAge(int year, int month, int day) {
+        Calendar dob = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
+
+        dob.set(year, month, day);
+
+        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
+            age--;
+        }
+
+        Integer ageInt = new Integer(age);
+        String ageS = ageInt.toString();
+
+        return ageS;
+    }
+
+    private String getFormattedDate(String dob) {
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = fmt.parse(dob);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat fmtOut = new SimpleDateFormat("dd/MM/yyyy");
+        return fmtOut.format(date);
     }
 
     private void setuptoolbar() {
@@ -65,8 +242,7 @@ public class PostTripFragment extends Fragment {
 
     private void setupTab(View v) {
 
-        viewPager = (WrapContentViewPager) v.findViewById(R.id.pager);
-        viewPager.setPagingEnabled(true);
+        viewPager = (WrappingViewPager) v.findViewById(R.id.pager);
 
         TabLayout tabLayout = (TabLayout) v.findViewById(R.id.tab_layout);
 
@@ -91,7 +267,7 @@ public class PostTripFragment extends Fragment {
         viewPager.setAdapter(adapter);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
+        viewPager.setCurrentItem(0);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 

@@ -8,44 +8,17 @@
     <include
         android:id="@+id/toolbar"
         layout="@layout/app_bar" />
-
+    <fragment
+        android:id="@+id/place_autocomplete_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+        />
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/linearlayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="100">
-
-            <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
-                android:id="@+id/places_autocomplete"
-                android:layout_width="0dp"
-                android:layout_height="35dp"
-                android:layout_margin="5dp"
-                android:layout_weight="70"
-                android:background="@drawable/edit_black_background"
-                android:hint="Enter Place "
-                android:paddingLeft="5dp"
-                android:textColorHint="@color/black"
-                app:pacv_googleMapsApiKey="AIzaSyAyjIfqniiR1A2GqpP5M0-bL7bKa54Ctqk" />
-
-            <Button
-                android:id="@+id/search_button"
-                android:layout_width="0dp"
-                android:layout_height="35dp"
-                android:layout_margin="5dp"
-                android:layout_toRightOf="@+id/places_autocomplete"
-                android:layout_weight="30"
-                android:background="@color/colorPrimary"
-                android:text="Search"
-                android:textAllCaps="false"
-                android:textColor="@color/white" />
-
-        </LinearLayout>
 
         <fragment
             android:id="@+id/map"

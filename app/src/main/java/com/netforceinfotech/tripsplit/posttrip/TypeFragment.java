@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,23 +17,57 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.appyvet.rangebar.RangeBar;
+import com.bumptech.glide.Glide;
+import com.directions.route.AbstractRouting;
+import com.directions.route.Route;
+import com.directions.route.RouteException;
+import com.directions.route.Routing;
+import com.directions.route.RoutingListener;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+import com.mukesh.countrypicker.fragments.CountryPicker;
+import com.mukesh.countrypicker.interfaces.CountryPickerListener;
+import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
-import com.shehabic.droppy.DroppyClickCallbackInterface;
-import com.shehabic.droppy.DroppyMenuItem;
-import com.shehabic.droppy.DroppyMenuPopup;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -40,12 +76,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Currency;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+import static com.facebook.FacebookSdk.getApplicationContext;
 
-public class TypeFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+
+public class TypeFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, OnMapReadyCallback, GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraMoveCanceledListener, RoutingListener, CompoundButton.OnCheckedChangeListener {
 
     private static final String IMAGE_DIRECTORY_NAME = "tripsplit";
 
@@ -53,9 +96,15 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     private static final int TAKE_PHOTO_CODE = 1235;
     private static final int DESTINATION = 420;
     private static final int SOURCE = 421;
-
+    private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    AbstractRouting.TravelMode mode;
+    String group = "male";
+    float zoomlevel = 16f;
+    private PolylineOptions polylineOptions = new PolylineOptions();
+    private ArrayList<LatLng> arrayPoints = new ArrayList<>();
+    LinearLayout linearLayoutReturn;
     Context context;
-    TextView textViewETD, pass_txt, space_txt, textviewETA, textviewAgeGroup;
+    TextView textViewETD, textviewPax, textviewSpace, textviewETA, textviewAgeGroup, textViewReturnETA, textViewReturnETD;
     Button increamentPass, decreamentPass, increamentSpace, decreamentSpace, male, female, mixed, buttonPost, buttonAddImage;
     int pass_number = 1;
     int space_number = 1;
@@ -65,8 +114,31 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     private MaterialDialog dialog;
     Button buttonCurrency;
     RangeBar rangeBar;
+    RadioButton radioButtonOneway, radioButtonReturn;
     TextView textViewDepartureAddress, textViewDestinationAddress;
     private Intent google_intent;
+    String TAG = "googleplace";
+    private MapView mMapView;
+    private boolean mapReady = false;
+    private LatLng destinationLatLang, sourceLatLng;
+    private boolean destinationFlag = false, sourceFlag = false;
+    private Place place;
+    private List<Polyline> polylines = new ArrayList<>();
+    private static final int[] COLORS = new int[]{R.color.colorPrimaryDark, R.color.colorPrimary, R.color.colorPrimaryLight, R.color.colorAccent, R.color.primary_dark_material_light};
+    private GoogleMap mMap;
+    String type = "car";
+    ImageView imageViewOneWay, imageViewReturn, image;
+    private boolean returnFlag = true;
+    UserSessionManager userSessionManager;
+    private String upperLimit="100", lowerLimit="0";
+    private String trip = "0";
+    EditText editTextVehicleType, editTextItenarary, editTextTotalCost;
+    private String currencyCode;
+    private Calendar now;
+    private DatePickerDialog dpd;
+    private boolean returnetdclicked;
+    private MaterialDialog progressDialog;
+    private Marker destinationMarker, sournceMarker;
 
     public TypeFragment() {
         // Required empty public constructor
@@ -82,41 +154,80 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_flight, container, false);
+        View view = inflater.inflate(R.layout.fragment_type, container, false);
         context = getActivity();
+        userSessionManager = new UserSessionManager(context);
+        mMapView = (MapView) view.findViewById(R.id.mapView);
+        context = getActivity();
+        try {
+            type = this.getArguments().getString("type");
+            ////aeroplane,car,bus,ship
+
+        } catch (Exception ex) {
+            showMessage("bundle error");
+            Log.i("kunsang_exception", "paramenter not yet set");
+        }
+        mMapView.onCreate(savedInstanceState);
+
+        mMapView.onResume(); // needed to get the map to display immediately
+
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        mMapView.getMapAsync(this);
         initView(view);
         return view;
     }
 
     private void initView(View view) {
+        image = (ImageView) view.findViewById(R.id.image);
+        image.setVisibility(View.GONE);
+        progressDialog = new MaterialDialog.Builder(context)
+                .title(R.string.progress_dialog)
+                .content(R.string.please_wait)
+                .progress(true, 0).build();
+        editTextTotalCost = (EditText) view.findViewById(R.id.et_totalCost);
+        editTextItenarary = (EditText) view.findViewById(R.id.et_itenarary);
+        editTextVehicleType = (EditText) view.findViewById(R.id.et_vehicleType);
+        linearLayoutReturn = (LinearLayout) view.findViewById(R.id.linearlayoutReturn);
+        textViewReturnETA = (TextView) view.findViewById(R.id.textviewReturnETA);
+        textViewReturnETD = (TextView) view.findViewById(R.id.textviewReturnETD);
         textViewDepartureAddress = (TextView) view.findViewById(R.id.textViewDepartureAddress);
         textViewDestinationAddress = (TextView) view.findViewById(R.id.textViewDestinationAddress);
         textViewDestinationAddress.setOnClickListener(this);
         textViewDepartureAddress.setOnClickListener(this);
+        textViewReturnETA.setOnClickListener(this);
+        textViewReturnETD.setOnClickListener(this);
+        imageViewOneWay = (ImageView) view.findViewById(R.id.imageViewOneway);
+        imageViewReturn = (ImageView) view.findViewById(R.id.imageViewReturn);
+        imageViewOneWay.setOnClickListener(this);
+        imageViewReturn.setOnClickListener(this);
+        radioButtonOneway = (RadioButton) view.findViewById(R.id.radioButtonOneway);
+        radioButtonReturn = (RadioButton) view.findViewById(R.id.radioButtonReturn);
+        radioButtonOneway.setOnCheckedChangeListener(this);
+        radioButtonReturn.setOnCheckedChangeListener(this);
+        radioButtonOneway.setChecked(false);
+        radioButtonOneway.setChecked(true);
 
         rangeBar = (RangeBar) view.findViewById(R.id.rangebar);
         textviewAgeGroup = (TextView) view.findViewById(R.id.textviewAgeGroup);
+        textviewAgeGroup.setText(lowerLimit + "-" + upperLimit);
+
         buttonCurrency = (Button) view.findViewById(R.id.buttonCurrency);
         buttonCurrency.setOnClickListener(this);
         final String currency[] = {"INR", "USD", "EURO", "YEN"};
-        DroppyMenuPopup.Builder droppyBuilder = new DroppyMenuPopup.Builder(context, buttonCurrency);
-        droppyBuilder.addMenuItem(new DroppyMenuItem("INR"))
-                .addMenuItem(new DroppyMenuItem("USD"))
-                .addMenuItem(new DroppyMenuItem("EURO"))
-                .addMenuItem(new DroppyMenuItem("YEN"));
-        droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
-            @Override
-            public void call(View v, int id) {
-                buttonCurrency.setText(currency[id]);
-            }
-        });
-        droppyBuilder.build();
+
         rangeBar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
             public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex,
                                               int rightPinIndex,
                                               String leftPinValue, String rightPinValue) {
                 textviewAgeGroup.setText(leftPinValue + "-" + rightPinValue);
+                lowerLimit = leftPinValue;
+                upperLimit = rightPinValue;
             }
         });
         buttonAddImage = (Button) view.findViewById(R.id.buttonAddImage);
@@ -132,8 +243,8 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         mixed = (Button) view.findViewById(R.id.mixedButton);
         mixed.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         mixed.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
-        pass_txt = (TextView) view.findViewById(R.id.pass_txt);
-        space_txt = (TextView) view.findViewById(R.id.space_txt);
+        textviewPax = (TextView) view.findViewById(R.id.textviewPax);
+        textviewSpace = (TextView) view.findViewById(R.id.textviewSpace);
         textviewETA = (TextView) view.findViewById(R.id.textviewETA);
         textViewETD = (TextView) view.findViewById(R.id.textviewETD);
         Typeface custom_font = Typeface.createFromAsset(context.getAssets(), "fonts/GothamRoundedBook.ttf");
@@ -155,16 +266,37 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
 
         switch (view.getId()) {
             case R.id.textViewDestinationAddress:
-                google_intent = new Intent(getActivity(), GoogleMapActivity.class);
-                google_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                google_intent.putExtra("choose_source", false);
-                startActivityForResult(google_intent, DESTINATION);
+                try {
+                    Intent intent = new Intent(context, GoogleMapActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("choose_source", false);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, DESTINATION);
+                } catch (Exception ex) {
+                    showMessage("google map exception");
+                    ex.printStackTrace();
+                }
                 break;
             case R.id.textViewDepartureAddress:
-                google_intent = new Intent(getActivity(), GoogleMapActivity.class);
-                google_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                google_intent.putExtra("choose_source", true);
-                startActivityForResult(google_intent, SOURCE);
+                try {
+                    Intent intent = new Intent(context, GoogleMapActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("choose_source", true);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, SOURCE);
+                } catch (Exception ex) {
+                    showMessage("google map exception");
+                    ex.printStackTrace();
+                }
+              /*  try {
+                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                            .build(getActivity());
+                    startActivityForResult(intent, SOURCE);
+                } catch (GooglePlayServicesRepairableException e) {
+                    // TODO: Handle the error.
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    // TODO: Handle the error.
+                }*/
                 break;
             case R.id.buttonAddImage:
                 showEditPicPopup();
@@ -174,8 +306,10 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 break;
             case R.id.textviewETD:
                 etdclicked = true;
-                Calendar now = Calendar.getInstance();
-                DatePickerDialog dpd = DatePickerDialog.newInstance(
+                returnetdclicked = false;
+
+                now = Calendar.getInstance();
+                dpd = DatePickerDialog.newInstance(
                         TypeFragment.this,
                         now.get(Calendar.YEAR),
                         now.get(Calendar.MONTH),
@@ -187,15 +321,44 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 break;
             case R.id.textviewETA:
                 etdclicked = false;
-                Calendar now1 = Calendar.getInstance();
-                DatePickerDialog dpd1 = DatePickerDialog.newInstance(
-                        TypeFragment.this,
-                        now1.get(Calendar.YEAR),
-                        now1.get(Calendar.MONTH),
-                        now1.get(Calendar.DAY_OF_MONTH)
-                );
-                dpd1.show(getActivity().getFragmentManager(), "Datepickerdialog");
+                returnetdclicked = false;
 
+                now = Calendar.getInstance();
+                dpd = DatePickerDialog.newInstance(
+                        TypeFragment.this,
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DAY_OF_MONTH)
+                );
+                dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+
+
+                break;
+            case R.id.textviewReturnETA:
+                etdclicked = false;
+                returnetdclicked = true;
+                now = Calendar.getInstance();
+                dpd = DatePickerDialog.newInstance(
+                        TypeFragment.this,
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DAY_OF_MONTH)
+                );
+                dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+
+                break;
+            case R.id.textviewReturnETD:
+                etdclicked = false;
+                returnetdclicked = true;
+
+                now = Calendar.getInstance();
+                dpd = DatePickerDialog.newInstance(
+                        TypeFragment.this,
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DAY_OF_MONTH)
+                );
+                dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
 
                 break;
 
@@ -203,7 +366,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
 
                 pass_number = pass_number + 1;
                 String p_n = String.valueOf(pass_number);
-                pass_txt.setText(p_n);
+                textviewPax.setText(p_n);
 
 
                 break;
@@ -213,7 +376,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 if (pass_number >= 1) {
                     pass_number = pass_number - 1;
                     String dp_n = String.valueOf(pass_number);
-                    pass_txt.setText(dp_n);
+                    textviewPax.setText(dp_n);
                 }
                 break;
 
@@ -221,7 +384,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
 
                 space_number = space_number + 1;
                 String sp_n = String.valueOf(space_number);
-                space_txt.setText(sp_n);
+                textviewSpace.setText(sp_n);
 
                 break;
 
@@ -229,13 +392,14 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 if (space_number >= 1) {
                     space_number = space_number - 1;
                     String dsp_n = String.valueOf(space_number);
-                    space_txt.setText(dsp_n);
+                    textviewSpace.setText(dsp_n);
                 }
 
                 break;
 
             case R.id.maleButton:
 
+                group = "male";
                 female.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.border_image));
                 mixed.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.border_image2));
                 male.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
@@ -247,7 +411,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 break;
 
             case R.id.femaleButton:
-
+                group = "female";
                 male.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.border_image));
                 mixed.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.border_image2));
                 female.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
@@ -260,6 +424,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 break;
 
             case R.id.mixedButton:
+                group = "mixed";
 
                 male.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.border_image));
                 female.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.border_image));
@@ -278,17 +443,120 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 pickPictureIntent();
                 dialog.dismiss();
                 break;
+            case R.id.buttonCurrency:
+                showCountryPopUp();
+                break;
+            case R.id.imageViewOneway:
+                radioButtonOneway.performClick();
+                break;
+            case R.id.imageViewReturn:
+                radioButtonReturn.performClick();
+                break;
         }
 
 
     }
 
     private void postTrip() {
-        validateDate();
+        if (validateDate()) {
+            String baseUrl = getString(R.string.url);
+            // https://netforcesales.com/tripesplit/mobileApp/api/services.php?opt=posttrip
+            String url = baseUrl + "services.php?opt=posttrip";
+            Log.i("url",url);
+            progressDialog.show();
+            if (filePath != null) {
+
+                Ion.with(getApplicationContext())
+                        .load("POST", url)
+                        .setMultipartParameter("user_id", userSessionManager.getUserId())
+                        .setMultipartParameter("type", type)
+                        .setMultipartParameter("pax", textviewPax.getText().toString().trim())
+                        .setMultipartParameter("group", group)
+                        .setMultipartParameter("age_group_upper", upperLimit)
+                        .setMultipartParameter("age_group_lower", lowerLimit)
+                        .setMultipartParameter("trip", trip)
+                        .setMultipartParameter("vehicle_type", editTextVehicleType.getText().toString().trim())
+                        .setMultipartParameter("depart_address", textViewDepartureAddress.getText().toString())
+                        .setMultipartParameter("dest_address", textViewDestinationAddress.getText().toString())
+                        .setMultipartParameter("depart_lat", sourceLatLng.latitude + "")
+                        .setMultipartParameter("depart_lon", sourceLatLng.longitude + "")
+                        .setMultipartParameter("dest_lat", destinationLatLang.latitude + "")
+                        .setMultipartParameter("dest_lon", destinationLatLang.longitude + "")
+                        .setMultipartParameter("etd", textViewETD.getText().toString())
+                        .setMultipartParameter("eta", textviewETA.getText().toString())
+                        .setMultipartParameter("return_etd", textViewReturnETD.getText().toString())
+                        .setMultipartParameter("return_eta", textViewReturnETA.getText().toString())
+                        .setMultipartParameter("iteinerary", editTextItenarary.getText().toString().trim())
+                        .setMultipartParameter("total_cost", editTextTotalCost.getText().toString())
+                        //currency
+                        .setMultipartParameter("currency", currencyCode)
+                        .setMultipartFile("image", new File(filePath))
+                        .asJsonObject()
+                        .setCallback(new FutureCallback<JsonObject>() {
+                            @Override
+                            public void onCompleted(Exception e, JsonObject result) {
+                                progressDialog.dismiss();
+                                if (result == null) {
+                                    e.printStackTrace();
+                                    showMessage("Error in Posting new Trip!!! Try again");
+                                } else {
+                                    if (result.get("status").getAsString().equalsIgnoreCase("success")) {
+                                        result.toString();
+                                        showMessage("New Trip Posted Successfully");
+                                        setupDashboardFragment();
+                                    }
+                                    Log.i("result", result.toString());
+                                }
+                            }
+                        });
+            } else {
+                Ion.with(getApplicationContext())
+                        .load("POST", url)
+                        .setMultipartParameter("user_id", userSessionManager.getUserId())
+                        .setMultipartParameter("type", type)
+                        .setMultipartParameter("pax", textviewPax.getText().toString().trim())
+                        .setMultipartParameter("group", group)
+                        .setMultipartParameter("age_group_upper", upperLimit)
+                        .setMultipartParameter("age_group_lower", lowerLimit)
+                        .setMultipartParameter("trip", trip)
+                        .setMultipartParameter("vehicle_type", editTextVehicleType.getText().toString().trim())
+                        .setMultipartParameter("depart_address", textViewDepartureAddress.getText().toString())
+                        .setMultipartParameter("dest_address", textViewDestinationAddress.getText().toString())
+                        .setMultipartParameter("depart_lat", sourceLatLng.latitude + "")
+                        .setMultipartParameter("depart_lon", sourceLatLng.longitude + "")
+                        .setMultipartParameter("dest_lat", destinationLatLang.latitude + "")
+                        .setMultipartParameter("dest_lon", destinationLatLang.longitude + "")
+                        .setMultipartParameter("etd", textViewETD.getText().toString())
+                        .setMultipartParameter("eta", textviewETA.getText().toString())
+                        .setMultipartParameter("return_etd", textViewReturnETD.getText().toString())
+                        .setMultipartParameter("return_eta", textViewReturnETA.getText().toString())
+                        .setMultipartParameter("iteinerary", editTextItenarary.getText().toString().trim())
+                        .setMultipartParameter("total_cost", editTextTotalCost.getText().toString())
+                        //currency
+                        .setMultipartParameter("currency", currencyCode)
+                        .asJsonObject()
+                        .setCallback(new FutureCallback<JsonObject>() {
+                            @Override
+                            public void onCompleted(Exception e, JsonObject result) {
+                                progressDialog.dismiss();
+                                if (result == null) {
+                                    e.printStackTrace();
+                                    showMessage("Error in Posting new Trip!!! Try again");
+                                } else {
+                                    if (result.get("status").getAsString().equalsIgnoreCase("success")) {
+                                        showMessage("New Trip Posted Successfully");
+                                    }
+                                    Log.i("result", result.toString());
+                                }
+                            }
+                        });
+            }
+
+        }
     }
 
-    private void validateDate() {
-        Date etd, eta;
+    private boolean validateDate() {
+        Date etd, eta, returnetd, returneta;
         String date1 = textViewETD.getText().toString();
         String date2 = textviewETA.getText().toString();
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE dd MMM yy HH:mm");
@@ -297,19 +565,50 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
             etd = dateFormat.parse(date1);
         } catch (ParseException e) {
             showMessage("Departure date not set");
-            return;
+            return false;
         }
         try {
             eta = dateFormat.parse(date2);
         } catch (ParseException e) {
             showMessage("Arival date not set");
-            return;
+            return false;
         }
         Log.i("datecheck", etd.toString() + ":" + eta.toString());
         if (etd.after(eta)) {
 
             showMessage("Arival time should be after Departure time");
         }
+
+        if (returnFlag) {
+            String date3 = textViewReturnETD.getText().toString();
+            String date4 = textViewReturnETA.getText().toString();
+            try {
+                returnetd = dateFormat.parse(date3);
+            } catch (ParseException e) {
+                showMessage("Departure date not set");
+                return false;
+            }
+            try {
+                returneta = dateFormat.parse(date4);
+            } catch (ParseException e) {
+                showMessage("Arival date not set");
+                return false;
+            }
+            Log.i("datecheck", returnetd.toString() + ":" + returneta.toString());
+            if (returnetd.after(returneta)) {
+
+                showMessage("Arival time should be after Departure time");
+                return false;
+            }
+            if (etd.after(returnetd)) {
+                showMessage("Return time should be after out trip time");
+                return false;
+            }
+
+        }
+        return true;
+
+
     }
 
     private void showMessage(String s) {
@@ -321,10 +620,14 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         String minuteString = minute < 10 ? "0" + minute : "" + minute;
         String secondString = second < 10 ? "0" + second : "" + second;
         String time = "You picked the following time: " + hourString + "h" + minuteString + "m" + secondString + "s";
-        if (etdclicked) {
+        if (etdclicked && !returnetdclicked) {
             textViewETD.append(" " + hourString + ":" + minuteString);
-        } else {
+        } else if (!etdclicked && !returnetdclicked) {
             textviewETA.append(" " + hourString + ":" + minuteString);
+        } else if (etdclicked && returnetdclicked) {
+            textViewReturnETA.append(" " + hourString + ":" + minuteString);
+        } else {
+            textViewReturnETD.append(" " + hourString + ":" + minuteString);
         }
     }
 
@@ -340,10 +643,14 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
 
         SimpleDateFormat outDate = new SimpleDateFormat("EEE dd MMM yy");
 
-        if (etdclicked) {
+        if (etdclicked && !returnetdclicked) {
             textViewETD.setText(outDate.format(date2));
-        } else {
+        } else if (!etdclicked && !returnetdclicked) {
             textviewETA.setText(outDate.format(date2));
+        } else if (etdclicked && returnetdclicked) {
+            textViewReturnETD.setText(outDate.format(date2));
+        } else {
+            textViewReturnETA.setText(outDate.format(date2));
         }
         Calendar now = Calendar.getInstance();
         TimePickerDialog tpd = TimePickerDialog.newInstance(
@@ -493,6 +800,72 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         return Uri.fromFile(getOutputMediaFile());
     }
 
+    private void setupSourceDestinationMarker() {
+        switch (type) {
+            case "aeroplane":
+                mode = Routing.TravelMode.TRANSIT;
+                break;
+            case "car":
+                mode = Routing.TravelMode.DRIVING;
+                break;
+            case "ship":
+                mode = Routing.TravelMode.TRANSIT;
+                break;
+            case "bus":
+                mode = Routing.TravelMode.TRANSIT;
+                break;
+        }
+        Routing routing = new Routing.Builder()
+                .travelMode(mode)
+                .withListener(this)
+                .waypoints(sourceLatLng, destinationLatLang)
+                .build();
+        routing.execute();
+
+        MarkerOptions options = new MarkerOptions();
+        options.position(sourceLatLng);
+        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_source_location));
+        mMap.addMarker(options);
+        options.position(destinationLatLang);
+        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_destination_location));
+        mMap.addMarker(options);
+        CameraUpdate center =
+                CameraUpdateFactory.newLatLng(sourceLatLng);
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+
+        mMap.moveCamera(center);
+        mMap.animateCamera(zoom);
+        showMessage(center.toString());
+        double dummy_radius = distance(sourceLatLng.latitude, sourceLatLng.longitude, destinationLatLang.latitude, destinationLatLang.longitude);
+        dummy_radius = dummy_radius / 2;
+        double circleRad = dummy_radius * 1000;//multiply by 1000 to make units in KM
+        float zoomLevel = getZoomLevel(circleRad);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sourceLatLng, zoomLevel));
+
+    }
+
+    private int getZoomLevel(double radius) {
+        double scale = radius / 500;
+        return ((int) (16 - Math.log(scale) / Math.log(2)));
+    }
+
+    private double distance(double lat1, double lon1, double lat2, double lon2) {
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515;
+        return (dist);
+    }
+
+    private double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    private double rad2deg(double rad) {
+        return (rad * 180.0 / Math.PI);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -500,6 +873,8 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 if (resultCode == getActivity().RESULT_OK) {
                     Log.i("result picture", "clicked");
                     buttonAddImage.setText(filePath);
+                    image.setVisibility(View.VISIBLE);
+                    Glide.with(context).load(new File(filePath)).error(R.drawable.ic_error).into(image);
                 }
                 break;
             case PICK_IMAGE:
@@ -516,23 +891,268 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    image.setVisibility(View.VISIBLE);
+                    Glide.with(context).load(new File(filePath)).error(R.drawable.ic_error).into(image);
+
                     Log.i("result picture", "picked");
                 }
                 break;
             case DESTINATION:
-                if (resultCode == getActivity().RESULT_OK) {
+                destinationFlag = true;
+                if (resultCode == RESULT_OK) {
+                    double lat = data.getDoubleExtra("lat", 0);
+                    double lon = data.getDoubleExtra("lon", 0);
                     String address = data.getStringExtra("address");
                     textViewDestinationAddress.setText(address);
+                    destinationLatLang = new LatLng(lat, lon);
+                    try {
+                        destinationMarker.remove();
+                    } catch (Exception ex) {
+
+                    }
+                    destinationMarker = mMap.addMarker(new MarkerOptions().title(address).position(destinationLatLang));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destinationLatLang, zoomlevel));
+                    if (sourceFlag) {
+                        zoomInTwoPoint();
+                    }
+
                 }
                 break;
             case SOURCE:
-                if (resultCode == getActivity().RESULT_OK) {
+                sourceFlag = true;
+                if (resultCode == RESULT_OK) {
+                    double lat = data.getDoubleExtra("lat", 0);
+                    double lon = data.getDoubleExtra("lon", 0);
                     String address = data.getStringExtra("address");
                     textViewDepartureAddress.setText(address);
-                }
+                    sourceLatLng = new LatLng(lat, lon);
+                    try {
+                        sournceMarker.remove();
+                    } catch (Exception ex) {
 
+                    }
+                    sournceMarker = mMap.addMarker(new MarkerOptions().title(address).position(sourceLatLng));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sourceLatLng, zoomlevel));
+
+
+                }
+                break;
+            case PLACE_AUTOCOMPLETE_REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    place = PlaceAutocomplete.getPlace(getActivity(), data);
+                    Log.i(TAG, "Place: " + place.getName());
+                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                    Status status = PlaceAutocomplete.getStatus(getActivity(), data);
+                    // TODO: Handle the error.
+                    Log.i(TAG, status.getStatusMessage());
+
+                } else if (resultCode == RESULT_CANCELED) {
+                    // The user canceled the operation.
+                }
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void zoomInTwoPoint() {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(sourceLatLng);
+        builder.include(destinationLatLang);
+        LatLngBounds bounds = builder.build();
+        int padding = 10; // offset from edges of the map in pixels
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+        mMap.animateCamera(cu);
+
+    }
+
+    private void drawPolyLine() {
+        arrayPoints.clear();
+        arrayPoints.add(sourceLatLng);
+        arrayPoints.add(destinationLatLang);
+        polylineOptions.color(Color.RED);
+        polylineOptions.width(5);
+        polylineOptions.addAll(arrayPoints);
+        mMap.addPolyline(polylineOptions);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(arrayPoints.get(0), 15));
+        // Zoom in, animating the camera.
+        mMap.animateCamera(CameraUpdateFactory.zoomIn());
+        // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
+
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mapReady = true;
+        mMap = googleMap;
+        // Add a marker in Sydney and move the camera
+        mMap.getUiSettings().setRotateGesturesEnabled(false);
+        mMap.getUiSettings().setAllGesturesEnabled(true);
+        mMap.getUiSettings().setMapToolbarEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                zoomlevel = mMap.getCameraPosition().zoom;
+            }
+        });
+    }
+
+    @Override
+    public void onCameraIdle() {
+
+    }
+
+    @Override
+    public void onCameraMoveStarted(int i) {
+
+    }
+
+    @Override
+    public void onCameraMove() {
+
+    }
+
+    @Override
+    public void onCameraMoveCanceled() {
+
+    }
+
+    @Override
+    public void onRoutingFailure(RouteException e) {
+        if (e != null) {
+            Toast.makeText(context, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(context, "Something went wrong, Try again", Toast.LENGTH_SHORT).show();
+        }
+        drawPolyLine();
+    }
+
+    @Override
+    public void onRoutingStart() {
+
+    }
+
+    @Override
+    public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex) {
+
+
+        if (polylines.size() > 0) {
+            for (Polyline poly : polylines) {
+                poly.remove();
+            }
+        }
+
+
+        for (int i = 0; i < route.size(); i++) {
+
+            //In case of more than 5 alternative routes
+            int colorIndex = i % COLORS.length;
+
+            PolylineOptions polyOptions = new PolylineOptions();
+            polyOptions.color(ContextCompat.getColor(context, COLORS[colorIndex]));
+            polyOptions.width(10 + i * 3);
+            polyOptions.addAll(route.get(i).getPoints());
+            Polyline polyline = mMap.addPolyline(polyOptions);
+            polylines.add(polyline);
+
+            Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    @Override
+    public void onRoutingCancelled() {
+
+    }
+
+    public LatLng midPoint(double lat1, double lon1, double lat2, double lon2) {
+
+        double dLon = Math.toRadians(lon2 - lon1);
+
+        //convert to radians
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+        lon1 = Math.toRadians(lon1);
+
+        double Bx = Math.cos(lat2) * Math.cos(dLon);
+        double By = Math.cos(lat2) * Math.sin(dLon);
+        double lat3 = Math.atan2(Math.sin(lat1) + Math.sin(lat2), Math.sqrt((Math.cos(lat1) + Bx) * (Math.cos(lat1) + Bx) + By * By));
+        double lon3 = lon1 + Math.atan2(By, Math.cos(lat1) + Bx);
+
+        return new LatLng(lat3, lon3);
+    }
+
+    private void showCountryPopUp() {
+        final CountryPicker picker = CountryPicker.newInstance("Select Country");
+        picker.show(getChildFragmentManager(), "COUNTRY_PICKER");
+        picker.setListener(new CountryPickerListener() {
+            @Override
+            public void onSelectCountry(String name, String code, String dialCode, int flagDrawableResID) {
+                // Implement your code here
+                try {
+                    Currency currency = picker.getCurrencyCode(code);
+                    currencyCode = currency.getCurrencyCode();
+                    String currencySymbol = currency.getSymbol();
+                    buttonCurrency.setText(currencySymbol + "   " + currencyCode);
+                } catch (Exception ex) {
+                    showMessage(getString(R.string.currency_not_found));
+                }
+                picker.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        switch (compoundButton.getId()) {
+            case R.id.radioButtonOneway:
+                if (b) {
+                    returnFlag = false;
+                    trip = "0";
+                    linearLayoutReturn.setVisibility(View.GONE);
+                    imageViewOneWay.setImageResource(R.drawable.checked);
+                    imageViewReturn.setImageResource(R.drawable.unchecked);
+                } else {
+                    trip = "1";
+                    returnFlag = true;
+                    linearLayoutReturn.setVisibility(View.VISIBLE);
+                    imageViewOneWay.setImageResource(R.drawable.unchecked);
+                    imageViewReturn.setImageResource(R.drawable.checked);
+                }
+                break;
+            case R.id.radioButtonReturn:
+
+                if (b) {
+                    trip = "1";
+                    linearLayoutReturn.setVisibility(View.VISIBLE);
+                    imageViewOneWay.setImageResource(R.drawable.unchecked);
+                    imageViewReturn.setImageResource(R.drawable.checked);
+                    returnFlag = true;
+                } else {
+                    trip = "0";
+                    returnFlag = false;
+                    linearLayoutReturn.setVisibility(View.GONE);
+                    imageViewOneWay.setImageResource(R.drawable.checked);
+                    imageViewReturn.setImageResource(R.drawable.unchecked);
+                }
+                break;
+
+        }
+    }
+
+    private void replaceFragment(Fragment newFragment, String tag) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame, newFragment, tag);
+        transaction.commit();
+    }
+
+    private void setupDashboardFragment() {
+        HomeFragment dashboardFragment = new HomeFragment();
+        String tagName = dashboardFragment.getClass().getName();
+        replaceFragment(dashboardFragment, tagName);
+
     }
 }

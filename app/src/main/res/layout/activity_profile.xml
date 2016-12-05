@@ -23,8 +23,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="280dp"
-                    >
+                    android:layout_height="280dp">
 
 
                     <RelativeLayout
@@ -34,23 +33,33 @@
                         android:layout_marginBottom="10dp"
                         android:layout_marginTop="16dp">
 
+                        <ImageView
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_error"
+                            android:id="@+id/imageViewDp"
+                            android:layout_width="match_parent"
+                            android:layout_height="300dp" />
 
-                        <Button
-                            android:id="@+id/editbutton"
-                            android:layout_width="70dp"
-                            android:layout_height="30dp"
-                            android:layout_marginLeft="10dp"
-                            android:background="@drawable/ic_editplus_icon" />
+                        <!--
+
+                                                <Button
+                                                    android:id="@+id/editbutton"
+                                                    android:layout_width="70dp"
+                                                    android:layout_height="30dp"
+                                                    android:layout_marginLeft="10dp"
+                                                    android:background="@drawable/ic_editplus_icon" />
+                        -->
 
                         <LinearLayout
-                            android:gravity="center"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_marginRight="16dp"
+                            android:gravity="center"
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/textViewCountryCode"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="@drawable/circular_bg_fill"
@@ -58,45 +67,51 @@
                                 android:text="NZ"
                                 android:textColor="@color/white" />
 
-                           <LinearLayout
-                               android:layout_marginTop="6dp"
-                               android:gravity="center"
-                               android:orientation="vertical"
-                               android:layout_width="wrap_content"
-                               android:layout_height="wrap_content">
-                               <ImageView
-                                   android:layout_marginTop="6dp"
-                                   android:src="@drawable/star_icon"
-                                   android:layout_width="30dp"
-                                   android:layout_height="30dp" />
-                               <ImageView
-                                   android:layout_marginTop="6dp"
-                                   android:src="@drawable/star_icon"
-                                   android:layout_width="30dp"
-                                   android:layout_height="30dp" />
-                               <ImageView
-                                   android:layout_marginTop="6dp"
-                                   android:src="@drawable/star_icon"
-                                   android:layout_width="30dp"
-                                   android:layout_height="30dp" />
-                               <ImageView
-                                   android:layout_marginTop="6dp"
-                                   android:src="@drawable/star_icon"
-                                   android:layout_width="30dp"
-                                   android:layout_height="30dp" />
-                               <ImageView
-                                   android:layout_marginTop="6dp"
-                                   android:src="@drawable/star_outlineicon"
-                                   android:layout_width="30dp"
-                                   android:layout_height="30dp" />
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:gravity="center"
+                                android:orientation="vertical">
 
-                           </LinearLayout>
+                                <ImageView
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_marginTop="6dp"
+                                    android:src="@drawable/ic_star_full" />
+
+                                <ImageView
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_marginTop="6dp"
+                                    android:src="@drawable/ic_star_full" />
+
+                                <ImageView
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_marginTop="6dp"
+                                    android:src="@drawable/ic_star_full" />
+
+                                <ImageView
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_marginTop="6dp"
+                                    android:src="@drawable/ic_star_full" />
+
+                                <ImageView
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_marginTop="6dp"
+                                    android:src="@drawable/ic_star_outline" />
+
+                            </LinearLayout>
                         </LinearLayout>
 
                     </RelativeLayout>
 
 
                     <TextView
+                        android:id="@+id/textViewDateCreated"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
@@ -131,34 +146,43 @@
                         android:layout_marginTop="10dp"
                         android:orientation="vertical">
 
-
-                        <TextView
-                            android:id="@+id/name_text"
+                        <LinearLayout
+                            android:id="@+id/linearlayoutName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/textviewName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:textColor="@color/black"
+                                android:textSize="18dp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="," />
+
+                            <TextView
+                                android:id="@+id/textviewAge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_toRightOf="@+id/textviewName"
+                                android:textColor="@color/black"
+                                android:textSize="18dp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/textviewAddress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/linearlayoutName"
                             android:layout_marginLeft="10dp"
-                            android:text="Ryan,"
-                            android:textColor="@color/black"
-                            android:textSize="18dp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/age_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_toRightOf="@+id/name_text"
-                            android:text="36"
-                            android:textColor="@color/black"
-                            android:textSize="18dp" />
-
-                        <TextView
-                            android:id="@+id/addredss_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/name_text"
-                            android:layout_marginLeft="10dp"
-                            android:text="Thailand, Phuket"
                             android:textColor="@color/black"
                             android:textSize="16dp" />
 
@@ -205,10 +229,10 @@
                     app:tabSelectedTextColor="@color/black"
                     app:tabTextColor="@color/white" />
 
-                <com.netforceinfotech.tripsplit.general.WrapContentViewPager
+                <xyz.santeri.wvp.WrappingViewPager
                     android:id="@+id/pager"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="1500dp"
 
                     />
 

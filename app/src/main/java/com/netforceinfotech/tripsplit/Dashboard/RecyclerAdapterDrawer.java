@@ -123,7 +123,6 @@ public class RecyclerAdapterDrawer extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public int getItemCount() {
-        Log.i("TAG2 count", data.size() + "");
         return data.size();
     }
 

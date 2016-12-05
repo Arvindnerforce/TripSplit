@@ -44,6 +44,19 @@ or Search Splitz….
     <string name="editdob">Date of Birth</string>
     <string name="departure_address">Departure Address</string>
     <string name="destination_address">Destination Address</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="select_date_and_time">Select Date and Time</string>
+    <string name="total_cost">Total Cost</string>
+    <string name="currency_not_found">Currency not found</string>
+    <string name="return_etd">Return ETD</string>
+    <string name="return_eta">Return ETA</string>
+    <string name="passenger">Passenger</string>
+    <string name="vehicle_type">Vehicle Type</string>
+    <string name="selected_place">Selected Place</string>
+    <string name="choose_source">Choose Source</string>
+    <string name="choose_destination">Choose Destination</string>
+    <string name="itinerary">Itinerary</string>
+    <string name="add_image">Add Image</string>
 
 
 </resources>
