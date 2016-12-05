@@ -40,6 +40,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.gson.Gson;
@@ -94,6 +95,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         userSessionManager = new UserSessionManager(context);
         setupToolbar();
         initView();
+        startActivity(new Intent(context, DashboardActivity.class));
         new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {
@@ -324,8 +326,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     JsonArray data = result.getAsJsonArray("data");
                                     JsonObject jsonObject = data.get(0).getAsJsonObject();
                                     if (jsonObject.get("msg").getAsString().equalsIgnoreCase("Please Enter Email ID")) {
-                                        showMessage("popup called");
+                                        //          showMessage("popup called");
                                         showEditPicPopup();
+                                        return;
+
+                                    }
+                                    try {
+                                        LoginManager.getInstance().logOut();
+                                        finish();
+                                    } catch (Exception ex) {
+
                                     }
 
                                 } catch (Exception ex) {
@@ -542,7 +552,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 Log.i(TAG, "successfully registered");
 
                             } else {
-                                Log.i(TAG, "successfully registered :"+token);
+                                Log.i(TAG, "successfully registered :" + token);
                             }
                         }
 

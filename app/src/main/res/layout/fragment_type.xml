@@ -9,18 +9,10 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:layout_margin="16dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-            <View
-                android:id="@+id/view1"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/flight_view_background"
-
-                ></View>
-
 
             <RelativeLayout
 
@@ -360,9 +352,10 @@
                 <EditText
                     android:id="@+id/et_vehicleType"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="37dp"
                     android:layout_marginTop="20dp"
-                    android:background="@drawable/editext_background"
+                    android:background="@drawable/round_border"
+                    android:gravity="center_vertical"
                     android:hint="@string/vehicle_type"
                     android:paddingBottom="8dp"
                     android:paddingLeft="17dp"
@@ -372,11 +365,12 @@
 
 
                 <TextView
+                    android:gravity="center_vertical"
                     android:id="@+id/textViewDepartureAddress"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="37dp"
                     android:layout_marginTop="20dp"
-                    android:background="@drawable/editext_background"
+                    android:background="@drawable/round_border"
                     android:hint="@string/departure_address"
                     android:paddingBottom="8dp"
                     android:paddingLeft="17dp"
@@ -386,9 +380,10 @@
                     android:textColorHint="@color/red" />
 
                 <TextView
+                    android:gravity="center_vertical"
                     android:id="@+id/textViewDestinationAddress"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="37dp"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/editext_background"
                     android:hint="@string/destination_address"
@@ -403,7 +398,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="240dp"
                     android:layout_marginTop="16dp"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -411,27 +406,28 @@
                     android:orientation="vertical">
 
                     <LinearLayout
+                        android:weightSum="100"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:gravity="left"
+                            android:layout_weight="20"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
                             android:layout_marginTop="20dp"
                             android:text="ETD"
                             android:textColor="@color/black"
-                            android:textSize="18dp" />
+                            android:textSize="16dp" />
 
                         <TextView
+                            android:layout_weight="80"
                             android:id="@+id/textviewETD"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="7dp"
-                            android:layout_marginRight="7dp"
+                            android:layout_width="0dp"
+                            android:layout_height="37dp"
                             android:layout_marginTop="20dp"
-                            android:background="@drawable/editext_background"
+                            android:background="@drawable/round_border"
                             android:hint="@string/select_date_and_time"
                             android:paddingBottom="8dp"
                             android:paddingLeft="17dp"
@@ -439,30 +435,32 @@
                             android:paddingTop="8dp"
                             android:textColor="@color/colorPrimary"
                             android:textColorHint="@color/colorPrimary"
-                            android:textSize="18dp" />
+                            android:textSize="14dp" />
 
                     </LinearLayout>
 
 
                     <LinearLayout
+                        android:layout_marginTop="16dp"
+                        android:gravity="center_vertical"
+                        android:weightSum="100"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_weight="20"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="20dp"
                             android:text="ETA"
                             android:textColor="@color/black"
-                            android:textSize="18dp" />
+                            android:textSize="16dp" />
 
                         <TextView
+                            android:layout_weight="80"
                             android:id="@+id/textviewETA"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="7dp"
+                            android:layout_width="0dp"
+                            android:layout_height="37dp"
                             android:background="@drawable/editext_background"
                             android:hint="@string/select_date_and_time"
                             android:paddingBottom="8dp"
@@ -471,7 +469,7 @@
                             android:paddingTop="8dp"
                             android:textColor="@color/colorPrimary"
                             android:textColorHint="@color/colorPrimary"
-                            android:textSize="18dp" />
+                            android:textSize="14dp" />
 
 
                     </LinearLayout>
@@ -491,20 +489,16 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="20dp"
+                            android:layout_marginTop="16dp"
                             android:text="@string/return_etd"
                             android:textColor="@color/black"
-                            android:textSize="18dp" />
+                            android:textSize="16dp" />
 
                         <TextView
                             android:id="@+id/textviewReturnETD"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="7dp"
-
-                            android:layout_marginRight="7dp"
-                            android:layout_marginTop="20dp"
+                            android:layout_marginTop="6dp"
                             android:background="@drawable/editext_background"
                             android:hint="@string/select_date_and_time"
                             android:paddingBottom="8dp"
@@ -527,17 +521,17 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="20dp"
+                            android:layout_marginTop="16dp"
                             android:text="@string/return_eta"
                             android:textColor="@color/black"
-                            android:textSize="18dp" />
+                            android:textSize="16dp" />
+
 
                         <TextView
                             android:id="@+id/textviewReturnETA"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="7dp"
+                            android:layout_marginTop="6dp"
                             android:background="@drawable/editext_background"
                             android:hint="@string/select_date_and_time"
                             android:paddingBottom="8dp"
@@ -549,30 +543,31 @@
                             android:textColorHint="@color/colorPrimary"
                             android:textSize="18dp" />
 
-
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
+                    android:layout_marginTop="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="10dp">
+                    >
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/itinerary"
                         android:textColor="@color/black"
-                        android:textSize="18dp" />
+                        android:textSize="16dp" />
 
 
                     <EditText
+                        android:gravity="start"
                         android:id="@+id/et_itenarary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/iteninary_editext_border"
+                        android:background="@drawable/round_border"
                         android:lines="6"
                         android:paddingBottom="8dp"
                         android:paddingLeft="17dp"
@@ -588,8 +583,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_weight="30"
-                    android:background="@drawable/iteninary_editext_border"
-                    android:drawableRight="@drawable/ic_arrow"
+                    android:background="@drawable/round_border"
+                    android:drawableRight="@drawable/ic_chevron_primary_down"
                     android:padding="5dp"
                     android:text="@string/add_image"
                     android:textAllCaps="false" />
@@ -624,7 +619,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="5dp"
                         android:layout_weight="60"
-                        android:background="@drawable/iteninary_editext_border"
+                        android:background="@drawable/round_border"
                         android:inputType="numberDecimal"
                         android:minLines="3"
                         android:paddingBottom="8dp"
