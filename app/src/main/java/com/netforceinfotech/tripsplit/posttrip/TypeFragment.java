@@ -60,6 +60,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -98,7 +99,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     private static final int SOURCE = 421;
     private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     AbstractRouting.TravelMode mode;
-    String group = "male";
+    String group = "mixed";
     float zoomlevel = 16f;
     private PolylineOptions polylineOptions = new PolylineOptions();
     private ArrayList<LatLng> arrayPoints = new ArrayList<>();
@@ -130,7 +131,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     ImageView imageViewOneWay, imageViewReturn, image;
     private boolean returnFlag = true;
     UserSessionManager userSessionManager;
-    private String upperLimit="100", lowerLimit="0";
+    private String upperLimit = "100", lowerLimit = "0";
     private String trip = "0";
     EditText editTextVehicleType, editTextItenarary, editTextTotalCost;
     private String currencyCode;
@@ -139,6 +140,8 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     private boolean returnetdclicked;
     private MaterialDialog progressDialog;
     private Marker destinationMarker, sournceMarker;
+    private CameraUpdate cu;
+    private MaterialDialog dialogPic;
 
     public TypeFragment() {
         // Required empty public constructor
@@ -462,7 +465,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
             String baseUrl = getString(R.string.url);
             // https://netforcesales.com/tripesplit/mobileApp/api/services.php?opt=posttrip
             String url = baseUrl + "services.php?opt=posttrip";
-            Log.i("url",url);
+            Log.i("url", url);
             progressDialog.show();
             if (filePath != null) {
 
@@ -501,11 +504,16 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                                     showMessage("Error in Posting new Trip!!! Try again");
                                 } else {
                                     if (result.get("status").getAsString().equalsIgnoreCase("success")) {
-                                        result.toString();
+                                        /*result.toString();
                                         showMessage("New Trip Posted Successfully");
-                                        setupDashboardFragment();
+                                        setupDashboardFragment();*/
+                                        Log.i("result", result.toString());
+                                        JsonArray data = result.getAsJsonArray("data");
+                                        JsonObject jsonObject = data.get(0).getAsJsonObject();
+                                        JsonObject trip_id=jsonObject.getAsJsonObject("trip_id");
+                                        setupDialog(trip_id);
                                     }
-                                    Log.i("result", result.toString());
+
                                 }
                             }
                         });
@@ -544,9 +552,15 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                                     showMessage("Error in Posting new Trip!!! Try again");
                                 } else {
                                     if (result.get("status").getAsString().equalsIgnoreCase("success")) {
+                                        /*result.toString();
                                         showMessage("New Trip Posted Successfully");
+                                        setupDashboardFragment();*/
+                                        Log.i("result", result.toString());
+                                        JsonArray data = result.getAsJsonArray("data");
+                                        JsonObject jsonObject = data.get(0).getAsJsonObject();
+                                        JsonObject trip_id=jsonObject.getAsJsonObject("trip_id");
+                                        setupDialog(trip_id);
                                     }
-                                    Log.i("result", result.toString());
                                 }
                             }
                         });
@@ -555,11 +569,111 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         }
     }
 
+    private void setupDialog(JsonObject jsonObject) {
+        boolean wrapInScrollView = true;
+        /*
+        *  textviewETD_date  textviewETD_time  textViewSource  textViewDestination
+                textViewETA  textViewJourneyTime  textCarType  textViewPax
+
+        * */
+        dialogPic = new MaterialDialog.Builder(context)
+                .title(R.string.postdetail)
+                .customView(R.layout.tripdetail, wrapInScrollView)
+                .negativeText(R.string.ok)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+
+        TextView textViewETD_date, textViewETD_time, textViewSource, textViewDestination, textViewETA, textViewJourneyTime,
+                textViewCarType, textViewPax;
+        textViewETD_date = (TextView) dialogPic.findViewById(R.id.textviewETD_date);
+        textViewETD_time = (TextView) dialogPic.findViewById(R.id.textviewETD_time);
+        textViewSource = (TextView) dialogPic.findViewById(R.id.textViewSource);
+        textViewDestination = (TextView) dialogPic.findViewById(R.id.textViewDestination);
+        textViewETA = (TextView) dialogPic.findViewById(R.id.textviewETA);
+        textViewJourneyTime = (TextView) dialogPic.findViewById(R.id.textViewJourneyTime);
+        textViewCarType = (TextView) dialogPic.findViewById(R.id.textCarType);
+        textViewPax = (TextView) dialogPic.findViewById(R.id.textViewPax);
+        String pax = jsonObject.get("pax").getAsString();
+        String vehical_type = jsonObject.get("vehical_type").getAsString();
+        String depart_address = jsonObject.get("depart_address").getAsString();
+        String dest_address = jsonObject.get("dest_address").getAsString();
+        String etd = jsonObject.get("etd").getAsString();
+        String eta = jsonObject.get("eta").getAsString();
+        textViewPax.setText(pax);
+        textViewCarType.setText(vehical_type);
+        textViewSource.setText(depart_address);
+        textViewDestination.setText(dest_address);
+        String etd_date = getFormatedDate(etd);
+        textViewETD_date.setText(etd_date);
+        String etd_time = getFormetedTime(etd);
+        textViewETD_time.setText(etd_time);
+        textViewETA.setText(eta);
+        String timeDiff = getFormattedTimeDiff(eta, etd);
+        textViewJourneyTime.setText(timeDiff);
+
+    }
+
+    private String getFormattedTimeDiff(String eta, String etd) {
+        Date d1 = null;
+        Date d2 = null;
+        SimpleDateFormat format = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
+
+        try {
+            d1 = format.parse(etd);
+            d2 = format.parse(eta);
+
+            //in milliseconds
+            long diff = d2.getTime() - d1.getTime();
+
+            long diffSeconds = diff / 1000 % 60;
+            long diffMinutes = diff / (60 * 1000) % 60;
+            long diffHours = diff / (60 * 60 * 1000) % 24;
+            long diffDays = diff / (24 * 60 * 60 * 1000);
+            String timeDiff = diffDays + "D," + diffHours + "H " + diffMinutes + "m";
+            return timeDiff;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "NA";
+        }
+    }
+
+    private String getFormetedTime(String etd) {
+        SimpleDateFormat fmt = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
+        Date date = null;
+        try {
+            date = fmt.parse(etd);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat fmtOut = new SimpleDateFormat("HH:mm");
+        return fmtOut.format(date);
+    }
+
+    private String getFormatedDate(String etd) {
+        //Sun 06 Nov 16 17:36
+        SimpleDateFormat fmt = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
+        Date date = null;
+        try {
+            date = fmt.parse(etd);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat fmtOut = new SimpleDateFormat("EEE dd, MMM yyyy");
+        return fmtOut.format(date);
+    }
+
     private boolean validateDate() {
         Date etd, eta, returnetd, returneta;
         String date1 = textViewETD.getText().toString();
         String date2 = textviewETA.getText().toString();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE dd MMM yy HH:mm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
         Log.i("datecheck", date1 + ":" + date2);
         try {
             etd = dateFormat.parse(date1);
@@ -641,7 +755,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
             e.printStackTrace();
         }
 
-        SimpleDateFormat outDate = new SimpleDateFormat("EEE dd MMM yy");
+        SimpleDateFormat outDate = new SimpleDateFormat("EEE dd MMM yyyy");
 
         if (etdclicked && !returnetdclicked) {
             textViewETD.setText(outDate.format(date2));
@@ -960,8 +1074,13 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         builder.include(destinationLatLang);
         LatLngBounds bounds = builder.build();
         int padding = 10; // offset from edges of the map in pixels
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-        mMap.animateCamera(cu);
+        cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+        mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                mMap.animateCamera(cu);
+            }
+        });
 
     }
 

@@ -7,7 +7,10 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
         <LinearLayout
             android:layout_margin="16dp"
             android:layout_width="match_parent"
@@ -398,7 +401,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="240dp"
                     android:layout_marginTop="16dp"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -578,6 +581,8 @@
 
 
                 <Button
+                    android:textColor="@color/colorPrimary"
+                    android:gravity="left|center_vertical"
                     android:id="@+id/buttonAddImage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -642,24 +647,25 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@color/colorPrimary"
-                android:padding="10dp">
-
-                <Button
-                    android:id="@+id/buttonPost"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:text="Post Split +"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white" />
-
-
-            </LinearLayout>
         </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/editext_background_filled"
+        android:padding="10dp">
+
+        <Button
+            android:id="@+id/buttonPost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Post Split +"
+            android:background="?android:attr/selectableItemBackground"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+
+    </LinearLayout>
+</LinearLayout>
     </ScrollView>
 </LinearLayout>
