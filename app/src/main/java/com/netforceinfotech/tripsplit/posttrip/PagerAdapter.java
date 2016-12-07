@@ -12,13 +12,12 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     int mNumOfTabs;
     private int mCurrentPosition = -1; // Keep track of the current position
 
-    private TypeFragment typeFragment;
+    private TypeFragment aeroplaneFragment, carFragment, busFragment, shipFragment;
     Bundle bundle;
 
     public PagerAdapter(FragmentManager fm, int NumOfTabs) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
-        bundle = new Bundle();
     }
 
     @Override
@@ -38,36 +37,41 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
             }
         }
     }
+
     @Override
     public Fragment getItem(int position) {
 
         switch (position) {
             case 0:
-                typeFragment = new TypeFragment();
+                aeroplaneFragment = new TypeFragment();
+                bundle = new Bundle();
                 bundle.putString("type", "aeroplane");//aeroplane,car,bus,ship
-                typeFragment.setArguments(bundle);
-                return typeFragment;
+                aeroplaneFragment.setArguments(bundle);
+                return aeroplaneFragment;
             case 1:
-                typeFragment = new TypeFragment();
+                carFragment = new TypeFragment();
+                bundle = new Bundle();
                 bundle.putString("type", "car");
-                typeFragment.setArguments(bundle);
-                return typeFragment;
+                carFragment.setArguments(bundle);
+                return carFragment;
             case 2:
-                typeFragment = new TypeFragment();
+                busFragment = new TypeFragment();
+                bundle = new Bundle();
                 bundle.putString("type", "bus");
-                typeFragment.setArguments(bundle);
-                return typeFragment;
+                busFragment.setArguments(bundle);
+                return busFragment;
             case 3:
-                typeFragment = new TypeFragment();
+                shipFragment = new TypeFragment();
+                bundle = new Bundle();
                 bundle.putString("type", "ship");
-                typeFragment.setArguments(bundle);
-                return typeFragment;
+                shipFragment.setArguments(bundle);
+                return shipFragment;
 
             default:
-                typeFragment = new TypeFragment();
+                carFragment = new TypeFragment();
                 bundle.putString("type", "car");
-                typeFragment.setArguments(bundle);
-                return typeFragment;
+                carFragment.setArguments(bundle);
+                return carFragment;
         }
 
     }

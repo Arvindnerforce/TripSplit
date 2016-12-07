@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,7 +18,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,8 +40,6 @@ import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
@@ -141,7 +137,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     private MaterialDialog progressDialog;
     private Marker destinationMarker, sournceMarker;
     private CameraUpdate cu;
-    private MaterialDialog dialogPic;
+    private MaterialDialog custompopup;
 
     public TypeFragment() {
         // Required empty public constructor
@@ -466,9 +462,11 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
             // https://netforcesales.com/tripesplit/mobileApp/api/services.php?opt=posttrip
             String url = baseUrl + "services.php?opt=posttrip";
             Log.i("url", url);
+            Log.i("type", type);
+
             progressDialog.show();
             if (filePath != null) {
-
+                Log.i("filePath", "inside send image");
                 Ion.with(getApplicationContext())
                         .load("POST", url)
                         .setMultipartParameter("user_id", userSessionManager.getUserId())
@@ -490,7 +488,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                         .setMultipartParameter("return_etd", textViewReturnETD.getText().toString())
                         .setMultipartParameter("return_eta", textViewReturnETA.getText().toString())
                         .setMultipartParameter("iteinerary", editTextItenarary.getText().toString().trim())
-                        .setMultipartParameter("total_cost", editTextTotalCost.getText().toString())
+                        .setMultipartParameter("totalcost", editTextTotalCost.getText().toString())
                         //currency
                         .setMultipartParameter("currency", currencyCode)
                         .setMultipartFile("image", new File(filePath))
@@ -510,7 +508,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                                         Log.i("result", result.toString());
                                         JsonArray data = result.getAsJsonArray("data");
                                         JsonObject jsonObject = data.get(0).getAsJsonObject();
-                                        JsonObject trip_id=jsonObject.getAsJsonObject("trip_id");
+                                        JsonObject trip_id = jsonObject.getAsJsonObject("data");
                                         setupDialog(trip_id);
                                     }
 
@@ -518,6 +516,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                             }
                         });
             } else {
+                Log.i("filePath", "outside send image");
                 Ion.with(getApplicationContext())
                         .load("POST", url)
                         .setMultipartParameter("user_id", userSessionManager.getUserId())
@@ -539,7 +538,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                         .setMultipartParameter("return_etd", textViewReturnETD.getText().toString())
                         .setMultipartParameter("return_eta", textViewReturnETA.getText().toString())
                         .setMultipartParameter("iteinerary", editTextItenarary.getText().toString().trim())
-                        .setMultipartParameter("total_cost", editTextTotalCost.getText().toString())
+                        .setMultipartParameter("totalcost", editTextTotalCost.getText().toString())
                         //currency
                         .setMultipartParameter("currency", currencyCode)
                         .asJsonObject()
@@ -558,7 +557,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                                         Log.i("result", result.toString());
                                         JsonArray data = result.getAsJsonArray("data");
                                         JsonObject jsonObject = data.get(0).getAsJsonObject();
-                                        JsonObject trip_id=jsonObject.getAsJsonObject("trip_id");
+                                        JsonObject trip_id = jsonObject.getAsJsonObject("data");
                                         setupDialog(trip_id);
                                     }
                                 }
@@ -576,34 +575,39 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 textViewETA  textViewJourneyTime  textCarType  textViewPax
 
         * */
-        dialogPic = new MaterialDialog.Builder(context)
+        custompopup = new MaterialDialog.Builder(context)
                 .title(R.string.postdetail)
                 .customView(R.layout.tripdetail, wrapInScrollView)
                 .negativeText(R.string.ok)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
+                        custompopup.dismiss();
                     }
                 })
                 .show();
 
         TextView textViewETD_date, textViewETD_time, textViewSource, textViewDestination, textViewETA, textViewJourneyTime,
-                textViewCarType, textViewPax;
-        textViewETD_date = (TextView) dialogPic.findViewById(R.id.textviewETD_date);
-        textViewETD_time = (TextView) dialogPic.findViewById(R.id.textviewETD_time);
-        textViewSource = (TextView) dialogPic.findViewById(R.id.textViewSource);
-        textViewDestination = (TextView) dialogPic.findViewById(R.id.textViewDestination);
-        textViewETA = (TextView) dialogPic.findViewById(R.id.textviewETA);
-        textViewJourneyTime = (TextView) dialogPic.findViewById(R.id.textViewJourneyTime);
-        textViewCarType = (TextView) dialogPic.findViewById(R.id.textCarType);
-        textViewPax = (TextView) dialogPic.findViewById(R.id.textViewPax);
+                textViewCarType, textViewPax, textViewPrice;
+        textViewETD_date = (TextView) custompopup.findViewById(R.id.textviewETD_date);
+        textViewETD_time = (TextView) custompopup.findViewById(R.id.textviewETD_time);
+        textViewSource = (TextView) custompopup.findViewById(R.id.textViewSource);
+        textViewDestination = (TextView) custompopup.findViewById(R.id.textViewDestination);
+        textViewETA = (TextView) custompopup.findViewById(R.id.textViewETA);
+        textViewJourneyTime = (TextView) custompopup.findViewById(R.id.textViewJourneyTime);
+        textViewCarType = (TextView) custompopup.findViewById(R.id.textCarType);
+        textViewPax = (TextView) custompopup.findViewById(R.id.textViewPax);
+        textViewPrice = (TextView) custompopup.findViewById(R.id.textViewPrice);
         String pax = jsonObject.get("pax").getAsString();
         String vehical_type = jsonObject.get("vehical_type").getAsString();
         String depart_address = jsonObject.get("depart_address").getAsString();
         String dest_address = jsonObject.get("dest_address").getAsString();
         String etd = jsonObject.get("etd").getAsString();
         String eta = jsonObject.get("eta").getAsString();
+        String start_price = jsonObject.get("start_price").getAsString();
+        String currency = jsonObject.get("currency").getAsString();
+
+        textViewPrice.setText(currency + " " + start_price);
         textViewPax.setText(pax);
         textViewCarType.setText(vehical_type);
         textViewSource.setText(depart_address);
@@ -612,7 +616,8 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         textViewETD_date.setText(etd_date);
         String etd_time = getFormetedTime(etd);
         textViewETD_time.setText(etd_time);
-        textViewETA.setText(eta);
+        String eta_time = getFormetedTime(eta);
+        textViewETA.setText(eta_time);
         String timeDiff = getFormattedTimeDiff(eta, etd);
         textViewJourneyTime.setText(timeDiff);
 
@@ -1000,6 +1005,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
 
                     int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                     filePath = getPath(uri);
+                    Log.i("filePath", filePath);
                     try {
                         buttonAddImage.setText(filePath);
                     } catch (Exception e) {
