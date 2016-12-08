@@ -490,31 +490,34 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:orientation="horizontal"
+                            android:weightSum="100">
 
                             <TextView
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="16dp"
-                                android:text="@string/return_etd"
+                                android:layout_marginTop="20dp"
+                                android:layout_weight="20"
+                                android:gravity="left"
+                                android:text="ETD"
                                 android:textColor="@color/black"
                                 android:textSize="16dp" />
 
                             <TextView
                                 android:id="@+id/textviewReturnETD"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
-                                android:background="@drawable/editext_background"
+                                android:layout_width="0dp"
+                                android:layout_height="37dp"
+                                android:layout_marginTop="20dp"
+                                android:layout_weight="80"
+                                android:background="@drawable/round_border"
                                 android:hint="@string/select_date_and_time"
                                 android:paddingBottom="8dp"
                                 android:paddingLeft="17dp"
                                 android:paddingRight="17dp"
                                 android:paddingTop="8dp"
-
                                 android:textColor="@color/colorPrimary"
                                 android:textColorHint="@color/colorPrimary"
-                                android:textSize="18dp" />
+                                android:textSize="14dp" />
 
                         </LinearLayout>
 
@@ -522,35 +525,38 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:layout_marginTop="16dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:weightSum="100">
 
                             <TextView
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="16dp"
-                                android:text="@string/return_eta"
+                                android:layout_weight="20"
+                                android:text="ETA"
                                 android:textColor="@color/black"
                                 android:textSize="16dp" />
 
-
                             <TextView
                                 android:id="@+id/textviewReturnETA"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
+                                android:layout_width="0dp"
+                                android:layout_height="37dp"
+                                android:layout_weight="80"
                                 android:background="@drawable/editext_background"
                                 android:hint="@string/select_date_and_time"
                                 android:paddingBottom="8dp"
                                 android:paddingLeft="17dp"
                                 android:paddingRight="17dp"
                                 android:paddingTop="8dp"
-
                                 android:textColor="@color/colorPrimary"
                                 android:textColorHint="@color/colorPrimary"
-                                android:textSize="18dp" />
+                                android:textSize="14dp" />
+
 
                         </LinearLayout>
                     </LinearLayout>
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -658,10 +664,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                >
+                android:layout_marginTop="10dp">
 
                 <Button
                     android:id="@+id/buttonPost"

@@ -59,6 +59,13 @@ or Search Splitz….
     <string name="add_image">Add Image</string>
     <string name="postdetail">Trip created successfully</string>
     <string name="ok">OK</string>
+    <string name="destination">Destination</string>
+    <string name="source">Source</string>
+    <string name="best_match">Best match</string>
+    <string name="low_cost">Lowest Cost</string>
+    <string name="highest_cost">Highest Cost</string>
+    <string name="date">Date</string>
+    <string name="cantbeempy">Field cannot be empty</string>
 
 
 </resources>

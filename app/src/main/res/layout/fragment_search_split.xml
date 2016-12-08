@@ -6,31 +6,9 @@
     android:background="#E3E4E6"
     android:focusableInTouchMode="true"
     android:orientation="vertical">
-    <LinearLayout
-        android:id="@+id/linearlayoutSearch"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
-        android:gravity="center"
-        android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Search Split"
-            android:textColor="@color/white" />
-
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="6dp"
-            android:src="@drawable/ic_search_white" />
-
-    </LinearLayout>
     <android.support.v4.widget.NestedScrollView
         android:layout_alignParentTop="true"
-        android:layout_above="@+id/linearlayoutSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

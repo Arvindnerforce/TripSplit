@@ -1,6 +1,7 @@
 package com.netforceinfotech.tripsplit.posttrip;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -69,8 +70,13 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -138,6 +144,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     private Marker destinationMarker, sournceMarker;
     private CameraUpdate cu;
     private MaterialDialog custompopup;
+    private boolean imageFlag = false;
 
     public TypeFragment() {
         // Required empty public constructor
@@ -347,7 +354,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
 
                 break;
             case R.id.textviewReturnETD:
-                etdclicked = false;
+                etdclicked = true;
                 returnetdclicked = true;
 
                 now = Calendar.getInstance();
@@ -744,9 +751,9 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         } else if (!etdclicked && !returnetdclicked) {
             textviewETA.append(" " + hourString + ":" + minuteString);
         } else if (etdclicked && returnetdclicked) {
-            textViewReturnETA.append(" " + hourString + ":" + minuteString);
-        } else {
             textViewReturnETD.append(" " + hourString + ":" + minuteString);
+        } else {
+            textViewReturnETA.append(" " + hourString + ":" + minuteString);
         }
     }
 
@@ -820,6 +827,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     public String getPath(Uri uri) {
         // just some safety built in
         if (uri == null) {
+            showMessage("null uri");
             // TODO perform some logging or show user feedback
             return null;
         }
@@ -990,6 +998,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         switch (requestCode) {
             case TAKE_PHOTO_CODE:
                 if (resultCode == getActivity().RESULT_OK) {
+                    imageFlag = true;
                     Log.i("result picture", "clicked");
                     buttonAddImage.setText(filePath);
                     image.setVisibility(View.VISIBLE);
@@ -998,14 +1007,16 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 break;
             case PICK_IMAGE:
                 if (resultCode == getActivity().RESULT_OK) {
+                    imageFlag = true;
                     Uri uri = data.getData();
-                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                    Cursor cursor = context.getContentResolver().query(uri, filePathColumn, null, null, null);
-                    cursor.moveToFirst();
-
-                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                     filePath = getPath(uri);
-                    Log.i("filePath", filePath);
+                    if (filePath == null) {
+                        filePath = getRealPathFromURI(uri, getActivity());
+                        if (filePath == null) {
+                            showMessage("File path still null :(");
+                            return;
+                        }
+                    }
                     try {
                         buttonAddImage.setText(filePath);
                     } catch (Exception e) {
@@ -1030,7 +1041,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                     } catch (Exception ex) {
 
                     }
-                    destinationMarker = mMap.addMarker(new MarkerOptions().title(address).position(destinationLatLang));
+                    destinationMarker = mMap.addMarker(new MarkerOptions().title(getString(R.string.destination)+"\n"+address).position(destinationLatLang));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destinationLatLang, zoomlevel));
                     if (sourceFlag) {
                         zoomInTwoPoint();
@@ -1051,7 +1062,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                     } catch (Exception ex) {
 
                     }
-                    sournceMarker = mMap.addMarker(new MarkerOptions().title(address).position(sourceLatLng));
+                    sournceMarker = mMap.addMarker(new MarkerOptions().title(getString(R.string.source)+"\n"+address).position(sourceLatLng));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sourceLatLng, zoomlevel));
 
 
@@ -1073,6 +1084,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
 
     private void zoomInTwoPoint() {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -1279,5 +1291,23 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         String tagName = dashboardFragment.getClass().getName();
         replaceFragment(dashboardFragment, tagName);
 
+    }
+
+    public String getRealPathFromURI(Uri contentURI, Activity context) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        @SuppressWarnings("deprecation")
+        Cursor cursor = context.managedQuery(contentURI, projection, null,
+                null, null);
+        if (cursor == null)
+            return null;
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        if (cursor.moveToFirst()) {
+            String s = cursor.getString(column_index);
+            // cursor.close();
+            return s;
+        }
+        // cursor.close();
+        return null;
     }
 }
