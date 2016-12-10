@@ -16,7 +16,7 @@ public class SearchPagerAdapter extends FragmentStatePagerAdapter {
 
 
     int mNumOfTabs;
-    private SearchFragment searchFragment;
+    private SearchFragment aeriplaneFragment,carFragment,busFragment,shipFragment;
     public int currentpage = 0;
     private Bundle bundle;
 
@@ -32,25 +32,25 @@ public class SearchPagerAdapter extends FragmentStatePagerAdapter {
         switch (position) {
 
             case 0:
-                searchFragment = new SearchFragment();
+                aeriplaneFragment = new SearchFragment();
                 bundle.putString("type", "aeroplane");
-                searchFragment.setArguments(bundle);
-                return searchFragment;
+                aeriplaneFragment.setArguments(bundle);
+                return aeriplaneFragment;
             case 1:
-                searchFragment = new SearchFragment();
+                carFragment = new SearchFragment();
                 bundle.putString("type", "car");
-                searchFragment.setArguments(bundle);
-                return searchFragment;
+                carFragment.setArguments(bundle);
+                return carFragment;
             case 2:
-                searchFragment = new SearchFragment();
+                busFragment = new SearchFragment();
                 bundle.putString("type", "bus");
-                searchFragment.setArguments(bundle);
-                return searchFragment;
+                busFragment.setArguments(bundle);
+                return busFragment;
             case 3:
-                searchFragment = new SearchFragment();
+                shipFragment = new SearchFragment();
                 bundle.putString("type", "ship");
-                searchFragment.setArguments(bundle);
-                return searchFragment;
+                shipFragment.setArguments(bundle);
+                return shipFragment;
             default:
                 return null;
 
@@ -63,10 +63,6 @@ public class SearchPagerAdapter extends FragmentStatePagerAdapter {
         return mNumOfTabs;
     }
 
-    public void clicked(int currentItem) {
-        Log.i("kclicked", "clicked" + currentpage);
-        searchFragment.clicked();
-    }
 
 
 }

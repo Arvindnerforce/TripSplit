@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +16,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.Search.SearchData;
 import com.netforceinfotech.tripsplit.Search.searchfragment.subfragment.CarAdapter;
 import com.netforceinfotech.tripsplit.Search.searchfragment.subfragment.RecyclerViewFragment;
+import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.netforceinfotech.tripsplit.posttrip.GoogleMapActivity;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuItem;
@@ -29,13 +34,15 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 
 public class SearchFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, GoogleMapActivity.AddressListner {
-
-
+    String sort = "Best match";
+    private static final int TRAVEL_TO = 2;
+    private static final int TRAVEL_FROM = 1;
     private Calendar calendar;
     SearchData searchdata;
     RecyclerView recyclerView;
@@ -43,11 +50,15 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
     CarAdapter adapter;
     public TextView date_txt, travel_from, travel_to;
     RelativeLayout relativeLayoutSort, relativeLayoutGlobe;
-    LinearLayout linearLayoutRefine;
+    LinearLayout linearLayoutRefine, linearlayoutSearch;
 
     Context context;
     private SearchClickedListner searchClickedListner;
     private RecyclerViewFragment dashboardFragment;
+    private double dest_lat, dest_lon, source_lat, source_lon;
+    UserSessionManager userSessionManager;
+    TextView textViewSort;
+    String type;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -65,6 +76,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
 
         View view = inflater.inflate(R.layout.search_fragment, container, false);
         context = getActivity();
+        userSessionManager = new UserSessionManager(context);
+        type = this.getArguments().getString("type");
         initView(view);
 
 
@@ -74,6 +87,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
     }
 
     private void initView(View view) {
+        textViewSort = (TextView) view.findViewById(R.id.textViewSort);
+        linearlayoutSearch = (LinearLayout) view.findViewById(R.id.linearlayoutSearch);
+        linearlayoutSearch.setOnClickListener(this);
         travel_from = (TextView) view.findViewById(R.id.travel_from);
         travel_from.setOnClickListener(this);
         travel_to = (TextView) view.findViewById(R.id.travel_to);
@@ -85,14 +101,20 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
         linearLayoutRefine = (LinearLayout) view.findViewById(R.id.linearlayoutRefine);
         linearLayoutRefine.setOnClickListener(this);
         DroppyMenuPopup.Builder droppyBuilder = new DroppyMenuPopup.Builder(getActivity(), relativeLayoutSort);
-
-        droppyBuilder.addMenuItem(new DroppyMenuItem("Sort"));
-        droppyBuilder.addMenuItem(new DroppyMenuItem("Refine"));
-        droppyBuilder.addMenuItem(new DroppyMenuItem("Globe"));
+        final ArrayList<String> sorts = new ArrayList<>();
+        sorts.add(getString(R.string.best_match));
+        sorts.add(getString(R.string.low_cost));
+        sorts.add(getString(R.string.highest_cost));
+        sorts.add(getString(R.string.date));
+        sort = sorts.get(0);
+        droppyBuilder.addMenuItem(new DroppyMenuItem(getString(R.string.best_match)));
+        droppyBuilder.addMenuItem(new DroppyMenuItem(getString(R.string.low_cost)));
+        droppyBuilder.addMenuItem(new DroppyMenuItem(getString(R.string.highest_cost)));
+        droppyBuilder.addMenuItem(new DroppyMenuItem(getString(R.string.date)));
         droppyBuilder.setOnClick(new DroppyClickCallbackInterface() {
             @Override
             public void call(View v, int id) {
-                Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
+                sort = sorts.get(id);
             }
         });
         droppyBuilder.build();
@@ -105,6 +127,14 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
     public void onClick(View view) {
 
         switch (view.getId()) {
+            case R.id.linearlayoutSearch:
+                if (travel_from.getText().length() <= 0 || travel_to.getText().length() <= 0 || date_txt.getText().length() <= 0) {
+                    showMessage(getString(R.string.cantbeempy));
+                    return;
+                } else {
+                    searchTrip();
+                }
+                break;
             case R.id.linearlayoutRefine:
                 clearAllData();
                 break;
@@ -118,15 +148,47 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
                 Intent google_intent = new Intent(getActivity(), GoogleMapActivity.class);
                 google_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 google_intent.putExtra("choose_source", true);
-                startActivityForResult(google_intent, 1);
+                startActivityForResult(google_intent, TRAVEL_FROM);
             case R.id.travel_to:
                 Intent google_intent2 = new Intent(getActivity(), GoogleMapActivity.class);
                 google_intent2.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 google_intent2.putExtra("choose_source", false);
-                startActivityForResult(google_intent2, 2);
+                startActivityForResult(google_intent2, TRAVEL_TO);
         }
 
 
+    }
+
+    private void searchTrip() {
+        JsonObject json = new JsonObject();
+        json.addProperty("dest_lat", dest_lat);
+        json.addProperty("dest_lon", dest_lon);
+        json.addProperty("source_lat", source_lat);
+        json.addProperty("source_lon", source_lon);
+        json.addProperty("etd", date_txt.getText().toString());
+        json.addProperty("range", userSessionManager.getSearchRadius());
+        json.addProperty("sort", sort);
+        json.addProperty("type", type);
+        Log.i("type",type);
+        String baseUrl = getString(R.string.url);
+        //http://netforce.biz/tripesplit/mobileApp/api/services.php?opt=search_trip
+        String url = baseUrl + "services.php?opt=search_trip";
+
+        Ion.with(context)
+                .load(url)
+                .setJsonObjectBody(json)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        // do stuff with the result or error
+                        if (result == null) {
+                            showMessage("something wrong");
+                        } else {
+                            Log.i("result", result.toString());
+                        }
+                    }
+                });
     }
 
     private void clearAllData() {
@@ -144,12 +206,16 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == getActivity().RESULT_OK && requestCode == 2) {
+        if (resultCode == getActivity().RESULT_OK && requestCode == TRAVEL_TO) {
             String address = data.getStringExtra("address");
+            dest_lat = data.getDoubleExtra("lat", 0);
+            dest_lon = data.getDoubleExtra("lon", 0);
             travel_to.setText(address);
         }
-        if (resultCode == getActivity().RESULT_OK && requestCode == 1) {
+        if (resultCode == getActivity().RESULT_OK && requestCode == TRAVEL_FROM) {
             String address = data.getStringExtra("address");
+            source_lat = data.getDoubleExtra("lat", 0);
+            source_lon = data.getDoubleExtra("lon", 0);
             travel_from.setText(address);
         }
     }
@@ -210,10 +276,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
 
     }
 
-    public void clicked() {
-        showMessage("clicked adapter");
-        dashboardFragment.updateTextValue(travel_from.getText().toString(), travel_to.getText().toString());
-    }
 
     private void showMessage(String clicked) {
         Toast.makeText(context, clicked, Toast.LENGTH_SHORT).show();

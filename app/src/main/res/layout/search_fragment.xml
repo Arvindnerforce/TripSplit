@@ -4,7 +4,6 @@
     android:background="#E6E7E9">
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -34,7 +33,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="50"
-                android:background="@drawable/iteninary_editext_border"
+                android:background="@drawable/round_border"
                 android:hint="Travel From"
                 android:paddingBottom="10dp"
                 android:paddingLeft="10dp"
@@ -50,7 +49,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="50"
-                android:background="@drawable/iteninary_editext_border"
+                android:background="@drawable/round_border"
                 android:hint="Travel To"
                 android:paddingBottom="10dp"
                 android:paddingLeft="10dp"
@@ -70,7 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="7dp"
-                android:background="@drawable/iteninary_editext_border"
+                android:background="@drawable/round_border"
                 android:hint="Select Date"
                 android:paddingBottom="10dp"
                 android:paddingLeft="15dp"
@@ -137,6 +136,7 @@
                     android:src="@drawable/ic_arrow" />
 
                 <TextView
+                    android:id="@+id/textViewSort"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -230,6 +230,30 @@
 
             </FrameLayout>
         </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearlayoutSearch"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Search Split"
+            android:textColor="@color/white" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="6dp"
+            android:src="@drawable/ic_search_white" />
 
     </LinearLayout>
 </RelativeLayout>

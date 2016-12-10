@@ -23,7 +23,7 @@ import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
 
 import xyz.santeri.wvp.WrappingViewPager;
 
-public class SearchSplitFragment extends Fragment implements View.OnClickListener {
+public class SearchSplitFragment extends Fragment {
 
     WrappingViewPager viewPager;
     Context context;
@@ -42,7 +42,6 @@ public class SearchSplitFragment extends Fragment implements View.OnClickListene
     }
 
     private void initView(View view) {
-        view.findViewById(R.id.linearlayoutSearch).setOnClickListener(this);
     }
 
     private void setuptoolbar() {
@@ -134,15 +133,6 @@ public class SearchSplitFragment extends Fragment implements View.OnClickListene
 
     }
 
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.linearlayoutSearch:
-                adapter.clicked(viewPager.getCurrentItem());
-                break;
-        }
-    }
 
     private void showMessage(String clicked) {
         Toast.makeText(context, clicked, Toast.LENGTH_SHORT).show();
