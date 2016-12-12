@@ -35,6 +35,7 @@ import com.netforceinfotech.tripsplit.Profile.editprofile.EditPofileFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.Search.SearchSplitFragment;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
+import com.netforceinfotech.tripsplit.group.GroupFragment;
 import com.netforceinfotech.tripsplit.posttrip.PostTripFragment;
 import com.netforceinfotech.tripsplit.preference.PreferenceFragment;
 import com.netforceinfotech.tripsplit.tutorial.DefaultIntro;
@@ -158,13 +159,13 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
     private List<RowDataDrawer> setDrawer() {
         List<RowDataDrawer> list = new ArrayList<>();
 
-        String title[] = {"Home", "Preferences", "Edit Profile", "Invite Friends", "Search Splitz", "Post Trip", "Messages", "dummy", "Group", "How it works", "Support"};
+        String title[] = {"Home", "Preferences", "Edit Profile", "Invite Friends", "Search Splitz", "Post Trip", "My Splitz", "My Trip", "Messages", "dummy", "Group", "How it works", "Support"};
         int drawableId[];
 
 
         drawableId = new int[]
                 {
-                        R.drawable.ic_home_menu, R.drawable.ic_prefrence, R.drawable.ic_edit_profile, R.drawable.ic_invite_frnd, R.drawable.ic_search_custom, R.drawable.ic_create_trip, R.drawable.ic_message,
+                        R.drawable.ic_home_menu, R.drawable.ic_prefrence, R.drawable.ic_edit_profile, R.drawable.ic_invite_frnd, R.drawable.ic_search_custom, R.drawable.ic_create_trip, R.drawable.ic_search_custom, R.drawable.ic_create_trip, R.drawable.ic_message,
                         R.drawable.ic_group, R.drawable.ic_group, R.drawable.ic_help, R.drawable.ic_community
                 };
 
@@ -285,21 +286,36 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
                 setupCreateTripFragment();
                 break;
             case 6:
-                setupMessageFragment();
+                setupMySplitz();
                 break;
             case 7:
+                setupMyPost();
                 break;
+
             case 8:
-                setupGroupFragment();
+                setupMessageFragment();
                 break;
             case 9:
-                setupHiWFragment();
                 break;
             case 10:
+                setupGroupFragment();
+                break;
+            case 11:
+                setupHiWFragment();
+                break;
+            case 12:
                 setupSupportFragment();
                 break;
         }
 
+
+    }
+
+    private void setupMyPost() {
+
+    }
+
+    private void setupMySplitz() {
 
     }
 
@@ -316,7 +332,10 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
     }
 
     private void setupGroupFragment() {
-        showMessage("set up Group Fragment");
+        GroupFragment groupFragment = new GroupFragment();
+        String tag = groupFragment.getClass().getName();
+        replaceFragment(groupFragment, tag);
+
     }
 
     private void setupMessageFragment() {

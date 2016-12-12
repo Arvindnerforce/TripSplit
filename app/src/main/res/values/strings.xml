@@ -66,6 +66,8 @@ or Search Splitz….
     <string name="highest_cost">Highest Cost</string>
     <string name="date">Date</string>
     <string name="cantbeempy">Field cannot be empty</string>
+    <string name="no_split_found">No split found</string>
+    <string name="search">Search</string>
 
 
 </resources>

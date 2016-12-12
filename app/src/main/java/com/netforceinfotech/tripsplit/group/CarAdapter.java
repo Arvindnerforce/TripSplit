@@ -1,14 +1,14 @@
-package com.netforceinfotech.tripsplit.Search.searchfragment.subfragment;
+package com.netforceinfotech.tripsplit.group;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.netforceinfotech.tripsplit.Profile.TripDetailsActivity;
+
 import com.netforceinfotech.tripsplit.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,13 +42,7 @@ public class CarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        viewHolder.materialRippleLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(context, TripDetailsActivity.class);
-                context.startActivity(i);
-            }
-        });
+
 
     }
 
