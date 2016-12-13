@@ -11,10 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.netforceinfotech.tripsplit.NavigationView.Message.writemessage.WriteAdapter;
 import com.netforceinfotech.tripsplit.R;
 
 import java.util.ArrayList;
@@ -64,7 +62,7 @@ public class MessageFragment extends Fragment {
     private void setupRecyclerView(View view) {
         messageLayout = (FrameLayout) view.findViewById(R.id.messagelayout);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerMyGroup);
         layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
 
         recyclerView.setLayoutManager(layoutManager);

@@ -18,8 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +43,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.techery.properratingbar.ProperRatingBar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -140,7 +137,7 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
         imageViewDp = (CircleImageView) view.findViewById(R.id.imageViewDp);
         textviewCountry = (TextView) view.findViewById(R.id.textviewCountry);
         textViewName = (TextView) view.findViewById(R.id.textviewName);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerMyGroup);
         list = setDrawer();
         adapter = new RecyclerAdapterDrawer(context, list);
         adapter.setClickListner(this);

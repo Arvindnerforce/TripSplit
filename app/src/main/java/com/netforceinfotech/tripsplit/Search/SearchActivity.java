@@ -81,7 +81,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     private void setupRecyclerView()
     {
-        recyclerView = (RecyclerView) findViewById(R.id.recycler);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerMyGroup);
 
         date_txt = (TextView) findViewById(R.id.textviewETD);
 

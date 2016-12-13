@@ -65,6 +65,7 @@ import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.R;
+import com.netforceinfotech.tripsplit.general.ImageFilePath;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
@@ -224,7 +225,6 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
 
         buttonCurrency = (Button) view.findViewById(R.id.buttonCurrency);
         buttonCurrency.setOnClickListener(this);
-        final String currency[] = {"INR", "USD", "EURO", "YEN"};
 
         rangeBar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
@@ -590,6 +590,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         custompopup.dismiss();
+                        setupDashboardFragment();
                     }
                 })
                 .show();
@@ -1011,7 +1012,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                     Uri uri = data.getData();
                     filePath = getPath(uri);
                     if (filePath == null) {
-                        filePath = getRealPathFromURI(uri, getActivity());
+                        filePath = ImageFilePath.getPath(getActivity(), data.getData());
                         if (filePath == null) {
                             showMessage("File path still null :(");
                             return;
@@ -1041,7 +1042,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                     } catch (Exception ex) {
 
                     }
-                    destinationMarker = mMap.addMarker(new MarkerOptions().title(getString(R.string.destination)+"\n"+address).position(destinationLatLang));
+                    destinationMarker = mMap.addMarker(new MarkerOptions().title(getString(R.string.destination) + ":" + address).position(destinationLatLang));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destinationLatLang, zoomlevel));
                     if (sourceFlag) {
                         zoomInTwoPoint();
@@ -1062,7 +1063,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                     } catch (Exception ex) {
 
                     }
-                    sournceMarker = mMap.addMarker(new MarkerOptions().title(getString(R.string.source)+"\n"+address).position(sourceLatLng));
+                    sournceMarker = mMap.addMarker(new MarkerOptions().title(getString(R.string.source) + ":" + address).position(sourceLatLng));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sourceLatLng, zoomlevel));
 
 
@@ -1084,6 +1085,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
 
 
     private void zoomInTwoPoint() {

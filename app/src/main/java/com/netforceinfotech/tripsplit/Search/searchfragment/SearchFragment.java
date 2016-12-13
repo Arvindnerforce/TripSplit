@@ -77,7 +77,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
     RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
     CarAdapter adapter;
-    public TextView date_txt, travel_from, travel_to;
+    public TextView textViewDate, textViewSource, textViewDestination;
     RelativeLayout relativeLayoutSort, relativeLayoutGlobe;
     LinearLayout linearLayoutRefine, linearlayoutSearch;
 
@@ -135,7 +135,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
     }
 
     private void setupRecyclerView(View view) {
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerMyGroup);
         adapter = new CarAdapter(context, carDatas);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -150,12 +150,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
         textViewSort = (TextView) view.findViewById(R.id.textViewSort);
         linearlayoutSearch = (LinearLayout) view.findViewById(R.id.linearlayoutSearch);
         linearlayoutSearch.setOnClickListener(this);
-        travel_from = (TextView) view.findViewById(R.id.travel_from);
-        travel_from.setOnClickListener(this);
-        travel_to = (TextView) view.findViewById(R.id.travel_to);
-        travel_to.setOnClickListener(this);
-        date_txt = (TextView) view.findViewById(R.id.textviewETD);
-        date_txt.setOnClickListener(this);
+        textViewSource = (TextView) view.findViewById(R.id.travel_from);
+        textViewSource.setOnClickListener(this);
+        textViewDestination = (TextView) view.findViewById(R.id.travel_to);
+        textViewDestination.setOnClickListener(this);
+        textViewDate = (TextView) view.findViewById(R.id.textviewETD);
+        textViewDate.setOnClickListener(this);
         relativeLayoutGlobe = (RelativeLayout) view.findViewById(R.id.relativeLayoutGlobe);
         relativeLayoutSort = (RelativeLayout) view.findViewById(R.id.relativeLayoutSort);
         linearLayoutRefine = (LinearLayout) view.findViewById(R.id.linearlayoutRefine);
@@ -187,7 +187,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.linearlayoutSearch:
-                if (travel_from.getText().length() <= 0 || travel_to.getText().length() <= 0 || date_txt.getText().length() <= 0) {
+                if (textViewSource.getText().length() <= 0 || textViewDestination.getText().length() <= 0 || textViewDate.getText().length() <= 0) {
                     showMessage(getString(R.string.cantbeempy));
                     return;
                 } else {
@@ -227,7 +227,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
         json.addProperty("dest_lon", dest_lon);
         json.addProperty("source_lat", source_lat);
         json.addProperty("source_lon", source_lon);
-        json.addProperty("etd", date_txt.getText().toString());
+        json.addProperty("etd", textViewDate.getText().toString());
         json.addProperty("range", userSessionManager.getSearchRadius());
         json.addProperty("sort", sort);
         json.addProperty("type", type);
@@ -242,7 +242,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
                 .setBodyParameter("dest_lon", dest_lon + "")
                 .setBodyParameter("source_lat", source_lat + "")
                 .setBodyParameter("source_lon", source_lon + "")
-                .setBodyParameter("etd", date_txt.getText().toString())
+                .setBodyParameter("etd", textViewDate.getText().toString())
                 .setBodyParameter("range", userSessionManager.getSearchRadius() + "")
                 .setBodyParameter("sort", sort)
                 .setBodyParameter("type", type)
@@ -297,9 +297,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
 
     private void clearAllData() {
         try {
-            travel_from.setText("Travel From");
-            travel_to.setText("Travel To");
-            date_txt.setText("Select date and time");
+            textViewSource.setText("Travel From");
+            textViewDestination.setText("Travel To");
+            textViewDate.setText("Select date and time");
             adapter.notifyDataSetChanged();
 
         } catch (Exception ex) {
@@ -317,7 +317,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
                     double lat = data.getDoubleExtra("lat", 0);
                     double lon = data.getDoubleExtra("lon", 0);
                     String address = data.getStringExtra("address");
-                    travel_to.setText(address);
+                    textViewDestination.setText(address);
                     destinationLatLang = new LatLng(lat, lon);
                     try {
                         destinationMarker.remove();
@@ -338,7 +338,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
                     double lat = data.getDoubleExtra("lat", 0);
                     double lon = data.getDoubleExtra("lon", 0);
                     String address = data.getStringExtra("address");
-                    travel_from.setText(address);
+                    textViewSource.setText(address);
                     sourceLatLng = new LatLng(lat, lon);
                     try {
                         sournceMarker.remove();
@@ -390,7 +390,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
         String minuteString = minute < 10 ? "0" + minute : "" + minute;
         String secondString = second < 10 ? "0" + second : "" + second;
         String time = "You picked the following time: " + hourString + "h" + minuteString + "m" + secondString + "s";
-        date_txt.append(" " + hourString + ":" + minuteString);
+        textViewDate.append(" " + hourString + ":" + minuteString);
     }
 
 
@@ -403,10 +403,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
             e.printStackTrace();
         }
 
-        SimpleDateFormat outDate = new SimpleDateFormat("EEE dd MMM yy");
+        SimpleDateFormat outDate = new SimpleDateFormat("EEE dd MMM yyyy");
 
 
-        date_txt.setText(outDate.format(date2));
+        textViewDate.setText(outDate.format(date2));
 
         Calendar now = Calendar.getInstance();
         TimePickerDialog tpd = TimePickerDialog.newInstance(
@@ -421,9 +421,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
     @Override
     public void gotAddress(String address, boolean source) {
         if (source) {
-            travel_from.setText(address);
+            textViewSource.setText(address);
         } else {
-            travel_to.setText(address);
+            textViewDestination.setText(address);
         }
 
     }
