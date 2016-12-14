@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.balysv.materialripple.MaterialRippleLayout
+<com.balysv.materialripple.MaterialRippleLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ripple"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    android:background="@drawable/border_linearlayout"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:background="@drawable/border_linearlayout">
 
     <LinearLayout
         android:id="@+id/linear"
@@ -18,79 +16,102 @@
 
         >
 
-        <TextView
-            android:id="@+id/textviewETD"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/date_text"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:orientation="horizontal">
 
+            <TextView
+                android:id="@+id/textviewETD_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="bottom"
             android:orientation="horizontal"
-            android:weightSum="100">
+            android:weightSum="110">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="25"
+                android:layout_weight="20"
                 android:gravity="left">
 
                 <TextView
+                    android:id="@+id/textviewETD_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:text="9.00" />
+                    android:textSize="10sp" />
 
             </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="50">
+                android:layout_weight="70">
 
                 <ImageView
                     android:id="@+id/imageview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
                     android:src="@drawable/ic_line_graph" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/textViewSource"
+                    android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_below="@+id/imageview"
-                    android:text="CHCH"
+                    android:ellipsize="end"
+                    android:maxLines="2"
                     android:textColor="@color/black"
-                    />
+                    android:textSize="9sp" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/textViewDestination"
+                    android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/imageview"
+                    android:ellipsize="end"
+                    android:maxLines="2"
                     android:textColor="@color/black"
-
-                    android:text="QTV" />
+                    android:textSize="9sp" />
 
             </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="25"
+                android:layout_weight="20"
                 android:gravity="right">
 
                 <TextView
+                    android:id="@+id/textViewETA"
                     android:layout_width="wrap_content"
-                    android:textColor="@color/black"
                     android:layout_height="wrap_content"
-                    android:text="14.00" />
+                    android:textColor="@color/black"
+                    android:textSize="10sp" />
 
 
             </LinearLayout>
@@ -113,24 +134,57 @@
             >
 
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_weight="25"
-                android:text="7H 45m- Volvo C70"
-                android:textColor="@color/black" />
+                android:orientation="horizontal">
 
+                <TextView
+                    android:id="@+id/textViewJourneyTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:textColor="@color/black"
+                    android:textSize="10sp" />
 
-            <TextView
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:textColor="@color/black"
+                    android:textSize="10sp" />
 
+                <TextView
+                    android:id="@+id/textCarType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_weight="25"
-                android:text="PAX1"
-                android:textColor="@color/black" />
+                android:orientation="horizontal">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="25"
+                    android:text="PAX : "
+                    android:textColor="@color/black"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/textViewPax"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/black"
+                    android:textSize="10sp" />
+            </LinearLayout>
         </RelativeLayout>
 
 

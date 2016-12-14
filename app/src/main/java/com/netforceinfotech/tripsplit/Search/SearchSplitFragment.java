@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.netforceinfotech.tripsplit.Dashboard.NavigationFragment;
 import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
@@ -33,6 +34,7 @@ public class SearchSplitFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search_split, container, false);
         context = getActivity();
+        NavigationFragment.POSITION = 4;
         setuptoolbar();
         initView(view);
         setupTab(view);
@@ -108,6 +110,8 @@ public class SearchSplitFragment extends Fragment {
         adapter = new SearchPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
 
         viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(0);
+
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

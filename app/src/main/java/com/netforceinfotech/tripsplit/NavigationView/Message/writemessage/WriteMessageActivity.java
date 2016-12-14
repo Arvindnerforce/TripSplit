@@ -7,14 +7,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
-import com.netforceinfotech.tripsplit.NavigationView.Message.MessageAdapter;
-import com.netforceinfotech.tripsplit.NavigationView.Message.MessageFragmentData;
 import com.netforceinfotech.tripsplit.R;
-import com.netforceinfotech.tripsplit.Search.SearchAdapter;
 
 import java.util.ArrayList;
 
@@ -49,7 +44,7 @@ public class WriteMessageActivity extends AppCompatActivity
     private void setupRecyclerView()
     {
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerMyGroup);
 
         layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
 

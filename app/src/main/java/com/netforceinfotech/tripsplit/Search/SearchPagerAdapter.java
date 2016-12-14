@@ -16,14 +16,13 @@ public class SearchPagerAdapter extends FragmentStatePagerAdapter {
 
 
     int mNumOfTabs;
-    private SearchFragment aeriplaneFragment,carFragment,busFragment,shipFragment;
+    private SearchFragment aeriplaneFragment, carFragment, busFragment, shipFragment;
     public int currentpage = 0;
     private Bundle bundle;
 
     public SearchPagerAdapter(FragmentManager fm, int NumOfTabs) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
-        bundle = new Bundle();
     }
 
 
@@ -33,21 +32,25 @@ public class SearchPagerAdapter extends FragmentStatePagerAdapter {
 
             case 0:
                 aeriplaneFragment = new SearchFragment();
+                bundle = new Bundle();
                 bundle.putString("type", "aeroplane");
                 aeriplaneFragment.setArguments(bundle);
                 return aeriplaneFragment;
             case 1:
                 carFragment = new SearchFragment();
+                bundle = new Bundle();
                 bundle.putString("type", "car");
                 carFragment.setArguments(bundle);
                 return carFragment;
             case 2:
                 busFragment = new SearchFragment();
+                bundle = new Bundle();
                 bundle.putString("type", "bus");
                 busFragment.setArguments(bundle);
                 return busFragment;
             case 3:
                 shipFragment = new SearchFragment();
+                bundle = new Bundle();
                 bundle.putString("type", "ship");
                 shipFragment.setArguments(bundle);
                 return shipFragment;
@@ -62,7 +65,6 @@ public class SearchPagerAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return mNumOfTabs;
     }
-
 
 
 }

@@ -1,7 +1,6 @@
 package com.netforceinfotech.tripsplit.NavigationView.Message.mysplit;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.netforceinfotech.tripsplit.NavigationView.Message.MessageAdapter;
-import com.netforceinfotech.tripsplit.NavigationView.Message.MessageFragmentData;
 import com.netforceinfotech.tripsplit.R;
 
 import java.util.ArrayList;
@@ -77,7 +74,7 @@ public class MySplitFragment extends Fragment
     {
         messageLayout = (FrameLayout) view.findViewById(R.id.messagelayout);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerMyGroup);
         layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
 
         recyclerView.setLayoutManager(layoutManager);

@@ -16,4 +16,5 @@
     <color name="selected_menu_back">#e5e5e5</color>
     <color name="polyline_color">#43a047</color>
     <color name="colorPrimaryLight">#f16d68</color>
+    <color name="darkpurple">#20102e</color>
 </resources>

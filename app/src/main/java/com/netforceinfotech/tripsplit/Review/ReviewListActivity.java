@@ -1,8 +1,5 @@
 package com.netforceinfotech.tripsplit.Review;
 
-import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,16 +8,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.netforceinfotech.tripsplit.R;
-import com.netforceinfotech.tripsplit.Search.SearchAdapter;
-import com.netforceinfotech.tripsplit.Search.SearchData;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class ReviewListActivity extends AppCompatActivity implements View.OnClickListener
 {
@@ -49,7 +41,7 @@ public class ReviewListActivity extends AppCompatActivity implements View.OnClic
 
     private void setupRecyclerView()
     {
-        recyclerView = (RecyclerView) findViewById(R.id.recycler);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerMyGroup);
 
         write_review_button = (Button)   findViewById(R.id.write_reviewButton);
 

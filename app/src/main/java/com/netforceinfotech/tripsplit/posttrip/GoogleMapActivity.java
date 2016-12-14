@@ -183,6 +183,8 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
                 GoogleMapActivity.this.zoomLevel = mMap.getCameraPosition().zoom;
             }
         });
+        mMap.setMyLocationEnabled(true);
+
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -209,6 +211,23 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
 
 
     }
+
+
+    private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
+        @Override
+        public void onMyLocationChange(Location location) {
+            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+            try {
+                marker.remove();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            marker = mMap.addMarker(new MarkerOptions().position(loc));
+            if (mMap != null) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
+            }
+        }
+    };
 
     @Override
     protected void onPause() {
