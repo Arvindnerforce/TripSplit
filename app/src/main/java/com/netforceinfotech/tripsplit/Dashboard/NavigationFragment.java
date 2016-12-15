@@ -113,6 +113,7 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
             String name = jsonObject.get("firstname").getAsString();
             String email = jsonObject.get("email").getAsString();
             String profile_image = jsonObject.get("profile_image").getAsString();
+            userSessionManager.setProfileImage(profile_image);
             String dob = jsonObject.get("dob").getAsString();
             String country = jsonObject.get("country").getAsString();
             String country_code = jsonObject.get("country_code").getAsString();

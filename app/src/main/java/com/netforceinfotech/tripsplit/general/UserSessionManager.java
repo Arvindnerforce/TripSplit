@@ -30,6 +30,7 @@ public class UserSessionManager {
     private static final String MESSAGENOTIFICATION = "messagenotification";
     private static final String EMAILNOTIFICATION = "emailnitification";
     private static final String INAPPVIBRATION = "inappvibration";
+    private static final String PROFILE_IMAGE = "profileiamge";
     // Shared Preferences reference
     SharedPreferences pref;
     // Editor reference for Shared preferences
@@ -215,6 +216,7 @@ public class UserSessionManager {
         editor.putBoolean(MESSAGENOTIFICATION, pw);
         editor.commit();
     }
+
     public boolean getEmailNotification() {
         return pref.getBoolean(EMAILNOTIFICATION, true);
 
@@ -224,6 +226,7 @@ public class UserSessionManager {
         editor.putBoolean(EMAILNOTIFICATION, pw);
         editor.commit();
     }
+
     public boolean getInAppVibration() {
         return pref.getBoolean(INAPPVIBRATION, true);
 
@@ -234,4 +237,13 @@ public class UserSessionManager {
         editor.commit();
     }
 
+    public void setProfileImage(String profile_image) {
+        editor.putString(PROFILE_IMAGE, profile_image);
+        editor.commit();
+    }
+
+    public String getProfileImage() {
+        return pref.getString(PROFILE_IMAGE, "");
+
+    }
 }

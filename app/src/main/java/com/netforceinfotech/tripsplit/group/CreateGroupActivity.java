@@ -11,17 +11,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
@@ -36,16 +41,16 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
+import java.util.Map;
 
 public class CreateGroupActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int PICK_IMAGE = 1234;
     private static final int TAKE_PHOTO_CODE = 1235;
     private static final String IMAGE_DIRECTORY_NAME = "tripsplit";
-
+    UserSessionManager userSessionManager;
     Toolbar toolbar;
     Context context;
     ImageView image;
@@ -57,12 +62,14 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
     private MaterialDialog progressDialog, dialog;
     private Uri fileUri;
     private String filePath;
+    private String selectedCategoryString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
         context = this;
+        userSessionManager = new UserSessionManager(context);
         initView();
         getCategory();
         setupToolBar(getString(R.string.create_group));
@@ -117,7 +124,7 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
             case TAKE_PHOTO_CODE:
                 if (resultCode == RESULT_OK) {
                     Log.i("result picture", "clicked");
-                    buttonAddImage.setText(filePath);
+                    //  buttonAddImage.setText(filePath);
                     image.setVisibility(View.VISIBLE);
                     Glide.with(context).load(new File(filePath)).error(R.drawable.ic_error).into(image);
                 }
@@ -134,7 +141,7 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
                         }
                     }
                     try {
-                        buttonAddImage.setText(filePath);
+                        //  buttonAddImage.setText(filePath);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -155,6 +162,16 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         String teams = title;
         getSupportActionBar().setTitle(teams);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public String getPath(Uri uri) {
@@ -245,9 +262,7 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
                 createGroup(editTextGroupTitle.getText().toString(), editTextCity.getText().toString(), textViewCountry.getText().toString(), selectedCategoryId);
                 // searchGroup(textViewCountry.getText().toString(), textViewCity.getText().toString(), textViewCategory.getText().toString());
                 break;
-            case R.id.imageViewCreateGroup:
 
-                break;
         }
     }
 
@@ -261,6 +276,7 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
             Log.i("filePath", "inside send image");
             Ion.with(getApplicationContext())
                     .load("POST", url)
+                    .setMultipartParameter("user_id", userSessionManager.getUserId())
                     .setMultipartParameter("chat_title", groupName)
                     .setMultipartParameter("city", city)
                     .setMultipartParameter("country", country)
@@ -276,7 +292,17 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
                                 showMessage("Error in creating group");
                             } else {
                                 if (result.get("status").getAsString().equalsIgnoreCase("success")) {
+                                    Log.i("result", result.toString());
                                     showMessage("Group Created Successfully");
+                                    JsonArray data = result.getAsJsonArray("data");
+                                    JsonObject jsonObject = data.get(0).getAsJsonObject();
+                                    JsonObject group=jsonObject.getAsJsonObject("group");
+                                    String group_id = group.get("group_id").getAsString();
+                                    String image = "";
+                                    if (!group.get("image").isJsonNull()) {
+                                        image = group.get("image").getAsString();
+                                    }
+                                    setupFirebase(group_id, image);
                                     finish();
                                 }
 
@@ -301,6 +327,14 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
                                 showMessage("Error in creating group");
                             } else {
                                 if (result.get("status").getAsString().equalsIgnoreCase("success")) {
+                                    JsonArray data = result.getAsJsonArray("data");
+                                    JsonObject jsonObject = data.get(0).getAsJsonObject();
+                                    String group_id = jsonObject.get("group_id").getAsString();
+                                    String image = "";
+                                    if (!jsonObject.get("image").isJsonNull()) {
+                                        image = jsonObject.get("image").getAsString();
+                                    }
+                                    setupFirebase(group_id, image);
                                     showMessage("Group Created Successfully");
                                     finish();
                                 }
@@ -309,6 +343,32 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
                         }
                     });
         }
+
+    }
+
+    private void setupFirebase(final String group_id, final String image) {
+        final DatabaseReference _group_title = FirebaseDatabase.getInstance().getReference().child("user_group");
+        final HashMap<String, Object> group_id_map = new HashMap<String, Object>();
+        group_id_map.put(group_id, "");
+        _group_title.updateChildren(group_id_map).addOnCompleteListener(this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Map<String, Object> map = new HashMap<String, Object>();
+                DatabaseReference _group_id = _group_title.child(group_id);
+                String tempKey = _group_id.push().getKey();
+                _group_id.updateChildren(map);
+                DatabaseReference message_root = _group_id.child(tempKey);
+                Map<String, Object> map1 = new HashMap<String, Object>();
+                map1.put("category:", selectedCategoryString);
+                map1.put("city", editTextCity.getText().toString());
+                map1.put("country", textViewCountry.getText().toString());
+                map1.put("user_id", userSessionManager.getUserId());
+                map1.put("timestamp", ServerValue.TIMESTAMP);
+                map1.put("image_url", image);
+                message_root.updateChildren(map1);
+
+            }
+        });
 
     }
 
@@ -419,6 +479,7 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
                     public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                         textViewCategory.setText(categories.get(which).name);
                         selectedCategoryId = categories.get(which).id;
+                        selectedCategoryString = categories.get(which).name;
                     }
                 })
                 .show();

@@ -95,7 +95,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         userSessionManager = new UserSessionManager(context);
         setupToolbar();
         initView();
-        startActivity(new Intent(context, DashboardActivity.class));
         new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {

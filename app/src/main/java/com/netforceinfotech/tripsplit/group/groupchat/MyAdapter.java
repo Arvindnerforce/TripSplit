@@ -1,14 +1,12 @@
-package com.netforceinfotech.tripsplit.group.searchgroup;
+package com.netforceinfotech.tripsplit.group.groupchat;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.netforceinfotech.tripsplit.R;
 
 import java.text.ParseException;
@@ -40,7 +38,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.row_searchgroup, parent, false);
+        View view = inflater.inflate(R.layout.row_mygroup, parent, false);
         viewHolder = new MyHolder(view);
         return viewHolder;
     }
@@ -48,17 +46,9 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         MyHolder myHolder = (MyHolder) holder;
-        myHolder.textViewGroupName.setText(itemList.get(position).title);
-        myHolder.textViewCategory.setText(itemList.get(position).category_name);
-        myHolder.textViewCity.setText(itemList.get(position).city);
-        myHolder.textViewCountry.setText(itemList.get(position).country);
-        Glide.with(context).load(itemList.get(position).image).error(R.drawable.ic_error).into(myHolder.imageView);
-        myHolder.view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showMessage("show group chat");
-            }
-        });
+
+
+
     }
 
     private void showMessage(String s) {
@@ -69,11 +59,9 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        Log.i("itemsize", itemList.size() + "");
         return itemList.size();
 //        return itemList.size();
     }
-
     private String getFormetedTime(String etd) {
         SimpleDateFormat fmt = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
         Date date = null;

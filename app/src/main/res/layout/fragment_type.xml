@@ -377,13 +377,13 @@
                         android:layout_marginTop="20dp"
                         android:background="@drawable/round_border"
                         android:gravity="center_vertical"
-                        android:hint="@string/departure_address"
+                        android:text="@string/departure_address"
                         android:paddingBottom="8dp"
                         android:paddingLeft="17dp"
                         android:paddingRight="17dp"
                         android:paddingTop="8dp"
 
-                        android:textColorHint="@color/red" />
+                        android:textColor="@color/red" />
 
                     <TextView
                         android:id="@+id/textViewDestinationAddress"
@@ -392,12 +392,12 @@
                         android:layout_marginTop="20dp"
                         android:background="@drawable/editext_background"
                         android:gravity="center_vertical"
-                        android:hint="@string/destination_address"
+                        android:text="@string/destination_address"
                         android:paddingBottom="8dp"
                         android:paddingLeft="17dp"
                         android:paddingRight="17dp"
                         android:paddingTop="8dp"
-                        android:textColorHint="@color/red" />
+                        android:textColor="@color/red" />
 
                     <com.google.android.gms.maps.MapView
                         android:id="@+id/mapView"
@@ -501,7 +501,7 @@
                                 android:gravity="left"
                                 android:text="Return ETD"
                                 android:textColor="@color/black"
-                                android:textSize="16dp" />
+                                android:textSize="12dp" />
 
                             <TextView
                                 android:id="@+id/textviewReturnETD"

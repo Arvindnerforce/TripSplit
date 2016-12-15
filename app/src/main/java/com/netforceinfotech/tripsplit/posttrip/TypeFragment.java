@@ -308,6 +308,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 showEditPicPopup();
                 break;
             case R.id.buttonPost:
+                //  setupDashboardFragment();
                 postTrip();
                 break;
             case R.id.textviewETD:
@@ -508,15 +509,18 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                                     e.printStackTrace();
                                     showMessage("Error in Posting new Trip!!! Try again");
                                 } else {
+                                    Log.i("result", result.toString());
                                     if (result.get("status").getAsString().equalsIgnoreCase("success")) {
                                         /*result.toString();
                                         showMessage("New Trip Posted Successfully");
                                         setupDashboardFragment();*/
-                                        Log.i("result", result.toString());
+
                                         JsonArray data = result.getAsJsonArray("data");
                                         JsonObject jsonObject = data.get(0).getAsJsonObject();
                                         JsonObject trip_id = jsonObject.getAsJsonObject("data");
                                         setupDialog(trip_id);
+                                    } else {
+
                                     }
 
                                 }
@@ -585,18 +589,26 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         custompopup = new MaterialDialog.Builder(context)
                 .title(R.string.postdetail)
                 .customView(R.layout.tripdetail, wrapInScrollView)
-                .negativeText(R.string.ok)
+                .positiveText(R.string.ok)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        custompopup.dismiss();
                         setupDashboardFragment();
+                        custompopup.dismiss();
                     }
                 })
                 .show();
 
         TextView textViewETD_date, textViewETD_time, textViewSource, textViewDestination, textViewETA, textViewJourneyTime,
-                textViewCarType, textViewPax, textViewPrice;
+                textViewCarType, textViewPax, textViewPrice, textViewETD_date_return, textViewETD_time_return,
+                textViewSource_return, textViewDestination_return, textViewETA_return, textViewJourneyTime_return;
+        LinearLayout linearLayoutReturn = (LinearLayout) custompopup.findViewById(R.id.linearLayoutReturn);
+        textViewETD_date_return = (TextView) custompopup.findViewById(R.id.textviewETD_dateReturn);
+        textViewETD_time_return = (TextView) custompopup.findViewById(R.id.textviewETD_timeReturn);
+        textViewSource_return = (TextView) custompopup.findViewById(R.id.textViewSourceReturn);
+        textViewDestination_return = (TextView) custompopup.findViewById(R.id.textViewDestinationReturn);
+        textViewETA_return = (TextView) custompopup.findViewById(R.id.textViewETAReturn);
+        textViewJourneyTime_return = (TextView) custompopup.findViewById(R.id.textViewJourneyTimeReturn);
         textViewETD_date = (TextView) custompopup.findViewById(R.id.textviewETD_date);
         textViewETD_time = (TextView) custompopup.findViewById(R.id.textviewETD_time);
         textViewSource = (TextView) custompopup.findViewById(R.id.textViewSource);
@@ -614,6 +626,21 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         String eta = jsonObject.get("eta").getAsString();
         String start_price = jsonObject.get("start_price").getAsString();
         String currency = jsonObject.get("currency").getAsString();
+        String trip = jsonObject.get("trip").getAsString();
+        if (trip.equalsIgnoreCase("1")) {
+            linearLayoutReturn.setVisibility(View.VISIBLE);
+            textViewDestination_return.setText(depart_address);
+            textViewSource_return.setText(dest_address);
+            String return_eta = jsonObject.get("return_eta").getAsString();
+            String return_etd = jsonObject.get("return_etd").getAsString();
+            textViewETD_date_return.setText(getFormatedDate(return_etd));
+            textViewETD_time_return.setText(getFormetedTime(return_etd));
+            textViewETA_return.setText(getFormetedTime(return_eta));
+            textViewJourneyTime_return.setText(getFormattedTimeDiff(return_eta, return_etd));
+
+        } else {
+            linearLayoutReturn.setVisibility(View.GONE);
+        }
 
         textViewPrice.setText(currency + " " + start_price);
         textViewPax.setText(pax);
@@ -704,6 +731,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         if (etd.after(eta)) {
 
             showMessage("Arival time should be after Departure time");
+            return false;
         }
 
         if (returnFlag) {
@@ -721,17 +749,26 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 showMessage("Arival date not set");
                 return false;
             }
+            if (eta.after(returnetd)) {
+                showMessage("Return journy cannot be set before!!!");
+                return false;
+            }
             Log.i("datecheck", returnetd.toString() + ":" + returneta.toString());
             if (returnetd.after(returneta)) {
 
                 showMessage("Arival time should be after Departure time");
                 return false;
             }
-            if (etd.after(returnetd)) {
-                showMessage("Return time should be after out trip time");
-                return false;
-            }
 
+
+        }
+        if (textViewDepartureAddress.getText().toString().equalsIgnoreCase(getString(R.string.departure_address))) {
+            showMessage("Select departure address");
+            return false;
+        }
+        if (textViewDestinationAddress.getText().toString().equalsIgnoreCase(getString(R.string.destination_address))) {
+            showMessage("Select destination address");
+            return false;
         }
         return true;
 
@@ -1001,7 +1038,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 if (resultCode == getActivity().RESULT_OK) {
                     imageFlag = true;
                     Log.i("result picture", "clicked");
-                    buttonAddImage.setText(filePath);
+                    //  buttonAddImage.setText(filePath);
                     image.setVisibility(View.VISIBLE);
                     Glide.with(context).load(new File(filePath)).error(R.drawable.ic_error).into(image);
                 }
@@ -1019,7 +1056,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                         }
                     }
                     try {
-                        buttonAddImage.setText(filePath);
+                        //  buttonAddImage.setText(filePath);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1085,7 +1122,6 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
 
 
     private void zoomInTwoPoint() {

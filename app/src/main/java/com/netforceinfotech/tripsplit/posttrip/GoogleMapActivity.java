@@ -51,6 +51,7 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
 
     private static final int PERMISSION_REQUEST_CODE_LOCATION = 1;
     static final LatLng TutorialsPoint = new LatLng(21, 57);
+    private static final int PERMISSION_REQUEST_CODE_LOCATION1 = 2;
     LatLng currentLatLng;
     public GoogleMap mMap;
     Context context;
@@ -174,6 +175,14 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
 
         } else {
             requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, PERMISSION_REQUEST_CODE_LOCATION, getApplicationContext(), GoogleMapActivity.this);
+        }
+        if (checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION, getApplicationContext(), GoogleMapActivity.this)) {
+
+            mMap.getUiSettings().setRotateGesturesEnabled(false);
+            // getLocation();
+
+        } else {
+            requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, PERMISSION_REQUEST_CODE_LOCATION1, getApplicationContext(), GoogleMapActivity.this);
         }
 
         mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
@@ -410,6 +419,18 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
         switch (requestCode) {
 
             case PERMISSION_REQUEST_CODE_LOCATION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    mMap.getUiSettings().setRotateGesturesEnabled(false);
+                    //getLocation();
+
+                } else {
+
+                    Toast.makeText(getApplicationContext(), "Permission Denied, You cannot access location data.", Toast.LENGTH_LONG).show();
+
+                }
+                break;
+            case PERMISSION_REQUEST_CODE_LOCATION1:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     mMap.getUiSettings().setRotateGesturesEnabled(false);

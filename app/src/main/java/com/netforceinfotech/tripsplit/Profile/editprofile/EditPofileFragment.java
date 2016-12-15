@@ -98,10 +98,11 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
     LinearLayout linearLayoutAddress, linearLayoutCountry, linearLayoutBirthday;
     private MaterialDialog dialogDoB;
     Button buttonOk;
-    EditText etDay, etMonth, etYear;
+    EditText etDay, etMonth, etYear, etAboutMe;
     private String dobString = "";
     MaterialRippleLayout rippleLayoutDob, rippleLayoutAddress, rippleLayoutCountry;
     LinearLayout linearLayoutMain;
+    private String aboutme = "";
 
 
     public EditPofileFragment() {
@@ -149,7 +150,8 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
     }
 
     private void initView(View view) {
-        linearLayoutMain= (LinearLayout) view.findViewById(R.id.linearlayoutMain);
+        etAboutMe = (EditText) view.findViewById(R.id.etAboutMe);
+        linearLayoutMain = (LinearLayout) view.findViewById(R.id.linearlayoutMain);
         progressDialog = new MaterialDialog.Builder(context)
                 .title(R.string.progress_dialog)
                 .content(R.string.please_wait)
@@ -321,10 +323,17 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
             showMessage("address parsing address");
         }
 
+        try {
+            aboutme = URLEncoder.encode(etAboutMe.getText().toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            addressString = "";
+            showMessage("address parsing address");
+        }
+
         String url = getResources().getString(R.string.url);
         String dateToSend = getServerDateFormat(etDoB.getText().toString());
         String uploadurl = "services.php?opt=updateprofile&user_id=" + userSessionManager.getUserId() + "&country_code="
-                + countryCode + "&country=" + country + "&dob=" + dateToSend + "&address=" + addressString;
+                + countryCode + "&country=" + country + "&dob=" + dateToSend + "&address=" + addressString + "&aboutme=" + aboutme;
         url = url + uploadurl;
 
         Log.i("result_url", url);
@@ -748,6 +757,13 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
             if (!jsonObject.get("address").isJsonNull()) {
                 address = jsonObject.get("address").getAsString();
             }
+            try {
+                if (!jsonObject.get("aboutme").isJsonNull()) {
+                    aboutme = jsonObject.get("aboutme").getAsString();
+                }
+            } catch (Exception ex) {
+
+            }
 
             try {
                 Glide.with(context).load(profile_image).error(R.drawable.ic_error).into(imageViewDp);
@@ -758,6 +774,7 @@ public class EditPofileFragment extends Fragment implements View.OnClickListener
             etDoB.setText(fortmatedDate);
             etAddress.setText(address);
             etCountry.setText(country);
+            etAboutMe.setText(aboutme);
             setAge(dob);
 
         }

@@ -144,7 +144,7 @@ public class GroupFragment extends Fragment implements View.OnClickListener {
     }
 
     private void replaceInnerFragment(Fragment newFragment, String tag) {
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.groupFrame, newFragment, tag);
         transaction.commit();
     }

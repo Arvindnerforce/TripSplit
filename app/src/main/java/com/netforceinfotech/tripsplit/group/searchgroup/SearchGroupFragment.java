@@ -86,7 +86,7 @@ public class SearchGroupFragment extends Fragment {
                             showMessage("Something went wrong. Please Try again");
                         } else {
                             Log.i("result", result.toString());
-                            if (result.get("status").toString().equalsIgnoreCase("success")) {
+                            if (result.get("status").getAsString().equalsIgnoreCase("success")) {
                                 JsonArray data = result.getAsJsonArray("data");
                                 JsonObject jsonObject = data.get(0).getAsJsonObject();
                                 JsonArray group = jsonObject.getAsJsonArray("group");
@@ -98,12 +98,14 @@ public class SearchGroupFragment extends Fragment {
     }
 
     private void setupGroupData(JsonArray group) {
+        Log.i("test","inside function");
         int size = group.size();
         if (size == 0) {
             showMessage("No group found");
             return;
         }
         for (int i = 0; i < size; i++) {
+            Log.i("test","inside loop begining"+i);
             JsonObject object = group.get(i).getAsJsonObject();
             String group_id = object.get("group_id").getAsString();
             String title = object.get("title").getAsString();
@@ -116,6 +118,7 @@ public class SearchGroupFragment extends Fragment {
             if (!myDatas.contains(myData)) {
                 myDatas.add(myData);
             }
+            Log.i("test","inside loop end"+i);
 
         }
         myAdapter.notifyDataSetChanged();

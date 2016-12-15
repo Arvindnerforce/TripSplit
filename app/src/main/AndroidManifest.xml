@@ -124,7 +124,8 @@
         <activity
             android:name=".posttrip.MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".group.CreateGroupActivity"></activity>
+        <activity android:name=".group.CreateGroupActivity" />
+        <activity android:name=".group.groupchat.GroupChatActivity"></activity>
     </application>
 
 </manifest>
