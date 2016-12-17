@@ -24,9 +24,13 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
@@ -63,6 +67,7 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
     private Uri fileUri;
     private String filePath;
     private String selectedCategoryString;
+    private DatabaseReference _user_group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,6 +221,11 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.linearLayoutPicture:
@@ -296,7 +306,7 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
                                     showMessage("Group Created Successfully");
                                     JsonArray data = result.getAsJsonArray("data");
                                     JsonObject jsonObject = data.get(0).getAsJsonObject();
-                                    JsonObject group=jsonObject.getAsJsonObject("group");
+                                    JsonObject group = jsonObject.getAsJsonObject("group");
                                     String group_id = group.get("group_id").getAsString();
                                     String image = "";
                                     if (!group.get("image").isJsonNull()) {
@@ -326,6 +336,7 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
                                 e.printStackTrace();
                                 showMessage("Error in creating group");
                             } else {
+                                Log.i("result", result.toString());
                                 if (result.get("status").getAsString().equalsIgnoreCase("success")) {
                                     JsonArray data = result.getAsJsonArray("data");
                                     JsonObject jsonObject = data.get(0).getAsJsonObject();
@@ -347,25 +358,99 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void setupFirebase(final String group_id, final String image) {
-        final DatabaseReference _group_title = FirebaseDatabase.getInstance().getReference().child("user_group");
-        final HashMap<String, Object> group_id_map = new HashMap<String, Object>();
-        group_id_map.put(group_id, "");
-        _group_title.updateChildren(group_id_map).addOnCompleteListener(this, new OnCompleteListener<Void>() {
+        _user_group = FirebaseDatabase.getInstance().getReference().child("user_group");
+        _user_group.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Map<String, Object> map = new HashMap<String, Object>();
-                DatabaseReference _group_id = _group_title.child(group_id);
-                String tempKey = _group_id.push().getKey();
-                _group_id.updateChildren(map);
-                DatabaseReference message_root = _group_id.child(tempKey);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(userSessionManager.getUserId())) {
+                    createUserChild(dataSnapshot, group_id, image);
+                } else {
+                    insertGrouptoUser(dataSnapshot, group_id, image);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    private void insertGrouptoUser(DataSnapshot dataSnapshot, final String group_id, final String image) {
+        final DatabaseReference _user_id = _user_group.child(userSessionManager.getUserId());
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put(group_id, "");
+
+
+        _user_id.updateChildren(map);
+        _user_id.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                DatabaseReference _group_id = _user_id.child(group_id);
                 Map<String, Object> map1 = new HashMap<String, Object>();
-                map1.put("category:", selectedCategoryString);
+                map1.put("category", selectedCategoryString);
                 map1.put("city", editTextCity.getText().toString());
                 map1.put("country", textViewCountry.getText().toString());
                 map1.put("user_id", userSessionManager.getUserId());
                 map1.put("timestamp", ServerValue.TIMESTAMP);
                 map1.put("image_url", image);
-                message_root.updateChildren(map1);
+                map1.put("title", editTextGroupTitle.getText().toString());
+                _group_id.updateChildren(map1);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void createUserChild(DataSnapshot dataSnapshot, final String group_id, final String image) {
+        final HashMap<String, Object> user_id_map = new HashMap<String, Object>();
+        user_id_map.put(userSessionManager.getUserId(), "");
+        _user_group.updateChildren(user_id_map);
+        _user_group.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                insertGrouptoUser(dataSnapshot, group_id, image);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });

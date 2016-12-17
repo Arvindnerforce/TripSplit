@@ -40,7 +40,6 @@
         android:id="@+id/linearlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/ripple"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
@@ -225,6 +224,10 @@
             android:layout_height="1dp"
             android:background="@color/view_background" />
 
+        <FrameLayout
+            android:id="@+id/searchFrame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></FrameLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerMyGroup"

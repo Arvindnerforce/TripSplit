@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
@@ -30,6 +31,7 @@ public class SearchGroupFragment extends Fragment {
     ArrayList<MyData> myDatas = new ArrayList<>();
     String country = "", city = "", category = "";
     private MyAdapter myAdapter;
+    private MaterialDialog progressDialog;
 
     public SearchGroupFragment() {
         // Required empty public constructor
@@ -42,6 +44,10 @@ public class SearchGroupFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search_group, container, false);
         context = getActivity();
+        progressDialog = new MaterialDialog.Builder(context)
+                .title(R.string.progress_dialog)
+                .content(R.string.please_wait)
+                .progress(true, 0).build();
         setupRecyclerView(view);
         try {
             country = this.getArguments().getString("country");
@@ -70,6 +76,7 @@ public class SearchGroupFragment extends Fragment {
 
     private void searchGroup(String country, String city, String category) {
         //http://netforce.biz/tripesplit/mobileApp/api/services.php?opt=search_group
+        progressDialog.show();
         String baseURl = getString(R.string.url);
         String url = baseURl + "/services.php?opt=search_group";
         Log.i("url", url);
@@ -82,6 +89,7 @@ public class SearchGroupFragment extends Fragment {
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
+                        progressDialog.dismiss();
                         if (result == null) {
                             showMessage("Something went wrong. Please Try again");
                         } else {
@@ -98,14 +106,14 @@ public class SearchGroupFragment extends Fragment {
     }
 
     private void setupGroupData(JsonArray group) {
-        Log.i("test","inside function");
+        Log.i("test", "inside function");
         int size = group.size();
         if (size == 0) {
             showMessage("No group found");
             return;
         }
         for (int i = 0; i < size; i++) {
-            Log.i("test","inside loop begining"+i);
+            Log.i("test", "inside loop begining" + i);
             JsonObject object = group.get(i).getAsJsonObject();
             String group_id = object.get("group_id").getAsString();
             String title = object.get("title").getAsString();
@@ -118,7 +126,7 @@ public class SearchGroupFragment extends Fragment {
             if (!myDatas.contains(myData)) {
                 myDatas.add(myData);
             }
-            Log.i("test","inside loop end"+i);
+            Log.i("test", "inside loop end" + i);
 
         }
         myAdapter.notifyDataSetChanged();

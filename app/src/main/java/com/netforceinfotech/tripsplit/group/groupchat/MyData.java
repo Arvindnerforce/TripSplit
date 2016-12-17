@@ -6,12 +6,14 @@ package com.netforceinfotech.tripsplit.group.groupchat;
 public class MyData {
     String key, id, image_url, message, name;
     Long timestamp;
+    boolean you;
 
-    public MyData(String key, String id, String image_url, String message, String name, Long timestamp) {
+    public MyData(String key, String id, String image_url, String message, String name, Long timestamp,boolean you) {
         this.key = key;
         this.id = id;
         this.image_url = image_url;
         this.message = message;
+        this.you=you;
         this.name = name;
         this.timestamp = timestamp;
     }

@@ -18,7 +18,9 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/linearLayout"
+            android:layout_alignParentTop="true">
 
         </android.support.v7.widget.RecyclerView>
 
@@ -32,6 +34,7 @@
             android:textSize="24sp" />
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -41,10 +44,13 @@
             <EditText
                 android:id="@+id/et_message"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="7dp"
-                android:background="@drawable/ic_chat_outline"
-                android:gravity="start" />
+                android:background="@drawable/round_border"
+                android:gravity="start"
+                android:hint="Enter Message here"
+                android:inputType="text"
+                android:padding="13dp" />
 
             <Button
                 android:id="@+id/buttonSend"

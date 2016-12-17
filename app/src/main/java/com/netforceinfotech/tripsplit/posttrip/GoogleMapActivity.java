@@ -70,7 +70,7 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
     AddressListner addressListner = null;
     private PlaceAutocompleteFragment autocompleteFragment;
     String TAG = "google_place";
-    private float zoomLevel = 16;
+    private float zoomLevel = 20;
     private LocationManager mLocationManager;
 
     @Override
@@ -211,32 +211,19 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
 
             }
         });
+        if (source_place) {
 
-        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000,
-                10, mLocationListener);
+
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000,
+                    10, mLocationListener);
+        }
         search = (Button) findViewById(R.id.search_button);
 
 
     }
 
-
-    private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
-        @Override
-        public void onMyLocationChange(Location location) {
-            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
-            try {
-                marker.remove();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            marker = mMap.addMarker(new MarkerOptions().position(loc));
-            if (mMap != null) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f));
-            }
-        }
-    };
 
     @Override
     protected void onPause() {
@@ -272,8 +259,28 @@ public class GoogleMapActivity extends AppCompatActivity implements OnMapReadyCa
             latLng = new LatLng(location.getLatitude(), location.getLongitude());
             marker = mMap.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.selected_place)));
             currentLatLng = latLng;
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
+            zoomLevel = 18;
             setCompleteAddress(latLng);
+            mMap.setMyLocationEnabled(false);
+
+            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            try {
+                mLocationManager.removeUpdates(mLocationListener);
+                mLocationManager = null;
+
+            } catch (Exception ex) {
+
+            }
 
 
         }

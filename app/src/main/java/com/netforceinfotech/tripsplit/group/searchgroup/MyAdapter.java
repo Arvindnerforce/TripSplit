@@ -1,6 +1,8 @@
 package com.netforceinfotech.tripsplit.group.searchgroup;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.netforceinfotech.tripsplit.R;
+import com.netforceinfotech.tripsplit.group.groupchat.GroupChatActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -52,11 +55,25 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         myHolder.textViewCategory.setText(itemList.get(position).category_name);
         myHolder.textViewCity.setText(itemList.get(position).city);
         myHolder.textViewCountry.setText(itemList.get(position).country);
-        Glide.with(context).load(itemList.get(position).image).error(R.drawable.ic_error).into(myHolder.imageView);
+        try {
+            Glide.with(context).load(itemList.get(position).image).error(R.drawable.ic_error).into(myHolder.imageView);
+        } catch (Exception ex) {
+
+        }
         myHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showMessage("show group chat");
+                Intent intent = new Intent(context, GroupChatActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("city", itemList.get(position).city);
+                bundle.putString("country", itemList.get(position).country);
+                bundle.putString("category", itemList.get(position).category_name);
+
+                bundle.putString("image_url", itemList.get(position).image);
+                bundle.putString("group_id", itemList.get(position).group_id);
+                bundle.putString("title", itemList.get(position).title);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
             }
         });
     }

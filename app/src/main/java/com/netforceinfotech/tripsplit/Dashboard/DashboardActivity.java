@@ -1,7 +1,9 @@
 package com.netforceinfotech.tripsplit.Dashboard;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -69,6 +71,25 @@ public class DashboardActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void getPermission() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            String[] permission = {
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            };
+
+            ActivityCompat.requestPermissions(this,
+                    permission, 1);
+
+
+        }
     }
 
     private void showPopUp() {

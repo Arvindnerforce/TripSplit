@@ -50,6 +50,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -71,13 +72,8 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -221,7 +217,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
 
         rangeBar = (RangeBar) view.findViewById(R.id.rangebar);
         textviewAgeGroup = (TextView) view.findViewById(R.id.textviewAgeGroup);
-        textviewAgeGroup.setText(lowerLimit + "-" + upperLimit);
+        textviewAgeGroup.setText(getString(R.string.age_group) + " : " + lowerLimit + "-" + upperLimit);
 
         buttonCurrency = (Button) view.findViewById(R.id.buttonCurrency);
         buttonCurrency.setOnClickListener(this);
@@ -231,7 +227,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
             public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex,
                                               int rightPinIndex,
                                               String leftPinValue, String rightPinValue) {
-                textviewAgeGroup.setText(leftPinValue + "-" + rightPinValue);
+                textviewAgeGroup.setText(getString(R.string.age_group) + " : " + leftPinValue + "-" + rightPinValue);
                 lowerLimit = leftPinValue;
                 upperLimit = rightPinValue;
             }
@@ -1079,7 +1075,9 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                     } catch (Exception ex) {
 
                     }
-                    destinationMarker = mMap.addMarker(new MarkerOptions().title(getString(R.string.destination) + ":" + address).position(destinationLatLang));
+                    BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_map_destination);
+
+                    destinationMarker = mMap.addMarker(new MarkerOptions().icon(icon).title(getString(R.string.destination) + ":" + address).position(destinationLatLang));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destinationLatLang, zoomlevel));
                     if (sourceFlag) {
                         zoomInTwoPoint();
@@ -1100,7 +1098,9 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                     } catch (Exception ex) {
 
                     }
-                    sournceMarker = mMap.addMarker(new MarkerOptions().title(getString(R.string.source) + ":" + address).position(sourceLatLng));
+                    BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_map_source);
+
+                    sournceMarker = mMap.addMarker(new MarkerOptions().icon(icon).title(getString(R.string.source) + ":" + address).position(sourceLatLng));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sourceLatLng, zoomlevel));
 
 

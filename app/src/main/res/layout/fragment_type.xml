@@ -234,7 +234,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="0-35"
+                        android:text="Age group :"
                         android:textColor="@color/red"
                         android:textSize="18dp" />
 
@@ -362,7 +362,7 @@
                         android:layout_marginTop="20dp"
                         android:background="@drawable/round_border"
                         android:gravity="center_vertical"
-                        android:hint="@string/vehicle_type"
+                        android:hint="@string/travelling_with"
                         android:paddingBottom="8dp"
                         android:paddingLeft="17dp"
                         android:paddingRight="17dp"
@@ -377,11 +377,11 @@
                         android:layout_marginTop="20dp"
                         android:background="@drawable/round_border"
                         android:gravity="center_vertical"
-                        android:text="@string/departure_address"
                         android:paddingBottom="8dp"
                         android:paddingLeft="17dp"
                         android:paddingRight="17dp"
                         android:paddingTop="8dp"
+                        android:text="@string/departure_address"
 
                         android:textColor="@color/red" />
 
@@ -392,11 +392,11 @@
                         android:layout_marginTop="20dp"
                         android:background="@drawable/editext_background"
                         android:gravity="center_vertical"
-                        android:text="@string/destination_address"
                         android:paddingBottom="8dp"
                         android:paddingLeft="17dp"
                         android:paddingRight="17dp"
                         android:paddingTop="8dp"
+                        android:text="@string/destination_address"
                         android:textColor="@color/red" />
 
                     <com.google.android.gms.maps.MapView

@@ -114,6 +114,7 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
             String email = jsonObject.get("email").getAsString();
             String profile_image = jsonObject.get("profile_image").getAsString();
             userSessionManager.setProfileImage(profile_image);
+            userSessionManager.setName(name);
             String dob = jsonObject.get("dob").getAsString();
             String country = jsonObject.get("country").getAsString();
             String country_code = jsonObject.get("country_code").getAsString();
@@ -157,7 +158,7 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
     private List<RowDataDrawer> setDrawer() {
         List<RowDataDrawer> list = new ArrayList<>();
 
-        String title[] = {"Home", "Preferences", "Edit Profile", "Invite Friends", "Search Splitz", "Post Trip", "My Splitz", "My Trip", "Messages", "dummy", "Group", "How it works", "Support"};
+        String title[] = {getString(R.string.home), getString(R.string.preferences), getString(R.string.edit_profile), getString(R.string.invite_friend), getString(R.string.search_spliz), getString(R.string.post_trip), getString(R.string.my_splitz), getString(R.string.my_trip), getString(R.string.messages), getString(R.string.dummy), getString(R.string.group), getString(R.string.how_it_works), getString(R.string.support)};
         int drawableId[];
 
 

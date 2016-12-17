@@ -19,6 +19,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,13 +56,16 @@ public class GroupFragment extends Fragment implements View.OnClickListener {
     Context context;
     UserSessionManager userSessionManager;
     ArrayList<MyData> myDatas = new ArrayList<>();
-    LinearLayout  linearLayoutSearch;
+    RelativeLayout relativeLayoutSearch;
     TextView textViewCountry, textViewCategory;
     EditText editTextCity;
     private String currencyCode = "";
     private MaterialDialog progressDialog;
     ArrayList<Category> categories = new ArrayList<>();
     private String selectedCategoryId;
+    public static int POSITION = 1;
+    static final int MYGROUP = 1;
+    static final int SEARCHGROUP = 2;
 
 
     public GroupFragment() {
@@ -80,8 +84,6 @@ public class GroupFragment extends Fragment implements View.OnClickListener {
         setuptoolbar();
         initView(view);
         getCategory();
-
-        setupMyGroupFragment();
         return view;
     }
 
@@ -131,6 +133,12 @@ public class GroupFragment extends Fragment implements View.OnClickListener {
         transaction.commit();
     }
 
+    @Override
+    public void onResume() {
+        setupMyGroupFragment();
+        super.onResume();
+    }
+
     public void setupHomeFragment() {
         HomeFragment dashboardFragment = new HomeFragment();
         String tagName = dashboardFragment.getClass().getName();
@@ -138,6 +146,7 @@ public class GroupFragment extends Fragment implements View.OnClickListener {
     }
 
     public void setupMyGroupFragment() {
+        POSITION = MYGROUP;
         MyGroupFragment myGroupFragment = new MyGroupFragment();
         String tagName = myGroupFragment.getClass().getName();
         replaceInnerFragment(myGroupFragment, tagName);
@@ -167,13 +176,13 @@ public class GroupFragment extends Fragment implements View.OnClickListener {
     }
 
 
-
     private void initView(View view) {
+        view.findViewById(R.id.imageViewClose).setOnClickListener(this);
         progressDialog = new MaterialDialog.Builder(context)
                 .title(R.string.progress_dialog)
                 .content(R.string.please_wait)
                 .progress(true, 0).build();
-        linearLayoutSearch = (LinearLayout) view.findViewById(R.id.linearlayoutSearch);
+        relativeLayoutSearch = (RelativeLayout) view.findViewById(R.id.relativeLayoutSearch);
         textViewCategory = (TextView) view.findViewById(R.id.textViewCategory);
         textViewCategory.setOnClickListener(this);
         editTextCity = (EditText) view.findViewById(R.id.editTextCity);
@@ -184,7 +193,7 @@ public class GroupFragment extends Fragment implements View.OnClickListener {
         view.findViewById(R.id.imageViewCreateGroup).setOnClickListener(this);
         //    setupRecyclerView(view);
         getGroupChat();
-        linearLayoutSearch.setVisibility(View.GONE);
+        relativeLayoutSearch.setVisibility(View.GONE);
 
 
     }
@@ -205,6 +214,13 @@ public class GroupFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.imageViewClose:
+                if (POSITION == SEARCHGROUP) {
+                    POSITION = MYGROUP;
+                    setupMyGroupFragment();
+                }
+                relativeLayoutSearch.setVisibility(View.GONE);
+                break;
             case R.id.textViewCountry:
                 setupCoutryPopUp();
                 break;
@@ -212,7 +228,7 @@ public class GroupFragment extends Fragment implements View.OnClickListener {
                 setupCategoryPopUp();
                 break;
             case R.id.textviewSearch:
-                linearLayoutSearch.setVisibility(View.VISIBLE);
+                relativeLayoutSearch.setVisibility(View.VISIBLE);
                 break;
             case R.id.buttonSearchGroup:
                 if (textViewCountry.getText().toString().equalsIgnoreCase("country")) {
@@ -242,6 +258,7 @@ public class GroupFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setupSearchGroupFragment(String country, String city, String selectedCategoryId) {
+        POSITION = SEARCHGROUP;
         SearchGroupFragment searchGroupFragment = new SearchGroupFragment();
         String tagName = searchGroupFragment.getClass().getName();
         Bundle bundle = new Bundle();

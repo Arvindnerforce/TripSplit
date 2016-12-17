@@ -75,6 +75,25 @@ or Search Splitz….
     <string name="choose_category">Choose Category</string>
     <string name="create_group">Create Group</string>
     <string name="group_title">Group Title</string>
+    <string name="home">Home</string>
+    <string name="preferences">Preferences</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="invite_friend">Invite Friends</string>
+    <string name="search_spliz">Search Splitz</string>
+    <string name="post_trip">Post Trip</string>
+    <string name="my_splitz">My Splitz</string>
+    <string name="my_trip">My Tripz</string>
+    <string name="messages">Messages</string>
+    <string name="dummy">dummy</string>
+    <string name="group">Group</string>
+    <string name="how_it_works">How it works</string>
+    <string name="support">Support</string>
+    <string name="age_group">Age group</string>
+    <string name="travelling_with">Travelling With</string>
+    <string name="action_delete">Delete</string>
+    <string name="removegroup">Remove Group</string>
+    <string name="leavegroup">Are you sure you want to leave the group?</string>
+    <string name="not_in_group">You are not in the group!</string>
 
 
 </resources>

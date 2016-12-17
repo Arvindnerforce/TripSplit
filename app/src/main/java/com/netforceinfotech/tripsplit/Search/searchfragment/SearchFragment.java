@@ -256,7 +256,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
                             showMessage("something wrong");
                         } else {
                             if (result.get("status").getAsString().equalsIgnoreCase("success")) {
-                                result.toString();
+                                Log.i("result", result.toString());
+
                                 JsonArray data = result.getAsJsonArray("data");
                                 JsonArray data1 = data.get(0).getAsJsonArray();
                                 setupData(data1);
