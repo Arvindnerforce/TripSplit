@@ -10,11 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.netforceinfotech.tripsplit.NavigationView.Message.writemessage.WriteMessageActivity;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.Review.ReviewDetails.ReviewDetails;
-import com.netforceinfotech.tripsplit.Search.SearchData;
-import com.netforceinfotech.tripsplit.Search.SearchHolder;
 
 import java.util.ArrayList;
 import java.util.List;

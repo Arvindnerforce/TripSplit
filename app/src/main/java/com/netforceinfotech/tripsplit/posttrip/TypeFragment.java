@@ -985,10 +985,10 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
 
         MarkerOptions options = new MarkerOptions();
         options.position(sourceLatLng);
-        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_source_location));
+        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_destination));
         mMap.addMarker(options);
         options.position(destinationLatLang);
-        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_destination_location));
+        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_source));
         mMap.addMarker(options);
         CameraUpdate center =
                 CameraUpdateFactory.newLatLng(sourceLatLng);
@@ -1077,7 +1077,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                     }
                     BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_map_destination);
 
-                    destinationMarker = mMap.addMarker(new MarkerOptions().icon(icon).title(getString(R.string.destination) + ":" + address).position(destinationLatLang));
+                    destinationMarker = mMap.addMarker(new MarkerOptions().icon(icon).snippet(address).title(getString(R.string.destination)).position(destinationLatLang));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destinationLatLang, zoomlevel));
                     if (sourceFlag) {
                         zoomInTwoPoint();
@@ -1100,7 +1100,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                     }
                     BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_map_source);
 
-                    sournceMarker = mMap.addMarker(new MarkerOptions().icon(icon).title(getString(R.string.source) + ":" + address).position(sourceLatLng));
+                    sournceMarker = mMap.addMarker(new MarkerOptions().icon(icon).snippet(address).title(getString(R.string.source)).position(sourceLatLng));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sourceLatLng, zoomlevel));
 
 

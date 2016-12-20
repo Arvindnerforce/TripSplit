@@ -27,16 +27,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.tripsplit.R;
-import com.netforceinfotech.tripsplit.Search.SearchData;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.netforceinfotech.tripsplit.posttrip.GoogleMapActivity;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
@@ -67,22 +64,19 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
     AbstractRouting.TravelMode mode;
     String group = "mixed";
     float zoomlevel = 16f;
-    private Marker destinationMarker, sournceMarker;
+    private Marker destinationMarker, sourceMarker;
     String TAG = "tag";
     String sort = "Best match";
     private static final int TRAVEL_TO = 2;
     private static final int TRAVEL_FROM = 1;
     private Calendar calendar;
-    SearchData searchdata;
     RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
-    CarAdapter adapter;
     public TextView textViewDate, textViewSource, textViewDestination;
     RelativeLayout relativeLayoutSort, relativeLayoutGlobe;
     LinearLayout linearLayoutRefine, linearlayoutSearch;
 
     Context context;
-    ArrayList<CarData> carDatas = new ArrayList<>();
     private double dest_lat, dest_lon, source_lat, source_lon;
     UserSessionManager userSessionManager;
     TextView textViewSort;
@@ -95,6 +89,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
     private LatLng destinationLatLang, sourceLatLng;
     private Place place;
     private CameraUpdate cu;
+    private SearchListViewFragment dashboardFragment;
+    private SearchGlobalViewFragment globeviewFragment;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -128,19 +124,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
         type = this.getArguments().getString("type");
         Log.i("type", type);
         initView(view);
-        setupRecyclerView(view);
         return view;
 
 
     }
 
-    private void setupRecyclerView(View view) {
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerMyGroup);
-        adapter = new CarAdapter(context, carDatas);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(adapter);
-    }
 
     private void initView(View view) {
         progressDialog = new MaterialDialog.Builder(context)
@@ -157,6 +145,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
         textViewDate = (TextView) view.findViewById(R.id.textviewETD);
         textViewDate.setOnClickListener(this);
         relativeLayoutGlobe = (RelativeLayout) view.findViewById(R.id.relativeLayoutGlobe);
+        relativeLayoutGlobe.setOnClickListener(this);
         relativeLayoutSort = (RelativeLayout) view.findViewById(R.id.relativeLayoutSort);
         linearLayoutRefine = (LinearLayout) view.findViewById(R.id.linearlayoutRefine);
         linearLayoutRefine.setOnClickListener(this);
@@ -184,14 +173,29 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
     }
 
 
+    public void setupListViewFragment() {
+        dashboardFragment = new SearchListViewFragment();
+        String tagName = dashboardFragment.getClass().getName();
+        replaceFragment(dashboardFragment, tagName);
+    }
+
+    public void setupGlobeViewFragment() {
+        globeviewFragment = new SearchGlobalViewFragment();
+        String tagName = globeviewFragment.getClass().getName();
+        replaceFragment(globeviewFragment, tagName);
+    }
+
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.relativeLayoutGlobe:
+                setupGlobeViewFragment();
+                break;
             case R.id.linearlayoutSearch:
                 if (textViewSource.getText().length() <= 0 || textViewDestination.getText().length() <= 0 || textViewDate.getText().length() <= 0) {
                     showMessage(getString(R.string.cantbeempy));
                     return;
                 } else {
-                    searchTrip();
+                    setupListViewFragment();
                 }
                 break;
             case R.id.linearlayoutRefine:
@@ -220,89 +224,15 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
 
     }
 
-    private void searchTrip() {
-        progressDialog.show();
-        JsonObject json = new JsonObject();
-        json.addProperty("dest_lat", dest_lat);
-        json.addProperty("dest_lon", dest_lon);
-        json.addProperty("source_lat", source_lat);
-        json.addProperty("source_lon", source_lon);
-        json.addProperty("etd", textViewDate.getText().toString());
-        json.addProperty("range", userSessionManager.getSearchRadius());
-        json.addProperty("sort", sort);
-        json.addProperty("type", type);
-        String baseUrl = getString(R.string.url);
-        //http://netforce.biz/tripesplit/mobileApp/api/services.php?opt=search_trip
-        String url = baseUrl + "services.php?opt=search_trip";
-        Log.i("url", url);
-        Log.i("type1", type);
-        Ion.with(context)
-                .load("POST", url)
-                .setBodyParameter("dest_lat", dest_lat + "")
-                .setBodyParameter("dest_lon", dest_lon + "")
-                .setBodyParameter("source_lat", source_lat + "")
-                .setBodyParameter("source_lon", source_lon + "")
-                .setBodyParameter("etd", textViewDate.getText().toString())
-                .setBodyParameter("range", userSessionManager.getSearchRadius() + "")
-                .setBodyParameter("sort", sort)
-                .setBodyParameter("type", type)
-                .asJsonObject()
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        progressDialog.dismiss();
-                        // do stuff with the result or error
-                        if (result == null) {
-                            showMessage("something wrong");
-                        } else {
-                            if (result.get("status").getAsString().equalsIgnoreCase("success")) {
-                                Log.i("result", result.toString());
-
-                                JsonArray data = result.getAsJsonArray("data");
-                                JsonArray data1 = data.get(0).getAsJsonArray();
-                                setupData(data1);
-                            }
-
-                        }
-                    }
-                });
-    }
-
-    private void setupData(JsonArray data1) {
-        int size = data1.size();
-        if (size == 0) {
-            showMessage(getString(R.string.no_split_found));
-        }
-        for (int i = 0; i < size; i++) {
-            try {
-                JsonObject object = data1.get(i).getAsJsonObject();
-                String trip_id = object.get("trip_id").getAsString();
-                String cost = object.get("cost").getAsString();
-                String currency = object.get("currency").getAsString();
-                String travel_time = object.get("travel_time").getAsString();
-                String source = object.get("source").getAsString();
-                String destination = object.get("destination").getAsString();
-                String car_type = object.get("car_type").getAsString();
-                String pax = object.get("pax").getAsString();
-                CarData carData = new CarData(trip_id, cost, source, destination, travel_time, car_type, currency);
-                if (!carDatas.contains(carData)) {
-                    carDatas.add(carData);
-                }
-            } catch (Exception ex) {
-                Log.i("position", i + "");
-                ex.printStackTrace();
-            }
-        }
-        adapter.notifyDataSetChanged();
-    }
 
     private void clearAllData() {
         try {
             textViewSource.setText("Travel From");
             textViewDestination.setText("Travel To");
             textViewDate.setText("Select date and time");
-            adapter.notifyDataSetChanged();
-
+            if (dashboardFragment != null) {
+                dashboardFragment.clearData();
+            }
         } catch (Exception ex) {
 
         }
@@ -325,7 +255,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
                     } catch (Exception ex) {
 
                     }
-                    destinationMarker = mMap.addMarker(new MarkerOptions().title(getString(R.string.destination) + "\n" + address).position(destinationLatLang));
+                    BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_map_destination);
+
+                    destinationMarker = mMap.addMarker(new MarkerOptions().icon(icon).snippet(address).title(getString(R.string.destination)).position(destinationLatLang));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destinationLatLang, zoomlevel));
                     if (sourceFlag) {
                         zoomInTwoPoint();
@@ -342,11 +274,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
                     textViewSource.setText(address);
                     sourceLatLng = new LatLng(lat, lon);
                     try {
-                        sournceMarker.remove();
+                        sourceMarker.remove();
                     } catch (Exception ex) {
 
                     }
-                    sournceMarker = mMap.addMarker(new MarkerOptions().title(getString(R.string.source) + "\n" + address).position(sourceLatLng));
+                    BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_map_source);
+
+                    sourceMarker = mMap.addMarker(new MarkerOptions().icon(icon).snippet(address).title(getString(R.string.source)).position(sourceLatLng));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sourceLatLng, zoomlevel));
 
 
@@ -431,7 +365,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
 
     private void replaceFragment(Fragment newFragment, String tag) {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.replace(R.id.drawer_layout, newFragment, tag);
+        transaction.replace(R.id.searchFrame, newFragment, tag);
         transaction.commit();
     }
 

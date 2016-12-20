@@ -51,10 +51,6 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Search.SearchActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".NavigationView.Message.writemessage.WriteMessageActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
