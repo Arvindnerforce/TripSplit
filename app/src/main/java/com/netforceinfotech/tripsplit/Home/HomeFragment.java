@@ -16,8 +16,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
-import com.netforceinfotech.tripsplit.Dashboard.NavigationFragment;
-import com.netforceinfotech.tripsplit.Dashboard.RecyclerAdapterDrawer;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.Search.SearchSplitFragment;
 import com.netforceinfotech.tripsplit.posttrip.PostTripFragment;

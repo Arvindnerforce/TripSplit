@@ -94,6 +94,11 @@ or Search Splitz….
     <string name="removegroup">Remove Group</string>
     <string name="leavegroup">Are you sure you want to leave the group?</string>
     <string name="not_in_group">You are not in the group!</string>
+    <string name="about_me">About me</string>
+    <string name="aeroplane_splitz">Aeroplane Splitz</string>
+    <string name="car_splitz">Car Splitz</string>
+    <string name="bus_splitz">Bus Splitz</string>
+    <string name="ship_splitz">Ship Splitz</string>
 
 
 </resources>

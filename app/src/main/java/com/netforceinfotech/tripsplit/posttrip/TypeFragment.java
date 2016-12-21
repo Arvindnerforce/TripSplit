@@ -796,6 +796,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         Date date2 = new Date();
         SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd");
         try {
+            monthOfYear = monthOfYear + 1;
             date2 = date_format.parse(year + "-" + monthOfYear + "-" + dayOfMonth);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -1129,7 +1130,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         builder.include(sourceLatLng);
         builder.include(destinationLatLang);
         LatLngBounds bounds = builder.build();
-        int padding = 10; // offset from edges of the map in pixels
+        int padding = 120; // offset from edges of the map in pixels
         cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
         mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override

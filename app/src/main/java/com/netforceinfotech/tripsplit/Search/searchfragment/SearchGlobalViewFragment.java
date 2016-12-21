@@ -33,6 +33,7 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.tripsplit.R;
+import com.netforceinfotech.tripsplit.general.UserSessionManager;
 
 import java.util.ArrayList;
 
@@ -41,6 +42,7 @@ import java.util.ArrayList;
  */
 public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraMoveCanceledListener, RoutingListener {
 
+    UserSessionManager userSessionManager;
     private GoogleMap mMap;
     private MaterialDialog progressDialog;
     Context context;
@@ -50,6 +52,8 @@ public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCall
     private float zoomlevel;
     private Marker sourceMarker;
     private CameraUpdate cu;
+    double dest_lat, dest_lon, source_lat, source_lon;
+    String etd, type, sort;
 
     public SearchGlobalViewFragment() {
         // Required empty public constructor
@@ -61,6 +65,15 @@ public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCall
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search_global_view, container, false);
+        userSessionManager = new UserSessionManager(getActivity());
+        dest_lat = getArguments().getDouble("dest_lat");
+        dest_lon = getArguments().getDouble("dest_lon");
+        source_lat = getArguments().getDouble("source_lat");
+        source_lon = getArguments().getDouble("source_lon");
+        etd = getArguments().getString("etd");
+        type = getArguments().getString("type");
+        sort = getArguments().getString("sort");
+
         mMapView = (MapView) view.findViewById(R.id.mapView);
 
         mMapView.onCreate(savedInstanceState);
@@ -93,15 +106,7 @@ public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCall
         * &dest_lat=28.599072519302414&dest_lon=77.32198219746351&etd=2016-05-11&range=4000&type=car
         * */
         progressDialog.show();
-        JsonObject json = new JsonObject();
-        json.addProperty("dest_lat", "28.599072519302414");
-        json.addProperty("dest_lon", "77.32198219746351");
-        json.addProperty("source_lat", "55.946302847171445");
-        json.addProperty("source_lon", "-3.1891679763793945");
-        json.addProperty("etd", "2016-05-11");
-        json.addProperty("range", "4000");
-        json.addProperty("sort", "sort");
-        json.addProperty("type", "car");
+
         String baseUrl = getString(R.string.url);
         //http://netforce.biz/tripesplit/mobileApp/api/services.php?opt=search_trip
         String url = baseUrl + "services.php?opt=search_trip";
@@ -109,14 +114,14 @@ public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCall
         Log.i("type1", "type");
         Ion.with(context)
                 .load("POST", url)
-                .setBodyParameter("dest_lat", 28.599072519302414 + "")
-                .setBodyParameter("dest_lon", 77.32198219746351 + "")
-                .setBodyParameter("source_lat", 55.946302847171445 + "")
-                .setBodyParameter("source_lon", -3.1891679763793945 + "")
-                .setBodyParameter("etd", "2016-05-11")
-                .setBodyParameter("range", "4000")
-                .setBodyParameter("sort", "")
-                .setBodyParameter("type", "car")
+                .setBodyParameter("dest_lat", dest_lat + "")
+                .setBodyParameter("dest_lon", dest_lon + "")
+                .setBodyParameter("source_lat", source_lat + "")
+                .setBodyParameter("source_lon", source_lon + "")
+                .setBodyParameter("etd", etd)
+                .setBodyParameter("range", userSessionManager.getSearchRadius() + "")
+                .setBodyParameter("sort", sort)
+                .setBodyParameter("type", type)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
@@ -142,6 +147,7 @@ public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCall
         int size = data.size();
         if (size == 0) {
             showMessage(getString(R.string.no_split_found));
+            return;
         }
         for (int i = 0; i < size; i++) {
             try {
@@ -189,7 +195,7 @@ public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCall
     }
 
     private void setupbound(ArrayList<CarData> carDatas) {
-       /* LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
         int size = carDatas.size();
         for (int i = 0; i < size; i++) {
             CarData carData = carDatas.get(i);
@@ -202,17 +208,18 @@ public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCall
             @Override
             public void onMapLoaded() {
                 mMap.animateCamera(cu);
+                zoomlevel = mMap.getCameraPosition().zoom;
+                LatLng searchLatLng = new LatLng(55.946302847171445, -3.1891679763793945);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchLatLng, zoomlevel));
+
+                mMap.addCircle(new CircleOptions()
+                        .center(searchLatLng)
+                        .radius(4 * 1000)
+                        .strokeWidth(0f)
+                        .fillColor(ContextCompat.getColor(context, R.color.greentranparent)));
             }
         });
-*/
-        LatLng searchLatLng = new LatLng(55.946302847171445, -3.1891679763793945);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchLatLng, 17));
 
-        mMap.addCircle(new CircleOptions()
-                .center(searchLatLng)
-                .radius(3 * 1000)
-                .strokeWidth(0f)
-                .fillColor(ContextCompat.getColor(context, R.color.greentranparent)));
 
     }
 

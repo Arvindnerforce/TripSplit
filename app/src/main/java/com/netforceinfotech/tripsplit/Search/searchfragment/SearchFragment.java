@@ -2,6 +2,7 @@ package com.netforceinfotech.tripsplit.Search.searchfragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -53,7 +54,7 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 
-public class SearchFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener, GoogleMapActivity.AddressListner, OnMapReadyCallback {
+public class SearchFragment extends Fragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener, GoogleMapActivity.AddressListner, OnMapReadyCallback {
     private static final String IMAGE_DIRECTORY_NAME = "tripsplit";
 
     private static final int PICK_IMAGE = 1234;
@@ -91,6 +92,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
     private CameraUpdate cu;
     private SearchListViewFragment dashboardFragment;
     private SearchGlobalViewFragment globeviewFragment;
+    private static int SELECTED_VIEW;
+    private static int LIST_VIEW = 0;
+    private static int GLOBE_VIEW = 1;
+    private String etd = "0000-00-00";
 
     public SearchFragment() {
         // Required empty public constructor
@@ -108,6 +113,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
 
         View view = inflater.inflate(R.layout.search_fragment, container, false);
         context = getActivity();
+        SELECTED_VIEW = LIST_VIEW;
         mMapView = (MapView) view.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
@@ -176,18 +182,51 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
     public void setupListViewFragment() {
         dashboardFragment = new SearchListViewFragment();
         String tagName = dashboardFragment.getClass().getName();
+        /*
+        * .setBodyParameter("dest_lat", dest_lat + "")
+                .setBodyParameter("dest_lon", dest_lon + "")
+                .setBodyParameter("source_lat", source_lat + "")
+                .setBodyParameter("source_lon", source_lon + "")
+                .setBodyParameter("etd", etd)
+                .setBodyParameter("range",userSessionManager.getSearchRadius() )
+                .setBodyParameter("sort", sort)
+                .setBodyParameter("type", type)
+        * */
+        Bundle bundle = new Bundle();
+        bundle.putDouble("dest_lat", dest_lat);
+        bundle.putDouble("dest_lon", dest_lon);
+        bundle.putDouble("source_lat", source_lat);
+        bundle.putDouble("source_lon", source_lon);
+        bundle.putString("etd", etd);
+        bundle.putString("sort", sort);
+        bundle.putString("type", type);
+        dashboardFragment.setArguments(bundle);
         replaceFragment(dashboardFragment, tagName);
     }
 
     public void setupGlobeViewFragment() {
         globeviewFragment = new SearchGlobalViewFragment();
         String tagName = globeviewFragment.getClass().getName();
+        Bundle bundle = new Bundle();
+        bundle.putDouble("dest_lat", dest_lat);
+        bundle.putDouble("dest_lon", dest_lon);
+        bundle.putDouble("source_lat", source_lat);
+        bundle.putDouble("source_lon", source_lon);
+        bundle.putString("etd", etd);
+        bundle.putString("sort", sort);
+        bundle.putString("type", type);
+        globeviewFragment.setArguments(bundle);
         replaceFragment(globeviewFragment, tagName);
     }
 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.relativeLayoutGlobe:
+                SELECTED_VIEW = GLOBE_VIEW;
+                relativeLayoutGlobe.setBackgroundResource(R.drawable.roundrect_tranparent_selected);
+                if (textViewSource.getText().length() <= 0 || textViewDestination.getText().length() <= 0 || textViewDate.getText().length() <= 0) {
+                    return;
+                }
                 setupGlobeViewFragment();
                 break;
             case R.id.linearlayoutSearch:
@@ -195,7 +234,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
                     showMessage(getString(R.string.cantbeempy));
                     return;
                 } else {
-                    setupListViewFragment();
+                    if (SELECTED_VIEW == LIST_VIEW) {
+                        setupListViewFragment();
+                    } else {
+                        setupGlobeViewFragment();
+                    }
                 }
                 break;
             case R.id.linearlayoutRefine:
@@ -227,6 +270,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
 
     private void clearAllData() {
         try {
+            SELECTED_VIEW = LIST_VIEW;
+            relativeLayoutGlobe.setBackgroundResource(R.drawable.roundrect_tranparent_unselected);
+
             textViewSource.setText("Travel From");
             textViewDestination.setText("Travel To");
             textViewDate.setText("Select date and time");
@@ -245,11 +291,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
             case DESTINATION:
                 destinationFlag = true;
                 if (resultCode == RESULT_OK) {
-                    double lat = data.getDoubleExtra("lat", 0);
-                    double lon = data.getDoubleExtra("lon", 0);
+                    dest_lat = data.getDoubleExtra("lat", 0);
+                    dest_lon = data.getDoubleExtra("lon", 0);
                     String address = data.getStringExtra("address");
                     textViewDestination.setText(address);
-                    destinationLatLang = new LatLng(lat, lon);
+                    destinationLatLang = new LatLng(dest_lat, dest_lon);
                     try {
                         destinationMarker.remove();
                     } catch (Exception ex) {
@@ -268,11 +314,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
             case SOURCE:
                 sourceFlag = true;
                 if (resultCode == RESULT_OK) {
-                    double lat = data.getDoubleExtra("lat", 0);
-                    double lon = data.getDoubleExtra("lon", 0);
+                    source_lat = data.getDoubleExtra("lat", 0);
+                    source_lon = data.getDoubleExtra("lon", 0);
                     String address = data.getStringExtra("address");
                     textViewSource.setText(address);
-                    sourceLatLng = new LatLng(lat, lon);
+                    sourceLatLng = new LatLng(source_lat, source_lon);
                     try {
                         sourceMarker.remove();
                     } catch (Exception ex) {
@@ -309,7 +355,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
         builder.include(sourceLatLng);
         builder.include(destinationLatLang);
         LatLngBounds bounds = builder.build();
-        int padding = 10; // offset from edges of the map in pixels
+        int padding = 120; // offset from edges of the map in pixels
         cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
         mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
@@ -333,6 +379,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
         Date date2 = new Date();
         SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd");
         try {
+            monthOfYear++;
             date2 = date_format.parse(year + "-" + monthOfYear + "-" + dayOfMonth);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -342,15 +389,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
 
 
         textViewDate.setText(outDate.format(date2));
-
-        Calendar now = Calendar.getInstance();
-        TimePickerDialog tpd = TimePickerDialog.newInstance(
-                this,
-                now.get(Calendar.HOUR_OF_DAY),
-                now.get(Calendar.MINUTE), true
-        );
-        tpd.show(getActivity().getFragmentManager(), "Timepickerdialog");
-
+        etd = date_format.format(date2);
     }
 
     @Override
@@ -391,6 +430,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ti
                 zoomlevel = mMap.getCameraPosition().zoom;
             }
         });
+
     }
 
 

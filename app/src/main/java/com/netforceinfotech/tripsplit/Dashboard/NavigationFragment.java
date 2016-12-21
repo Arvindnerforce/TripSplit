@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.Dashboard;
+package com.netforceinfotech.tripsplit.dashboard;
 
 
 import android.app.Activity;

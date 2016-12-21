@@ -17,10 +17,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.netforceinfotech.tripsplit.Dashboard.NavigationFragment;
+import com.bumptech.glide.Glide;
+import com.netforceinfotech.tripsplit.dashboard.NavigationFragment;
 import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.R;
-import com.netforceinfotech.tripsplit.general.WrapContentViewPager;
 
 import xyz.santeri.wvp.WrappingViewPager;
 
@@ -29,6 +29,8 @@ public class SearchSplitFragment extends Fragment {
     WrappingViewPager viewPager;
     Context context;
     SearchPagerAdapter adapter;
+    TextView textViewType;
+    ImageView imageViewType;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +46,8 @@ public class SearchSplitFragment extends Fragment {
     }
 
     private void initView(View view) {
+        textViewType = (TextView) view.findViewById(R.id.textViewType);
+        imageViewType = (ImageView) view.findViewById(R.id.imageViewType);
     }
 
     private void setuptoolbar() {
@@ -119,6 +123,26 @@ public class SearchSplitFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
                 tab.getIcon().setColorFilter(tabIconSelectedColor, PorterDuff.Mode.SRC_IN);
+                switch (tab.getPosition()) {
+                    case 0:
+                        textViewType.setText(getString(R.string.aeroplane_splitz));
+                        Glide.with(context).load(R.drawable.ic_arrow).into(imageViewType);
+                        break;
+                    case 1:
+                        textViewType.setText(R.string.car_splitz);
+                        Glide.with(context).load(R.drawable.ic_age).into(imageViewType);
+                        break;
+                    case 2:
+                        textViewType.setText(R.string.bus_splitz);
+                        Glide.with(context).load(R.drawable.ic_birth).into(imageViewType);
+                        break;
+                    case 3:
+                        textViewType.setText(R.string.ship_splitz);
+                        Glide.with(context).load(R.drawable.car_bg).into(imageViewType);
+                        break;
+
+
+                }
 
             }
 

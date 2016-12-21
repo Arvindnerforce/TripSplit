@@ -34,7 +34,7 @@
     <fragment
         android:layout_weight="75"
         android:id="@+id/fragment"
-        android:name="com.netforceinfotech.tripsplit.Dashboard.NavigationFragment"
+        android:name="com.netforceinfotech.tripsplit.dashboard.NavigationFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:background="#F3F4F6"

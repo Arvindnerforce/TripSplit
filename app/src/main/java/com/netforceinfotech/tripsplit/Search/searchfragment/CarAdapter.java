@@ -2,6 +2,7 @@ package com.netforceinfotech.tripsplit.Search.searchfragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import com.netforceinfotech.tripsplit.Profile.TripDetailsActivity;
 import com.netforceinfotech.tripsplit.R;
+import com.netforceinfotech.tripsplit.Search.TripDetailActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,7 +50,7 @@ public class CarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         CarHolder myHolder = (CarHolder) holder;
-        CarData carData = itemList.get(position);
+        final CarData carData = itemList.get(position);
         if (carData.trip.equalsIgnoreCase("1")) {
             myHolder.linearLayoutReturn.setVisibility(View.VISIBLE);
             myHolder.textViewDestination_return.setText(carData.depart_address);
@@ -75,6 +77,16 @@ public class CarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         myHolder.textViewETA.setText(eta_time);
         String timeDiff = getFormattedTimeDiff(carData.eta, carData.etd);
         myHolder.textViewJourneyTime.setText(timeDiff);
+        myHolder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, TripDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("trip_id", carData.tour_id);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
     }
 
     private void showMessage(String s) {

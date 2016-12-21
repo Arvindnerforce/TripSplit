@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:hedgehog="http://schemas.android.com/apk/res-auto"
     android:background="#F3F4F6"
-    tools:context="com.netforceinfotech.tripsplit.Dashboard.NavigationFragment">
+    tools:context="com.netforceinfotech.tripsplit.dashboard.NavigationFragment">
 
 
     <RelativeLayout

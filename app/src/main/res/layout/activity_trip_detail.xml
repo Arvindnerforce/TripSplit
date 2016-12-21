@@ -1,669 +1,790 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/coordinatorlayout"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:layout_height="wrap_content">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonBookIt"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
 
-        <android.support.design.widget.AppBarLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <include
-                android:id="@+id/toolbar"
-                layout="@layout/toolbar_bar_custom"
-                />
-        </android.support.design.widget.AppBarLayout>
 
-
-    </LinearLayout>
-
-
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <LinearLayout
+            <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
+                android:layout_height="wrap_content">
 
-                <RelativeLayout
+                <include
+                    android:id="@+id/toolbar"
+                    layout="@layout/app_bar" />
+            </android.support.design.widget.AppBarLayout>
+
+
+        </LinearLayout>
+
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="280dp"
-                    android:padding="15dp"
-                    >
-
+                    android:layout_height="wrap_content">
 
                     <RelativeLayout
-                        android:id="@+id/relativeedit"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        >
+                        android:layout_height="280dp">
 
-                        <Button
-                            android:id="@+id/editbutton"
-                            android:layout_width="70dp"
-                            android:layout_height="30dp"
-                            android:layout_marginLeft="10dp"
-                            android:background="@drawable/ic_editplus_icon" />
 
-                        <Button
-                            android:id="@+id/countryData"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
+                        <RelativeLayout
+                            android:id="@+id/relativeedit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp">
+
+                            <ImageView
+                                android:id="@+id/imageViewTrip"
+                                android:layout_width="match_parent"
+                                android:layout_height="300dp"
+                                android:scaleType="centerCrop" />
+
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="16dp"
+                                android:layout_marginTop="16dp"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/textViewCountryCode"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:background="@drawable/circular_bg_fill"
+                                    android:gravity="center"
+                                    android:text="NZ"
+                                    android:textColor="@color/white" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="6dp"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        android:id="@+id/imageViewStar1"
+                                        android:layout_width="30dp"
+                                        android:layout_height="30dp"
+                                        android:layout_marginTop="6dp"
+                                        android:src="@drawable/ic_star_full" />
+
+                                    <ImageView
+                                        android:id="@+id/imageViewStar2"
+                                        android:layout_width="30dp"
+                                        android:layout_height="30dp"
+                                        android:layout_marginTop="6dp"
+                                        android:src="@drawable/ic_star_full" />
+
+                                    <ImageView
+                                        android:id="@+id/imageViewStar3"
+                                        android:layout_width="30dp"
+                                        android:layout_height="30dp"
+                                        android:layout_marginTop="6dp"
+                                        android:src="@drawable/ic_star_full" />
+
+                                    <ImageView
+                                        android:id="@+id/imageViewStar4"
+                                        android:layout_width="30dp"
+                                        android:layout_height="30dp"
+                                        android:layout_marginTop="6dp"
+                                        android:src="@drawable/ic_star_full" />
+
+                                    <ImageView
+                                        android:id="@+id/imageViewStar5"
+                                        android:layout_width="30dp"
+                                        android:layout_height="30dp"
+                                        android:layout_marginTop="6dp"
+                                        android:src="@drawable/ic_star_outline" />
+
+                                </LinearLayout>
+                            </LinearLayout>
+
+                        </RelativeLayout>
+
+
+                        <TextView
+                            android:id="@+id/textViewDateCreated"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
                             android:layout_alignParentRight="true"
-                            android:layout_marginRight="15dp"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/ic_circle"
-                            android:text="NZ1"
-                            android:textColor="@color/white" />
+                            android:layout_marginBottom="16dp"
+                            android:layout_marginRight="16dp"
+                            android:text="8 July 2016"
+                            android:textColor="@color/red" />
+
 
                     </RelativeLayout>
-                    <io.techery.properratingbar.ProperRatingBar
-                        android:id="@+id/lowerRatingBar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:rotation="90"
-                        app:prb_defaultRating="3"
-                        app:prb_tickNormalDrawable="@drawable/star_outlineicon"
-                        app:prb_tickSelectedDrawable="@drawable/star_icon"
-                        android:layout_alignParentRight="true"
-                        app:prb_totalTicks="5"
-                        app:prb_clickable="true"
-                        android:layout_marginTop="60dp"
-                        android:layout_below="@+id/relativeedit"
-                        app:prb_tickSpacing="5dp"
-                        android:layout_marginRight="-60dp"
-                        />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="8 July 2016"
-                        android:textColor="@color/red"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_margin="10dp"
-                        />
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
-
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
                     android:orientation="vertical">
 
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginTop="10dp"
+                        android:background="@color/white"
                         android:orientation="vertical">
 
 
-                        <TextView
-                            android:id="@+id/textviewName"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:text="Ryan,"
+                            android:background="@color/white"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:weightSum="110">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="16dp"
+                                android:layout_weight="70"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <de.hdodenhof.circleimageview.CircleImageView
+                                    android:id="@+id/imageViewDp"
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
+                                    android:src="@drawable/car_bg" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <LinearLayout
+                                        android:id="@+id/linearlayoutName"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+
+                                        <TextView
+                                            android:id="@+id/textViewName"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Name"
+                                            android:textColor="@color/black"
+                                            android:textSize="16dp"
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="," />
+
+                                        <TextView
+                                            android:id="@+id/textViewAge"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="5dp"
+                                            android:layout_toRightOf="@+id/textviewName"
+                                            android:text="34"
+                                            android:textColor="@color/black"
+                                            android:textSize="16dp" />
+
+                                    </LinearLayout>
+
+                                    <TextView
+                                        android:id="@+id/textViewAddress"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:ellipsize="end"
+                                        android:maxLines="2"
+                                        android:text="Safdarjang ,Delhi"
+                                        android:textColor="@color/black"
+                                        android:textSize="14dp" />
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="16dp"
+                                android:layout_weight="40"
+                                android:gravity="center_vertical|right"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/imageViewEmail"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_margin="3dp"
+                                    android:src="@drawable/ic_message"
+                                    android:visibility="visible" />
+
+                                <ImageView
+                                    android:id="@+id/imageViewMessage"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:layout_margin="3dp"
+                                    android:src="@drawable/ic_chat"
+                                    android:visibility="visible" />
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:background="@color/view_background"></View>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="15dp">
+
+                            <ImageView
+                                android:id="@+id/imageViewType"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/ic_redplane" />
+
+
+                            <TextView
+                                android:id="@+id/textViewTrip"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_toRightOf="@+id/imageViewType"
+
+                                android:text="@string/source_dest_text"
+                                android:textColor="@color/black"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                        </RelativeLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:background="@color/view_background"></View>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="15dp"
+                            android:text="@string/about_me_heading"
                             android:textColor="@color/black"
                             android:textSize="18dp"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/textviewAge"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_toRightOf="@+id/textviewName"
-                            android:text="36"
-                            android:textColor="@color/black"
-                            android:textSize="18dp" />
-
-                        <TextView
-                            android:id="@+id/textviewAddress"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/textviewName"
-                            android:layout_marginLeft="10dp"
-                            android:text="Thailand, Phuket"
-                            android:textColor="@color/black"
-                            android:textSize="16dp" />
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true">
-
-
-                            <ImageView
-                                android:id="@+id/email"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:layout_marginRight="5dp"
-                                android:src="@drawable/ic_message"
-                                />
-
-                            <ImageView
-                                android:id="@+id/whatsapp"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:layout_marginLeft="5dp"
-                                android:layout_marginRight="10dp"
-                                android:layout_toRightOf="@+id/email"
-                                android:src="@drawable/ic_chat" />
-
-                        </RelativeLayout>
-
-                    </RelativeLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@color/view_background"
-                        ></View>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="15dp"
-                        >
-
-                        <ImageView
-                            android:id="@+id/redplane"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:src="@drawable/ic_redplane"
-                            />
-
-
-                        <TextView
+                            android:id="@+id/textViewAboutMe"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/black"
-                            android:text="@string/source_dest_text"
-
-                            android:layout_toRightOf="@+id/redplane"
-                            android:layout_marginLeft="5dp"
-                            android:textStyle="bold"
-                            android:textSize="18sp"
-                            />
-
-                    </RelativeLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@color/view_background"
-                        ></View>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:text="@string/about_me_heading"
-                        android:padding="15dp"
-                        android:textStyle="bold"
-                        android:textSize="18dp"
-                        />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:text="@string/about_me_txt"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="10dp"
-                        android:paddingBottom="10dp"
-                        />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@color/view_background"
-                        ></View>
-
-
-
-                    <RelativeLayout
-                        android:id="@+id/reviewlayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="15dp"
-                        >
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Review"
-
-                            android:textStyle="bold"
-                            android:textColor="@color/red"
-                            />
-
-
-                    </RelativeLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@color/view_background"
-                        ></View>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:background="@color/background"
-                        >
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="100"
-
-                        >
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="50"
-                            android:orientation="horizontal"
-
-                            android:padding="15dp"
-                            android:background="@drawable/linearlayout_border"
-                            >
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="25"
-                                android:text="ETD"
-                                android:textStyle="bold"
-                                android:textColor="@color/black"
-                                />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="25"
-                                android:text="3.00 am"
-                                android:textColor="@color/colorPrimary"
-                                />
-
-
-
-                        </LinearLayout>
-
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="50"
-                            android:orientation="horizontal"
-
-                            android:layout_marginLeft="5dp"
-                            android:padding="15dp"
-                            >
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="25"
-                                android:text="ETD"
-                                android:textStyle="bold"
-                                android:textColor="@color/black"
-                                />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="25"
-                                android:text="3.00 am"
-                                android:textColor="@color/colorPrimary"
-                                />
-
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/view_background"
-                            ></View>
-
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="100"
-
-                            >
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="50"
-                                android:orientation="horizontal"
-                               android:background="@drawable/linearlayout_border"
-                                android:padding="15dp"
-                                >
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="25"
-                                    android:text="ETD"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/black"
-                                    />
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="25"
-                                    android:text="3.00 am"
-                                    android:textColor="@color/colorPrimary"
-                                    />
-
-
-                            </LinearLayout>
-
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="50"
-                                android:orientation="horizontal"
-                                android:layout_marginLeft="5dp"
-                       android:padding="15dp"
-                                >
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="25"
-                                    android:text="ETD"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/black"
-                                    />
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="25"
-                                    android:text="3.00 am"
-                                    android:textColor="@color/colorPrimary"
-                                    />
-
-
-                            </LinearLayout>
-
-
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/view_background"
-                            ></View>
-
-
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="100"
-
-                            >
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="50"
-                                android:orientation="horizontal"
-                               android:background="@drawable/linearlayout_border"
-                                android:padding="15dp"
-                                >
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="25"
-                                    android:text="ETD"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/black"
-                                    />
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="25"
-                                    android:text="3.00 am"
-                                    android:textColor="@color/colorPrimary"
-                                    />
-
-
-                            </LinearLayout>
-
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="50"
-                                android:orientation="horizontal"
-                                android:layout_marginLeft="5dp"
-                                android:padding="15dp"
-                                >
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="25"
-                                    android:text="ETD"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/black"
-                                    />
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="25"
-                                    android:text="3.00 am"
-                                    android:textColor="@color/colorPrimary"
-                                    />
-
-
-                            </LinearLayout>
-
-
-
-                        </LinearLayout>
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/colorPrimary"
-                            android:padding="15dp"
-
-                            >
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="TripSplit"
-                                android:textColor="@color/white"
-                                android:layout_alignParentLeft="true"
-                                />
-
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="US$125.00"
-                                android:textColor="@color/white"
-                                android:layout_alignParentRight="true"
-                                />
-
-                        </RelativeLayout>
-
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="15dp"
-
-                            >
-
-
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Itinary"
-                                android:textColor="@color/black"
-                                android:layout_alignParentLeft="true"
-                                android:textStyle="bold"
-                                />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/about_me_txt"
-                                android:textColor="@color/black"
-                                android:layout_alignParentLeft="true"
-                                android:layout_marginTop="5dp"
-                                android:textSize="12dp"
-                                />
-
-
-
-                        </LinearLayout>
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/white"
-                            android:padding="15dp"
-
-                            >
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="TripSplit"
-                                android:textColor="@color/black"
-                                android:layout_alignParentLeft="true"
-                                />
-
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="US$125.00"
-                                android:textColor="@color/black"
-                                android:layout_alignParentRight="true"
-                                />
-
-                        </RelativeLayout>
-
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="10dp"
+                            android:text="@string/about_me_txt"
+                            android:textColor="@color/black" />
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="2dp"
-                            android:background="@color/view_background"
-                            ></View>
+                            android:background="@color/view_background"></View>
+
 
                         <RelativeLayout
+                            android:id="@+id/reviewlayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/white"
-                            android:padding="15dp"
-
-                            >
+                            android:padding="15dp">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="TripSplit"
-                                android:textColor="@color/black"
-                                android:layout_alignParentLeft="true"
-                                />
-
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="US$125.00"
-                                android:textColor="@color/black"
-                                android:layout_alignParentRight="true"
-                                />
-
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/colorPrimary"
-
-
-                            >
-
-                            <TextView
+                                android:id="@+id/textViewReview"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="Book It!"
-                                android:textColor="@color/white"
-                                 android:textAlignment="center"
-                                android:padding="15dp"
-                                />
-
+                                android:layout_height="wrap_content"
+                                android:text="Review"
+                                android:textColor="@color/red"
+                                android:textStyle="bold" />
 
 
                         </RelativeLayout>
 
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:background="@color/view_background"></View>
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/background"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="100"
+
+                                >
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="50"
+                                    android:background="@drawable/linearlayout_border"
+
+                                    android:orientation="horizontal"
+                                    android:padding="15dp">
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25"
+                                        android:text="ETD"
+                                        android:textColor="@color/black"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/textViewETD"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25"
+                                        android:text="3.00 am"
+                                        android:textColor="@color/colorPrimary" />
+
+
+                                </LinearLayout>
+
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_weight="50"
+
+                                    android:orientation="horizontal"
+                                    android:padding="15dp">
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25"
+                                        android:text="ETA"
+                                        android:textColor="@color/black"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/textViewETA"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25"
+                                        android:text="3.00 am"
+                                        android:textColor="@color/colorPrimary" />
+
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/linearLayoutReturn"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="100"
+
+                                >
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="50"
+                                    android:background="@drawable/linearlayout_border"
+
+                                    android:orientation="horizontal"
+                                    android:padding="15dp">
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25"
+                                        android:text="Return ETD"
+                                        android:textColor="@color/black"
+                                        android:textSize="10sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/textViewETDReturn"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25"
+                                        android:text="3.00 am"
+                                        android:textColor="@color/colorPrimary" />
+
+
+                                </LinearLayout>
+
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_weight="50"
+
+                                    android:orientation="horizontal"
+                                    android:padding="15dp">
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25"
+                                        android:text="Return ETA"
+                                        android:textColor="@color/black"
+                                        android:textSize="10sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/textViewETAReturn"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25"
+                                        android:text="3.00 am"
+                                        android:textColor="@color/colorPrimary" />
+
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/view_background"></View>
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="100"
+
+                                >
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="50"
+                                    android:background="@drawable/linearlayout_border"
+                                    android:orientation="horizontal"
+                                    android:padding="15dp">
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25"
+                                        android:text="Space"
+                                        android:textColor="@color/black"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/textViewSpace"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25"
+                                        android:text="3.00 am"
+                                        android:textColor="@color/colorPrimary" />
+
+
+                                </LinearLayout>
+
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_weight="50"
+                                    android:orientation="horizontal"
+                                    android:padding="15dp">
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25"
+                                        android:text="Date"
+                                        android:textColor="@color/black"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/textViewDate"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25"
+                                        android:text="3.00 am"
+                                        android:textColor="@color/colorPrimary" />
+
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/view_background"></View>
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="100"
+
+                                >
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="50"
+                                    android:background="@drawable/linearlayout_border"
+                                    android:orientation="horizontal"
+                                    android:padding="15dp">
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25"
+                                        android:text="PAX"
+                                        android:textColor="@color/black"
+                                        android:textStyle="bold" />
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25"
+                                        android:gravity="center_vertical"
+                                        android:orientation="horizontal">
+
+                                        <TextView
+                                            android:id="@+id/textViewPax"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="3"
+                                            android:textColor="@color/colorPrimary" />
+
+                                        <ImageView
+                                            android:layout_width="25dp"
+                                            android:layout_height="25dp"
+                                            android:layout_marginLeft="6dp"
+                                            android:src="@drawable/ic_pax" />
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_weight="50"
+                                    android:orientation="horizontal"
+                                    android:padding="15dp">
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25"
+                                        android:text="Age"
+                                        android:textColor="@color/black"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/textViewAgeGroup"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25"
+                                        android:text="25-50"
+                                        android:textColor="@color/colorPrimary" />
+
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/colorPrimary"
+                                android:padding="15dp"
+
+                                >
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:text="TripSplit"
+                                    android:textColor="@color/white" />
+
+
+                                <TextView
+                                    android:id="@+id/textViewTripSplit"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:text="US$125.00"
+                                    android:textColor="@color/white" />
+
+                            </RelativeLayout>
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:padding="15dp"
+
+                                >
+
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:text="@string/itinerary"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/textViewItenerary"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_marginTop="5dp"
+                                    android:lines="5"
+                                    android:text="@string/about_me_txt"
+                                    android:textColor="@color/black"
+                                    android:textSize="12dp" />
+
+
+                            </LinearLayout>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/white"
+                                android:padding="15dp"
+
+                                >
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:text="Total Cost"
+                                    android:textColor="@color/black" />
+
+
+                                <TextView
+                                    android:id="@+id/textViewTotalCost"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:text="US$125.00"
+                                    android:textColor="@color/black" />
+
+                            </RelativeLayout>
+
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="2dp"
+                                android:background="@color/view_background"></View>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/white"
+                                android:padding="15dp"
+
+                                >
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:text="Your Share"
+                                    android:textColor="@color/black" />
+
+
+                                <TextView
+                                    android:id="@+id/textViewYourShare"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:text="US$125.00"
+                                    android:textColor="@color/black" />
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/colorPrimary"
+
+
+                                >
+
+
+                            </RelativeLayout>
+
+
+                        </LinearLayout>
                     </LinearLayout>
+
                 </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
 
 
-    </android.support.v4.widget.NestedScrollView>
+    </LinearLayout>
 
+    <Button
+        android:id="@+id/buttonBookIt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:text="Book It!"
+        android:textColor="@color/white" />
 
-</LinearLayout>
+</RelativeLayout>

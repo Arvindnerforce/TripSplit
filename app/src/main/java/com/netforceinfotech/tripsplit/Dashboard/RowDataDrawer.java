@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.Dashboard;
+package com.netforceinfotech.tripsplit.dashboard;
 
 /**
  * Created by John on 9/14/2016.

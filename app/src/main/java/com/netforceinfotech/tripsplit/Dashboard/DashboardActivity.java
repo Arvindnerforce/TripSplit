@@ -1,15 +1,14 @@
-package com.netforceinfotech.tripsplit.Dashboard;
+package com.netforceinfotech.tripsplit.dashboard;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -24,7 +23,6 @@ import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
-import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 
@@ -34,7 +32,9 @@ public class DashboardActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     NavigationFragment drawer;
     UserSessionManager userSessionManager;
-
+    String[] PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE};
+    int PERMISSION_ALL = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +47,12 @@ public class DashboardActivity extends AppCompatActivity {
         setupToolbar();
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         setupNavigationCustom();
+        //   getPermission();
+        if (!hasPermissions(this, PERMISSIONS)) {
+            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+
+        }
+
     }
 
     private void setupToolbar() {
@@ -90,6 +96,17 @@ public class DashboardActivity extends AppCompatActivity {
 
 
         }
+    }
+
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private void showPopUp() {

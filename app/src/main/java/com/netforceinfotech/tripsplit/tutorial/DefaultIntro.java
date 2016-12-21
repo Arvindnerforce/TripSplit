@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.netforceinfotech.tripsplit.Dashboard.DashboardActivity;
+import com.netforceinfotech.tripsplit.dashboard.DashboardActivity;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 
 import tyrantgit.explosionfield.ExplosionField;

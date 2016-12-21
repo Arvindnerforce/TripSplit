@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
 
@@ -107,7 +109,8 @@
                             android:layout_marginLeft="6dp"
                             android:layout_weight="65"
                             android:background="@android:color/transparent"
-                            android:enabled="false" />
+                            android:enabled="false"
+                            android:hint="Age" />
 
                     </LinearLayout>
 
@@ -156,6 +159,7 @@
                             android:clickable="true"
                             android:enabled="false"
                             android:focusable="false"
+                            android:hint="DOB"
                             android:textColor="@color/black" />
 
                     </LinearLayout>
@@ -199,10 +203,8 @@
                             android:layout_marginLeft="6dp"
                             android:layout_weight="80"
                             android:background="@android:color/transparent"
-                            android:clickable="true"
-                            android:enabled="false"
-                            android:focusable="false"
-                            android:gravity="start"
+                            android:gravity="center_vertical"
+                            android:hint="@string/about_me"
                             android:inputType="text"
                             android:lines="3"
                             android:textColor="@color/black" />
@@ -251,6 +253,7 @@
                             android:clickable="true"
                             android:enabled="false"
                             android:focusable="false"
+                            android:hint="Address"
                             android:textColor="@color/black" />
 
                     </LinearLayout>
@@ -297,6 +300,7 @@
                             android:clickable="true"
                             android:enabled="false"
                             android:focusable="false"
+                            android:hint="Country"
                             android:textColor="@color/black" />
 
                     </LinearLayout>

@@ -18,6 +18,7 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.tripsplit.R;
+import com.netforceinfotech.tripsplit.general.UserSessionManager;
 
 import java.util.ArrayList;
 
@@ -26,10 +27,12 @@ import java.util.ArrayList;
  */
 public class SearchListViewFragment extends Fragment {
 
+    UserSessionManager userSessionManager;
     ArrayList<CarData> carDatas = new ArrayList<>();
     CarAdapter adapter;
     Context context;
-    String type = "type", sort = "sort";
+    double dest_lat, dest_lon, source_lat, source_lon;
+    String etd, type, sort;
     private MaterialDialog progressDialog;
 
     public SearchListViewFragment() {
@@ -43,6 +46,15 @@ public class SearchListViewFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search_list_view, container, false);
         context = getActivity();
+        userSessionManager = new UserSessionManager(context);
+        dest_lat = getArguments().getDouble("dest_lat");
+        dest_lon = getArguments().getDouble("dest_lon");
+        source_lat = getArguments().getDouble("source_lat");
+        source_lon = getArguments().getDouble("source_lon");
+        etd = getArguments().getString("etd");
+        type = getArguments().getString("type");
+        sort = getArguments().getString("sort");
+
         initView(view);
         setupRecyclerView(view);
         searchTrip();
@@ -122,30 +134,23 @@ public class SearchListViewFragment extends Fragment {
         * &dest_lat=28.599072519302414&dest_lon=77.32198219746351&etd=2016-05-11&range=4000&type=car
         * */
         progressDialog.show();
-        JsonObject json = new JsonObject();
-        json.addProperty("dest_lat", "28.599072519302414");
-        json.addProperty("dest_lon", "77.32198219746351");
-        json.addProperty("source_lat", "55.946302847171445");
-        json.addProperty("source_lon", "-3.1891679763793945");
-        json.addProperty("etd", "2016-05-11");
-        json.addProperty("range", "4000");
-        json.addProperty("sort", sort);
-        json.addProperty("type", "car");
+
         String baseUrl = getString(R.string.url);
         //http://netforce.biz/tripesplit/mobileApp/api/services.php?opt=search_trip
         String url = baseUrl + "services.php?opt=search_trip";
         Log.i("url", url);
         Log.i("type1", type);
+        Log.i("parameter",dest_lat+" : "+dest_lon+" : "+source_lat+" : "+source_lon+" : "+etd+" : "+userSessionManager.getSearchRadius()+" : "+sort+" : "+type);
         Ion.with(context)
                 .load("POST", url)
-                .setBodyParameter("dest_lat", 28.599072519302414 + "")
-                .setBodyParameter("dest_lon", 77.32198219746351 + "")
-                .setBodyParameter("source_lat", 55.946302847171445 + "")
-                .setBodyParameter("source_lon", -3.1891679763793945 + "")
-                .setBodyParameter("etd", "2016-05-11")
-                .setBodyParameter("range", "4000")
+                .setBodyParameter("dest_lat", dest_lat + "")
+                .setBodyParameter("dest_lon", dest_lon + "")
+                .setBodyParameter("source_lat", source_lat + "")
+                .setBodyParameter("source_lon", source_lon + "")
+                .setBodyParameter("etd", etd)
+                .setBodyParameter("range", userSessionManager.getSearchRadius() + "")
                 .setBodyParameter("sort", sort)
-                .setBodyParameter("type", "car")
+                .setBodyParameter("type", type)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override

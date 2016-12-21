@@ -29,7 +29,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,7 +42,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
-import com.netforceinfotech.tripsplit.Dashboard.DashboardActivity;
+import com.netforceinfotech.tripsplit.dashboard.DashboardActivity;
 import com.netforceinfotech.tripsplit.Home.HomeFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
@@ -63,12 +62,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import static com.netforceinfotech.tripsplit.R.id.cancel;
-import static com.netforceinfotech.tripsplit.R.id.etDay;
-import static com.netforceinfotech.tripsplit.R.id.etaddress;
 import static com.netforceinfotech.tripsplit.R.id.etcountry;
-import static com.netforceinfotech.tripsplit.R.id.etdob;
-import static com.netforceinfotech.tripsplit.R.id.start;
 
 public class EditPofileFragment extends Fragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
     View view;
