@@ -27,6 +27,31 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+Variable Used->*****************************************
+***********************************************
+boolean
+----------------------------------------------------
+  myUserIdFlag -> true if user node is present;
+  myUserId_id_Flag-> true if user is already chatting with other user
+  --------------------------------------------------
+*****************************************************
+ Database Reference
+ -------------------------------
+ _chat_title-> "chat_title" node
+ _my_userId -> node of user's user id in "chat_title" node
+ _my_userId_id-> node of other user id in User's id node. (Exist if they chat)
+ _chat-> root node of "chat"
+ _chat_id-> node of there conversation
+ --------------------------------
+ ************************************************************
+  Function()
+ -----------------------------------------
+ setupMyUserId() ->set up _my_userId node
+ setupMyChatIdId() -> setup _my_userId_id node
+ --------------------------------------
+
+  */
 public class MessageDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
     Context context;
@@ -38,13 +63,18 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
     private MaterialDialog progressDialog;
     TextView textViewNoMessage;
     private DatabaseReference _chat_title;
-    private DatabaseReference _chat_title_userid;
-    private boolean chat_title_userid_flag = false;
+    private DatabaseReference _my_userId, _their_userId;
+    private boolean myUserIdFlag = false, theirUserIdFlag;
     String id;
-    private boolean chat_title_userid_id_flag = false;
-    private DatabaseReference _chat_title_userid_id;
+    private boolean myUserId_id_flag = false, theirUserId_id_flag = false;
+    private DatabaseReference _my_userId_id, _their_userId_id;
     private DatabaseReference _chat_id;
     private DatabaseReference _chat;
+    String name, image_url;
+    private DatabaseReference _unseen;
+    private String chat_id;
+    boolean chat_id_created_flag =false;
+    private String last_message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +83,13 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
         context = this;
         userSessionManager = new UserSessionManager(context);
         Bundle bundle = getIntent().getExtras();
-        String name = bundle.getString("name");
+        name = bundle.getString("name");
         id = bundle.getString("id");
+        image_url = bundle.getString("profile_image");
         setupToolBar(name);
         initView();
+        setupRecyclerView();
+        setupFirebase();
     }
 
     private void initView() {
@@ -87,81 +120,18 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
         recyclerView.setAdapter(myAdapter);
     }
 
+
     private void setupFirebase() {
         progressDialog.show();
+        _unseen = FirebaseDatabase.getInstance().getReference().child("unseen");
         _chat = FirebaseDatabase.getInstance().getReference().child("chat");
-
         _chat_title = FirebaseDatabase.getInstance().getReference().child("chat_title");
         _chat_title.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 progressDialog.dismiss();
-                if (dataSnapshot.hasChild(userSessionManager.getUserId())) {
-                    // run some code
-                    _chat_title_userid = _chat_title.child(userSessionManager.getUserId());
-                    chat_title_userid_flag = true;
-                    _chat_title_userid.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.hasChild(id)) {
-                                chat_title_userid_id_flag = true;
-                                _chat_title_userid_id = _chat_title_userid.child(id);
-                                _chat_title_userid_id.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        if (dataSnapshot.hasChild("chat_id")) {
-                                            String chat_id = dataSnapshot.child("chat_id").getValue(String.class);
-                                            _chat_id = _chat.child(chat_id);
-                                            _chat_id.addChildEventListener(new ChildEventListener() {
-                                                @Override
-                                                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                                                    appendMessage(dataSnapshot);
-                                                }
-
-                                                @Override
-                                                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                                                }
-
-                                                @Override
-                                                public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                                                }
-
-                                                @Override
-                                                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                                                }
-
-                                                @Override
-                                                public void onCancelled(DatabaseError databaseError) {
-
-                                                }
-                                            });
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-                            } else {
-                                chat_title_userid_id_flag = false;
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
-
-                } else {
-                    chat_title_userid_flag = false;
-                    textViewNoMessage.setVisibility(View.VISIBLE);
-                }
+                setupMyUserId(dataSnapshot);
+                setupTheirUserId(dataSnapshot);
 
             }
 
@@ -171,6 +141,116 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
             }
         });
 
+    }
+
+    private void setupTheirUserId(DataSnapshot dataSnapshot) {
+        if (dataSnapshot.hasChild(id)) {
+            // run some code
+            _their_userId = _chat_title.child(id);
+            theirUserIdFlag = true;
+            _their_userId.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    setupTheirChatIdId(dataSnapshot, userSessionManager.getUserId());
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        } else {
+            theirUserIdFlag = false;
+        }
+    }
+
+
+    private void setupMyUserId(DataSnapshot dataSnapshot) {
+        if (dataSnapshot.hasChild(userSessionManager.getUserId())) {
+            // run some code
+            _my_userId = _chat_title.child(userSessionManager.getUserId());
+            myUserIdFlag = true;
+            _my_userId.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    setupMyChatIdId(dataSnapshot, id);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+        } else {
+            myUserIdFlag = false;
+            textViewNoMessage.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setupMyChatIdId(DataSnapshot dataSnapshot, String id) {
+        if (dataSnapshot.hasChild(id)) {
+            myUserId_id_flag = true;
+            _my_userId_id = _my_userId.child(id);
+            _my_userId_id.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    setupChatId(dataSnapshot);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        } else {
+            myUserId_id_flag = false;
+        }
+    }
+
+    private void setupTheirChatIdId(DataSnapshot dataSnapshot, String userId) {
+        if (dataSnapshot.hasChild(userId)) {
+            theirUserId_id_flag = true;
+            _their_userId_id = _my_userId.child(userId);
+
+        } else {
+            theirUserId_id_flag = false;
+        }
+    }
+
+    private void setupChatId(DataSnapshot dataSnapshot) {
+        if (dataSnapshot.hasChild("chat_id")) {
+            String chat_id = dataSnapshot.child("chat_id").getValue(String.class);
+            _chat_id = _chat.child(chat_id);
+            _chat_id.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    appendMessage(dataSnapshot);
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    showMessage("Check Internet Connection");
+                }
+            });
+        }
     }
 
     private void appendMessage(DataSnapshot dataSnapshot) {
@@ -212,53 +292,253 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
     }
 
     private void sendMessage() {
-        if (!chat_title_userid_id_flag) {
-            if (!chat_title_userid_flag) {
+        progressDialog.show();
+        if (myUserId_id_flag) {
+            pushMessage();
+            upDateMyUserId_id_DATA();
+        } else {
+            if (myUserIdFlag) {
+                createMyUserId_IdNode();
 
             } else {
-                HashMap<String, Object> chat_title_userid_map = new HashMap<String, Object>();
-                chat_title_userid_map.put(userSessionManager.getUserId(), "");
-                _chat_title.updateChildren(chat_title_userid_map);
-                _chat_title.addListenerForSingleValueEvent(new ValueEventListener() {
+                createMyUserIdNode();
+            }
+        }
+
+
+        if (theirUserId_id_flag) {
+            upDateTheirUserId_id_DATA();
+        } else {
+            if (theirUserIdFlag) {
+                createTheirUserId_IdNode();
+
+            } else {
+                createTheirUserIdNode();
+            }
+        }
+
+    }
+
+    private void upDateTheirUserId_id_DATA() {
+        _their_userId_id.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int count = dataSnapshot.child("unseen_count").getValue(Integer.class);
+                count++;
+                _their_userId_id.child("unseen_count").setValue(count);
+                updateTheirUnseenCount(count);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        _their_userId_id.child("timestamp").setValue(ServerValue.TIMESTAMP);
+        _their_userId_id.child("seen").setValue(false);
+        _their_userId_id.child("you").setValue(false);
+        _their_userId_id.child("last_message").setValue(last_message);
+    }
+
+    private void updateTheirUnseenCount(final int count) {
+        _unseen.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child(id).exists()) {
+                    int unseenCount = dataSnapshot.child(id).getValue(Integer.class);
+                    unseenCount = unseenCount + 1;
+                    _unseen.child(id).setValue(unseenCount);
+                } else {
+
+                    HashMap<String, Object> unseentheir_map = new HashMap<String, Object>();
+                    unseentheir_map.put(id, count);
+                    _unseen.updateChildren(unseentheir_map);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void updateMyUnseenCount(final int unseenCount1) {
+        _unseen.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child(userSessionManager.getUserId()).exists()) {
+                    int unseenCount = dataSnapshot.child(userSessionManager.getUserId()).getValue(Integer.class);
+                    unseenCount = unseenCount - unseenCount1;
+                    _unseen.child(userSessionManager.getUserId()).setValue(unseenCount);
+                } else {
+
+                    HashMap<String, Object> unseentheir_map = new HashMap<String, Object>();
+                    unseentheir_map.put(userSessionManager.getUserId(), 0);
+                    _unseen.updateChildren(unseentheir_map);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+    private void upDateMyUserId_id_DATA() {
+        _my_userId_id.child("timestamp").setValue(ServerValue.TIMESTAMP);
+        _my_userId_id.child("seen").setValue(true);
+        _my_userId_id.child("you").setValue(true);
+        _my_userId_id.child("last_message").setValue(last_message);
+
+        _my_userId_id.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int unseenCount = dataSnapshot.child("unseen_count").getValue(Integer.class);
+                updateMyUnseenCount(unseenCount);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        _my_userId_id.child("unseen_count").setValue(0);
+        _my_userId_id.child("last_message").setValue(et_message.getText().toString());
+    }
+
+    private void createMyUserIdNode() {
+        HashMap<String, Object> chat_title_userid_map = new HashMap<String, Object>();
+        chat_title_userid_map.put(userSessionManager.getUserId(), "");
+        _chat_title.updateChildren(chat_title_userid_map);
+        _chat_title.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                myUserIdFlag = true;
+                _my_userId = _chat_title.child(userSessionManager.getUserId());
+                createMyUserId_IdNode();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void createMyUserId_IdNode() {
+        HashMap<String, Object> chat_title_userid_id_map = new HashMap<String, Object>();
+        chat_title_userid_id_map.put(id, "");
+        _my_userId.updateChildren(chat_title_userid_id_map);
+        _my_userId.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                _my_userId_id = _my_userId.child(id);
+                myUserId_id_flag = true;
+                HashMap<String, Object> chat_title_userid_id_detailmap = new HashMap<String, Object>();
+                chat_title_userid_id_detailmap.put("name", name);
+                chat_title_userid_id_detailmap.put("image_url", image_url);
+                chat_title_userid_id_detailmap.put("timestamp", ServerValue.TIMESTAMP);
+                chat_title_userid_id_detailmap.put("seen", true);
+                chat_title_userid_id_detailmap.put("unseen_count", 0);
+                chat_title_userid_id_detailmap.put("last_message", et_message.getText().toString());
+                chat_title_userid_id_detailmap.put("you",true);
+
+                if(!chat_id_created_flag) {
+                    chat_id = _my_userId_id.push().getKey();
+                    chat_id_created_flag=true;
+                    chat_title_userid_id_detailmap.put("chat_id", chat_id);
+                }else {
+                    chat_title_userid_id_detailmap.put("chat_id", chat_id);
+
+                }
+                _my_userId_id.updateChildren(chat_title_userid_id_detailmap);
+                _my_userId_id.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
+
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        _chat_title_userid = _chat_title.child(userSessionManager.getUserId());
-                        HashMap<String, Object> chat_title_userid_id_map = new HashMap<String, Object>();
-                        chat_title_userid_id_map.put(id, "");
-                        _chat_title_userid.updateChildren(chat_title_userid_id_map);
-                        _chat_title_userid.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                _chat_title_userid_id = _chat_title_userid.child(id);
-                                HashMap<String, Object> chat_title_userid_id_detailmap = new HashMap<String, Object>();
-                                chat_title_userid_id_detailmap.put("name", "name");
-                                chat_title_userid_id_detailmap.put("image_url", "imageurl");
-                                chat_title_userid_id_detailmap.put("timestamp", ServerValue.TIMESTAMP);
-                                String key = _chat_title_userid_id.push().getKey();
-                                chat_title_userid_id_detailmap.put("chat_id", key);
+                        _chat_id = _chat.child(chat_id);
+                        pushMessage();
+                        upDateMyUserId_id_DATA();
+                    }
 
-                                _chat_title_userid_id.updateChildren(chat_title_userid_id_detailmap);
-                                _chat_title_userid_id.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        _chat_id = _chat_title_userid_id.child("chat_id");
-                                        pushMessage();
-                                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
 
-                                    }
-                                });
+            }
 
-                            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
 
-                            }
-                        });
+    }
 
+    private void createTheirUserIdNode() {
+        HashMap<String, Object> chat_title_userid_map = new HashMap<String, Object>();
+        chat_title_userid_map.put(id, "");
+        _chat_title.updateChildren(chat_title_userid_map);
+        _chat_title.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                theirUserIdFlag = true;
+                _their_userId = _chat_title.child(id);
+                createTheirUserId_IdNode();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+    private void createTheirUserId_IdNode() {
+        HashMap<String, Object> chat_title_userid_id_map = new HashMap<String, Object>();
+        chat_title_userid_id_map.put(userSessionManager.getUserId(), "");
+        _their_userId.updateChildren(chat_title_userid_id_map);
+        _their_userId.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                _their_userId_id = _their_userId.child(userSessionManager.getUserId());
+                theirUserId_id_flag = true;
+                HashMap<String, Object> chat_title_userid_id_detailmap = new HashMap<String, Object>();
+                chat_title_userid_id_detailmap.put("name", userSessionManager.getName());
+                chat_title_userid_id_detailmap.put("image_url", userSessionManager.getProfileImage());
+                chat_title_userid_id_detailmap.put("timestamp", ServerValue.TIMESTAMP);
+                chat_title_userid_id_detailmap.put("seen", false);
+                chat_title_userid_id_detailmap.put("unseen_count", 0);
+                chat_title_userid_id_detailmap.put("last_message", et_message.getText().toString());
+                chat_title_userid_id_detailmap.put("you",false);
+
+                if(!chat_id_created_flag) {
+                    chat_id = _their_userId_id.push().getKey();
+                    chat_id_created_flag=true;
+                    chat_title_userid_id_detailmap.put("chat_id", chat_id);
+                }else {
+                    chat_title_userid_id_detailmap.put("chat_id", chat_id);
+
+                }
+                _their_userId_id.updateChildren(chat_title_userid_id_detailmap);
+
+                _their_userId_id.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        _chat_id = _chat.child(chat_id);
+                        upDateTheirUserId_id_DATA();
 
                     }
 
@@ -270,11 +550,13 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
 
             }
 
-        } else {
-            pushMessage();
-        }
-    }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+
+    }
     private void pushMessage() {
         Map<String, Object> map = new HashMap<String, Object>();
         String tempKey = _chat_id.push().getKey();
@@ -287,13 +569,14 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
         map1.put("user_id", userSessionManager.getUserId());
         map1.put("timestamp", ServerValue.TIMESTAMP);
         message_root.updateChildren(map1);
-        progressDialog.show();
         message_root.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 appendMessage(dataSnapshot);
                 progressDialog.dismiss();
+                last_message=et_message.getText().toString();
                 et_message.setText("");
+                textViewNoMessage.setVisibility(View.GONE);
             }
 
             @Override
@@ -302,6 +585,7 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
                 showMessage("Could not send");
             }
         });
+
     }
 
     private void showMessage(String s) {

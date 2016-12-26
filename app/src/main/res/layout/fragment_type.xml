@@ -27,7 +27,7 @@
                     android:padding="15dp">
 
                     <TextView
-                        android:id="@+id/textviewPax"
+                        android:id="@+id/textViewPax"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -42,7 +42,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="5dp"
-                        android:layout_toRightOf="@+id/textviewPax"
+                        android:layout_toRightOf="@+id/textViewPax"
                         android:gravity="center_vertical"
                         android:text="@string/passenger"
                         android:textColor="@color/black"
@@ -83,13 +83,13 @@
                     android:background="@color/flight_view_background"></View>
 
                 <RelativeLayout
-                    android:id="@+id/relativelayout2"
+                    android:id="@+id/relativeLayout2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="15dp">
 
                     <TextView
-                        android:id="@+id/textviewSpace"
+                        android:id="@+id/textViewSpace"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -104,7 +104,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="5dp"
-                        android:layout_toRightOf="@+id/textviewSpace"
+                        android:layout_toRightOf="@+id/textViewSpace"
                         android:gravity="center_vertical"
                         android:text="Spaces"
                         android:textColor="@color/black"
@@ -230,7 +230,7 @@
                     >
 
                     <TextView
-                        android:id="@+id/textviewAgeGroup"
+                        android:id="@+id/textViewAgeGroup"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"

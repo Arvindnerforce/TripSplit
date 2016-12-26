@@ -47,11 +47,11 @@ public class DashboardActivity extends AppCompatActivity {
         setupToolbar();
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         setupNavigationCustom();
-        //   getPermission();
-        if (!hasPermissions(this, PERMISSIONS)) {
+        getPermission();
+        /*if (!hasPermissions(this, PERMISSIONS)) {
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
 
-        }
+        }*/
 
     }
 

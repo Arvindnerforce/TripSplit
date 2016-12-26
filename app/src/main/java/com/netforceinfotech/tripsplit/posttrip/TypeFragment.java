@@ -216,7 +216,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         radioButtonOneway.setChecked(true);
 
         rangeBar = (RangeBar) view.findViewById(R.id.rangebar);
-        textviewAgeGroup = (TextView) view.findViewById(R.id.textviewAgeGroup);
+        textviewAgeGroup = (TextView) view.findViewById(R.id.textViewAgeGroup);
         textviewAgeGroup.setText(getString(R.string.age_group) + " : " + lowerLimit + "-" + upperLimit);
 
         buttonCurrency = (Button) view.findViewById(R.id.buttonCurrency);
@@ -245,8 +245,8 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         mixed = (Button) view.findViewById(R.id.mixedButton);
         mixed.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         mixed.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
-        textviewPax = (TextView) view.findViewById(R.id.textviewPax);
-        textviewSpace = (TextView) view.findViewById(R.id.textviewSpace);
+        textviewPax = (TextView) view.findViewById(R.id.textViewPax);
+        textviewSpace = (TextView) view.findViewById(R.id.textViewSpace);
         textviewETA = (TextView) view.findViewById(R.id.textviewETA);
         textViewETD = (TextView) view.findViewById(R.id.textviewETD);
         Typeface custom_font = Typeface.createFromAsset(context.getAssets(), "fonts/GothamRoundedBook.ttf");
@@ -476,6 +476,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                         .setMultipartParameter("user_id", userSessionManager.getUserId())
                         .setMultipartParameter("type", type)
                         .setMultipartParameter("pax", textviewPax.getText().toString().trim())
+                        .setMultipartParameter("space", textviewSpace.getText().toString().trim())
                         .setMultipartParameter("group", group)
                         .setMultipartParameter("age_group_upper", upperLimit)
                         .setMultipartParameter("age_group_lower", lowerLimit)

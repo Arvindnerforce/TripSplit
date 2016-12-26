@@ -148,6 +148,7 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
                 } else {
                     textViewRange.setText(range + " km");
                 }
+                userSessionManager.setSearchRaius(range);
             }
 
             @Override
@@ -201,6 +202,7 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
         String tagName = dashboardFragment.getClass().getName();
         replaceFragment(dashboardFragment, tagName);
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {

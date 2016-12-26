@@ -1,6 +1,7 @@
 package com.netforceinfotech.tripsplit.Search;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ import com.koushikdutta.ion.Ion;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.netforceinfotech.tripsplit.R;
+import com.netforceinfotech.tripsplit.general.UserSessionManager;
+import com.netforceinfotech.tripsplit.message.message_detail.MessageDetailActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,6 +41,10 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
     LinearLayout linearLayoutReturn;
     TextView textViewETDReturn, textViewETAReturn, textViewCountryCode, textViewDateCreated, textViewName, textViewAge, textViewAddress, textViewTrip, textViewAboutMe, textViewETD, textViewETA, textViewSpace, textViewDate, textViewPax, textViewAgeGroup, textViewTripSplit, textViewItenerary, textViewTotalCost, textViewYourShare;
     ImageView imageViewDp, imageViewStar1, imageViewStar2, imageViewStar3, imageViewStar4, imageViewStar5, imageViewEmail, imageViewMessage, imageViewType, imageViewTrip;
+    private String tripcreator_id;
+    private String username;
+    UserSessionManager userSessionManager;
+    private String profile_image;
 
     private void initView() {
         buttonBookIt = (Button) findViewById(R.id.buttonBookIt);
@@ -50,7 +57,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
         reviewlayout = (RelativeLayout) findViewById(R.id.reviewlayout);
         textViewCountryCode = (TextView) findViewById(R.id.textViewCountryCode);
         textViewDateCreated = (TextView) findViewById(R.id.textViewDateCreated);
-        textViewName = (TextView) findViewById(R.id.textviewName);
+        textViewName = (TextView) findViewById(R.id.textViewName);
         textViewAge = (TextView) findViewById(R.id.textViewAge);
         textViewAddress = (TextView) findViewById(R.id.textViewAddress);
         textViewTrip = (TextView) findViewById(R.id.textViewTrip);
@@ -85,6 +92,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
         Bundle bundle = getIntent().getExtras();
         String trip_id = bundle.getString("trip_id");
         setupToolBar("Trip Detail");
+        userSessionManager = new UserSessionManager(context);
         initView();
         getTripDetail(trip_id);
 
@@ -145,6 +153,8 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
                 depart_address, country_code, etd, eta, iteinerary, image_name, currency,
                 return_eta, return_etd, dest_address, id, username, email, profile_image, dob, address, country, aboutme, your_share, created_date;
 
+        user_id = my_splitz.get("user_id").getAsString();
+        this.tripcreator_id = user_id;
         tour_id = my_splitz.get("tour_id").getAsString();
         start_price = my_splitz.get("start_price").getAsString();
         date_created = my_splitz.get("date_created").getAsString();
@@ -163,14 +173,16 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
         etd = my_splitz.get("etd").getAsString();
         eta = my_splitz.get("eta").getAsString();
         iteinerary = my_splitz.get("iteinerary").getAsString();
-        image_name = my_splitz.get("image_name").getAsString();
+        image_name = my_splitz.get("img_name").getAsString();
         currency = my_splitz.get("currency").getAsString();
         return_eta = my_splitz.get("return_eta").getAsString();
         return_etd = my_splitz.get("return_etd").getAsString();
         id = my_splitz.get("id").getAsString();
         username = my_splitz.get("username").getAsString();
+        this.username = username;
         email = my_splitz.get("email").getAsString();
         profile_image = my_splitz.get("profile_image").getAsString();
+        this.profile_image=profile_image;
         dob = my_splitz.get("dob").getAsString();
         address = my_splitz.get("address").getAsString();
         country = my_splitz.get("country").getAsString();
@@ -212,8 +224,8 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
         textViewDate.setText(getFormatedDate(etd));
         textViewPax.setText(pax);
         textViewAgeGroup.setText(age_group_lower + " - " + age_group_upper);
-        final CountryPicker picker = CountryPicker.newInstance("Select Country");
-        Currency currency1 = picker.getCurrencyCode(currency);
+        //final CountryPicker picker = CountryPicker.newInstance("Select Country");
+        Currency currency1 = Currency.getInstance(currency);
         String currencySymbol = currency1.getSymbol();
         textViewTripSplit.setText(currency + " " + currencySymbol + " " + start_price);
         textViewItenerary.setText(iteinerary);
@@ -239,6 +251,17 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
             case R.id.imageViewEmail:
                 break;
             case R.id.imageViewMessage:
+                if (!tripcreator_id.equalsIgnoreCase(userSessionManager.getUserId())) {
+                    Intent intent = new Intent(context, MessageDetailActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id", tripcreator_id);
+                    bundle.putString("name", username);
+                    bundle.putString("image_url",profile_image);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } else {
+                    showMessage("Cannot message to self");
+                }
                 break;
             case R.id.buttonBookIt:
                 break;

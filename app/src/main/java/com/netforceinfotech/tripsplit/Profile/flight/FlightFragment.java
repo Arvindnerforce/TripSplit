@@ -89,7 +89,7 @@ public class FlightFragment extends Fragment implements View.OnClickListener, Ti
 
     private void setupLayout(View view) {
         rangeBar = (RangeBar) view.findViewById(R.id.rangebar);
-        textviewAgeGroup = (TextView) view.findViewById(R.id.textviewAgeGroup);
+        textviewAgeGroup = (TextView) view.findViewById(R.id.textViewAgeGroup);
         buttonCurrency = (Button) view.findViewById(R.id.buttonCurrency);
         buttonCurrency.setOnClickListener(this);
         final String currency[] = {"INR", "USD", "EURO", "YEN"};
@@ -126,8 +126,8 @@ public class FlightFragment extends Fragment implements View.OnClickListener, Ti
         mixed = (Button) view.findViewById(R.id.mixedButton);
         mixed.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
         mixed.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
-        pass_txt = (TextView) view.findViewById(R.id.textviewPax);
-        space_txt = (TextView) view.findViewById(R.id.textviewSpace);
+        pass_txt = (TextView) view.findViewById(R.id.textViewPax);
+        space_txt = (TextView) view.findViewById(R.id.textViewSpace);
         textviewETA = (TextView) view.findViewById(R.id.textviewETA);
         textViewETD = (TextView) view.findViewById(R.id.textviewETD);
         Typeface custom_font = Typeface.createFromAsset(context.getAssets(), "fonts/GothamRoundedBook.ttf");
