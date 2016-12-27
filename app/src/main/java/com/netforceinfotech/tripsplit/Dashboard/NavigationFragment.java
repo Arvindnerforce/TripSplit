@@ -34,6 +34,7 @@ import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.Search.SearchSplitFragment;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.netforceinfotech.tripsplit.group.GroupFragment;
+import com.netforceinfotech.tripsplit.message.message_title.MessageTitleFragment;
 import com.netforceinfotech.tripsplit.posttrip.PostTripFragment;
 import com.netforceinfotech.tripsplit.preference.PreferenceFragment;
 import com.netforceinfotech.tripsplit.tutorial.DefaultIntro;
@@ -338,7 +339,7 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
     }
 
     private void setupMessageFragment() {
-        MessageFragment searchSplitFragment = new MessageFragment();
+        MessageTitleFragment searchSplitFragment = new MessageTitleFragment();
         String tag = searchSplitFragment.getClass().getName();
         replaceFragment(searchSplitFragment, tag);
     }

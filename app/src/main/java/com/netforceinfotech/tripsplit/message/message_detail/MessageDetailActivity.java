@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -50,7 +51,6 @@ boolean
  setupMyUserId() ->set up _my_userId node
  setupMyChatIdId() -> setup _my_userId_id node
  --------------------------------------
-
   */
 public class MessageDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -73,8 +73,9 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
     String name, image_url;
     private DatabaseReference _unseen;
     private String chat_id;
-    boolean chat_id_created_flag =false;
+    boolean chat_id_created_flag = false, seen = false;
     private String last_message;
+    long count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,11 +86,55 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
         Bundle bundle = getIntent().getExtras();
         name = bundle.getString("name");
         id = bundle.getString("id");
-        image_url = bundle.getString("profile_image");
+        image_url = bundle.getString("image_url");
+        try {
+
+            seen = bundle.getBoolean("seen");
+            count = bundle.getLong("count");
+            if (!seen) {
+                updateSeen(count);
+            }
+
+        } catch (Exception ex) {
+
+        }
         setupToolBar(name);
         initView();
         setupRecyclerView();
         setupFirebase();
+    }
+
+    private void updateSeen(final long count1) {
+        final DatabaseReference _unseen = FirebaseDatabase.getInstance().getReference().child("unseen");
+        _unseen.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                long count = dataSnapshot.child(userSessionManager.getUserId()).getValue(Long.class);
+                count = count - count1;
+                _unseen.child(userSessionManager.getUserId()).setValue(count);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        DatabaseReference _chat_titleMyId_id=FirebaseDatabase.getInstance().getReference().child("chat_title").child(userSessionManager.getUserId()).child(id);
+        _chat_titleMyId_id.child("seen").setValue(true);
+        _chat_titleMyId_id.child("unseen_count").setValue(0);
+
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initView() {
@@ -286,6 +331,7 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
                     showMessage("Input Message");
                     return;
                 }
+                last_message=et_message.getText().toString();
                 sendMessage();
                 break;
         }
@@ -449,13 +495,13 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
                 chat_title_userid_id_detailmap.put("seen", true);
                 chat_title_userid_id_detailmap.put("unseen_count", 0);
                 chat_title_userid_id_detailmap.put("last_message", et_message.getText().toString());
-                chat_title_userid_id_detailmap.put("you",true);
+                chat_title_userid_id_detailmap.put("you", true);
 
-                if(!chat_id_created_flag) {
+                if (!chat_id_created_flag) {
                     chat_id = _my_userId_id.push().getKey();
-                    chat_id_created_flag=true;
+                    chat_id_created_flag = true;
                     chat_title_userid_id_detailmap.put("chat_id", chat_id);
-                }else {
+                } else {
                     chat_title_userid_id_detailmap.put("chat_id", chat_id);
 
                 }
@@ -505,6 +551,7 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
         });
 
     }
+
     private void createTheirUserId_IdNode() {
         HashMap<String, Object> chat_title_userid_id_map = new HashMap<String, Object>();
         chat_title_userid_id_map.put(userSessionManager.getUserId(), "");
@@ -521,13 +568,13 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
                 chat_title_userid_id_detailmap.put("seen", false);
                 chat_title_userid_id_detailmap.put("unseen_count", 0);
                 chat_title_userid_id_detailmap.put("last_message", et_message.getText().toString());
-                chat_title_userid_id_detailmap.put("you",false);
+                chat_title_userid_id_detailmap.put("you", false);
 
-                if(!chat_id_created_flag) {
+                if (!chat_id_created_flag) {
                     chat_id = _their_userId_id.push().getKey();
-                    chat_id_created_flag=true;
+                    chat_id_created_flag = true;
                     chat_title_userid_id_detailmap.put("chat_id", chat_id);
-                }else {
+                } else {
                     chat_title_userid_id_detailmap.put("chat_id", chat_id);
 
                 }
@@ -557,6 +604,7 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
         });
 
     }
+
     private void pushMessage() {
         Map<String, Object> map = new HashMap<String, Object>();
         String tempKey = _chat_id.push().getKey();
@@ -574,7 +622,7 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
             public void onDataChange(DataSnapshot dataSnapshot) {
                 appendMessage(dataSnapshot);
                 progressDialog.dismiss();
-                last_message=et_message.getText().toString();
+                last_message = et_message.getText().toString();
                 et_message.setText("");
                 textViewNoMessage.setVisibility(View.GONE);
             }

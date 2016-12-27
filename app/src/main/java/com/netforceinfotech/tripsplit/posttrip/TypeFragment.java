@@ -186,6 +186,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     }
 
     private void initView(View view) {
+
         image = (ImageView) view.findViewById(R.id.image);
         image.setVisibility(View.GONE);
         progressDialog = new MaterialDialog.Builder(context)

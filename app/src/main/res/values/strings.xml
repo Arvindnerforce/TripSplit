@@ -4,7 +4,7 @@
     <string name="login">Login</string>
     <string name="welcome_text">Welcome to TripSplit, where you can share Journeys and connect with new friends</string>
     <string name="title_activity_home">HomeActivity</string>
-    <string name="message">Messages</string>
+    <string name="last_message">Messages</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="date_text">Mon 16,June 16</string>
@@ -85,6 +85,7 @@ or Search Splitz….
     <string name="my_trip">My Tripz</string>
     <string name="messages">Messages</string>
     <string name="dummy">dummy</string>
+    <string name="lorem_description">"There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain..."</string>
     <string name="group">Group</string>
     <string name="how_it_works">How it works</string>
     <string name="support">Support</string>
@@ -98,7 +99,9 @@ or Search Splitz….
     <string name="aeroplane_splitz">Aeroplane Splitz</string>
     <string name="car_splitz">Car Splitz</string>
     <string name="bus_splitz">Bus Splitz</string>
-    <string name="ship_splitz">Ship Splitz</string>
+    <string name="boat_splitz">Boat Splitz</string>
+    <string name="globe">Globe</string>
+    <string name="list">List</string>
 
 
 </resources>

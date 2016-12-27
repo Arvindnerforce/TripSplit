@@ -15,22 +15,25 @@
         <LinearLayout
             android:id="@+id/linearlayoutSearch"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:gravity="center"
             android:orientation="horizontal"
+            android:padding="14dp"
             android:visibility="visible">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Search Split"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="6dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="7dp"
                 android:src="@drawable/ic_search_white" />
 
         </LinearLayout>
@@ -205,6 +208,12 @@
                     android:background="@drawable/roundrect_tranparent_unselected"
                     android:padding="3dp">
 
+                   <CheckBox
+                       android:visibility="gone"
+                       android:id="@+id/checkBoxGlobe"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content" />
+
                     <ImageView
                         android:layout_width="16dp"
                         android:layout_height="16dp"
@@ -219,7 +228,8 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="6dp"
                         android:layout_marginRight="7dp"
-                        android:text="Globe"
+                        android:text=""
+                        android:id="@+id/textViewGlobe"
                         android:textSize="12sp" />
                 </RelativeLayout>
 

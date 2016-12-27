@@ -12,7 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,7 +57,7 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 
-public class SearchFragment extends Fragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener, GoogleMapActivity.AddressListner, OnMapReadyCallback {
+public class SearchFragment extends Fragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener, GoogleMapActivity.AddressListner, OnMapReadyCallback, CompoundButton.OnCheckedChangeListener {
     private static final String IMAGE_DIRECTORY_NAME = "tripsplit";
 
     private static final int PICK_IMAGE = 1234;
@@ -92,10 +95,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Da
     private CameraUpdate cu;
     private SearchListViewFragment dashboardFragment;
     private SearchGlobalViewFragment globeviewFragment;
-    private static int SELECTED_VIEW;
+    private static int SELECTED_VIEW = 0;
     private static int LIST_VIEW = 0;
     private static int GLOBE_VIEW = 1;
     private String etd = "0000-00-00";
+    CheckBox checkBoxGlobe;
+    TextView textViewGlobe;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -137,6 +142,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Da
 
 
     private void initView(View view) {
+        textViewGlobe = (TextView) view.findViewById(R.id.textViewGlobe);
+        checkBoxGlobe = (CheckBox) view.findViewById(R.id.checkBoxGlobe);
+        checkBoxGlobe.setOnCheckedChangeListener(this);
         progressDialog = new MaterialDialog.Builder(context)
                 .title(R.string.progress_dialog)
                 .content(R.string.please_wait)
@@ -174,6 +182,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Da
             }
         });
         droppyBuilder.build();
+        checkBoxGlobe.setChecked(false);
+        if (isAdded()) {
+            textViewGlobe.setText(getString(R.string.globe));
+        }
 
 
     }
@@ -222,23 +234,18 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Da
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.relativeLayoutGlobe:
-                SELECTED_VIEW = GLOBE_VIEW;
-                relativeLayoutGlobe.setBackgroundResource(R.drawable.roundrect_tranparent_selected);
-                if (textViewSource.getText().length() <= 0 || textViewDestination.getText().length() <= 0 || textViewDate.getText().length() <= 0) {
-                    return;
-                }
-                setupGlobeViewFragment();
+                checkBoxGlobe.performClick();
+
                 break;
             case R.id.linearlayoutSearch:
                 if (textViewSource.getText().length() <= 0 || textViewDestination.getText().length() <= 0 || textViewDate.getText().length() <= 0) {
                     showMessage(getString(R.string.cantbeempy));
                     return;
+                }
+                if (SELECTED_VIEW == LIST_VIEW) {
+                    setupListViewFragment();
                 } else {
-                    if (SELECTED_VIEW == LIST_VIEW) {
-                        setupListViewFragment();
-                    } else {
-                        setupGlobeViewFragment();
-                    }
+                    setupGlobeViewFragment();
                 }
                 break;
             case R.id.linearlayoutRefine:
@@ -434,4 +441,21 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Da
     }
 
 
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        switch (compoundButton.getId()) {
+            case R.id.checkBoxGlobe:
+                if (b) {
+                    textViewGlobe.setText(getString(R.string.list));
+                    SELECTED_VIEW = GLOBE_VIEW;
+                    setupGlobeViewFragment();
+                } else {
+                    setupListViewFragment();
+                    SELECTED_VIEW = LIST_VIEW;
+                    textViewGlobe.setText(getString(R.string.globe));
+                }
+                break;
+
+        }
+    }
 }

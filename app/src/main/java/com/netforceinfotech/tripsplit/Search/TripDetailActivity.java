@@ -2,7 +2,6 @@ package com.netforceinfotech.tripsplit.Search;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -17,12 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-import com.mukesh.countrypicker.fragments.CountryPicker;
-import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.netforceinfotech.tripsplit.message.message_detail.MessageDetailActivity;
@@ -151,7 +147,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
     private void setupTripDetail(JsonObject my_splitz) {
         String tour_id, start_price, date_created, user_id, cartype, pax, space, trip_group, age_group_lower, age_group_upper, trip, vehical_type,
                 depart_address, country_code, etd, eta, iteinerary, image_name, currency,
-                return_eta, return_etd, dest_address, id, username, email, profile_image, dob, address, country, aboutme, your_share, created_date;
+                return_eta, return_etd, dest_address, id, username, email, dob, address, country, aboutme, your_share, created_date;
 
         user_id = my_splitz.get("user_id").getAsString();
         this.tripcreator_id = user_id;
@@ -181,8 +177,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
         username = my_splitz.get("username").getAsString();
         this.username = username;
         email = my_splitz.get("email").getAsString();
-        profile_image = my_splitz.get("profile_image").getAsString();
-        this.profile_image=profile_image;
+        profile_image = my_splitz.get("img_name").getAsString();
         dob = my_splitz.get("dob").getAsString();
         address = my_splitz.get("address").getAsString();
         country = my_splitz.get("country").getAsString();

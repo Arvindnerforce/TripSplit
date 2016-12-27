@@ -28,6 +28,7 @@
 
 
                 <EditText
+
                     android:id="@+id/editTextGroupTitle"
                     android:layout_width="match_parent"
                     android:layout_height="37dp"
@@ -38,7 +39,7 @@
                     android:background="@drawable/editext_background"
                     android:gravity="center_vertical"
                     android:hint="@string/group_title"
-                    android:inputType="textPostalAddress"
+                    android:inputType="textCapWords"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/colorAccent"

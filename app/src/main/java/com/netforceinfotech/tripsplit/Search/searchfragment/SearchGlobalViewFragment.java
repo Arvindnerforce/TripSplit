@@ -283,7 +283,9 @@ public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCall
                 zoomlevel = mMap.getCameraPosition().zoom;
             }
         });
-        searchTrip();
+        if(isAdded()) {
+            searchTrip();
+        }
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {

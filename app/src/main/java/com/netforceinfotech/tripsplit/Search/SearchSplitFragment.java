@@ -115,6 +115,7 @@ public class SearchSplitFragment extends Fragment {
 
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(0);
+        Glide.with(context).load(R.drawable.plane_splitz).into(imageViewType);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
@@ -126,19 +127,19 @@ public class SearchSplitFragment extends Fragment {
                 switch (tab.getPosition()) {
                     case 0:
                         textViewType.setText(getString(R.string.aeroplane_splitz));
-                        Glide.with(context).load(R.drawable.ic_arrow).into(imageViewType);
+                        Glide.with(context).load(R.drawable.plane_splitz).into(imageViewType);
                         break;
                     case 1:
                         textViewType.setText(R.string.car_splitz);
-                        Glide.with(context).load(R.drawable.ic_age).into(imageViewType);
+                        Glide.with(context).load(R.drawable.car_bg).into(imageViewType);
                         break;
                     case 2:
                         textViewType.setText(R.string.bus_splitz);
-                        Glide.with(context).load(R.drawable.ic_birth).into(imageViewType);
+                        Glide.with(context).load(R.drawable.bus_splitz).into(imageViewType);
                         break;
                     case 3:
-                        textViewType.setText(R.string.ship_splitz);
-                        Glide.with(context).load(R.drawable.car_bg).into(imageViewType);
+                        textViewType.setText(R.string.boat_splitz);
+                        Glide.with(context).load(R.drawable.boat_split).into(imageViewType);
                         break;
 
 
