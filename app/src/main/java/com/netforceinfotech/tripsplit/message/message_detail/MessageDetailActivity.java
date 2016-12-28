@@ -120,7 +120,7 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
             }
         });
 
-        DatabaseReference _chat_titleMyId_id=FirebaseDatabase.getInstance().getReference().child("chat_title").child(userSessionManager.getUserId()).child(id);
+        DatabaseReference _chat_titleMyId_id = FirebaseDatabase.getInstance().getReference().child("chat_title").child(userSessionManager.getUserId()).child(id);
         _chat_titleMyId_id.child("seen").setValue(true);
         _chat_titleMyId_id.child("unseen_count").setValue(0);
 
@@ -258,7 +258,7 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
     private void setupTheirChatIdId(DataSnapshot dataSnapshot, String userId) {
         if (dataSnapshot.hasChild(userId)) {
             theirUserId_id_flag = true;
-            _their_userId_id = _my_userId.child(userId);
+            _their_userId_id = _their_userId.child(userId);
 
         } else {
             theirUserId_id_flag = false;
@@ -273,6 +273,9 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     appendMessage(dataSnapshot);
+                    Log.i("unseenfunction","called");
+                    updateSeen(1);
+
                 }
 
                 @Override
@@ -296,6 +299,18 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
                 }
             });
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        try{
+            if(_unseen!=null){
+
+            }
+        }catch (Exception ex){
+
+        }
+        super.onDestroy();
     }
 
     private void appendMessage(DataSnapshot dataSnapshot) {
@@ -331,7 +346,7 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
                     showMessage("Input Message");
                     return;
                 }
-                last_message=et_message.getText().toString();
+                last_message = et_message.getText().toString();
                 sendMessage();
                 break;
         }
@@ -366,6 +381,10 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
     }
 
     private void upDateTheirUserId_id_DATA() {
+        _their_userId_id.child("timestamp").setValue(ServerValue.TIMESTAMP);
+        _their_userId_id.child("seen").setValue(false);
+        _their_userId_id.child("you").setValue(false);
+        _their_userId_id.child("last_message").setValue(last_message);
         _their_userId_id.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -380,10 +399,7 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
 
             }
         });
-        _their_userId_id.child("timestamp").setValue(ServerValue.TIMESTAMP);
-        _their_userId_id.child("seen").setValue(false);
-        _their_userId_id.child("you").setValue(false);
-        _their_userId_id.child("last_message").setValue(last_message);
+
     }
 
     private void updateTheirUnseenCount(final int count) {

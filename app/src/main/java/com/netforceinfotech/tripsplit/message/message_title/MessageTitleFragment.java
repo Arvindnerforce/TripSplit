@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,9 +102,10 @@ public class MessageTitleFragment extends Fragment {
         toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
     }
+
     private void setupFirebase() {
         progressDialog.show();
-      getUnseenMessage();
+        getUnseenMessage();
         _chatTitle = FirebaseDatabase.getInstance().getReference().child("chat_title");
         //check User History
         _chatTitle.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -174,6 +176,7 @@ public class MessageTitleFragment extends Fragment {
             long timestamp = singleNode.child("timestamp").getValue(Long.class);
             long unseen_count = singleNode.child("unseen_count").getValue(Long.class);
             MyData myData = new MyData(key, chat_id, image_url, last_message, name, timestamp, seen, unseen_count);
+            Log.i("mydata", myData.key);
             if (!myDatas.contains(myData)) {
                 myDatas.add(myData);
             }
