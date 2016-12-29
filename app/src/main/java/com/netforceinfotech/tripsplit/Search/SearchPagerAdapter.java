@@ -1,12 +1,11 @@
-package com.netforceinfotech.tripsplit.Search;
+package com.netforceinfotech.tripsplit.search;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 
-import com.netforceinfotech.tripsplit.Search.searchfragment.SearchFragment;
+import com.netforceinfotech.tripsplit.search.searchfragment.SearchFragment;
 
 /**
  * Created by John on 8/29/2016.

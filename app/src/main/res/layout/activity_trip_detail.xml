@@ -785,6 +785,7 @@
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary"
         android:text="Book It!"
+        android:textSize="18sp"
         android:textColor="@color/white" />
 
 </RelativeLayout>

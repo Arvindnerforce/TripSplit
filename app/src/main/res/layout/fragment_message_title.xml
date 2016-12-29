@@ -13,10 +13,13 @@
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="16dp"
             android:text="Message"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler"
@@ -32,5 +35,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="No Chat History"
-        android:textColor="@color/colorPrimary" />
+        android:textColor="@color/colorPrimary"
+        android:visibility="gone" />
 </FrameLayout>

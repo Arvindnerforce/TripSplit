@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.Review;
+package com.netforceinfotech.tripsplit.review;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.netforceinfotech.tripsplit.R;
-import com.netforceinfotech.tripsplit.Review.ReviewDetails.ReviewDetails;
+import com.netforceinfotech.tripsplit.review.ReviewDetails.ReviewDetails;
 
 import java.util.ArrayList;
 import java.util.List;

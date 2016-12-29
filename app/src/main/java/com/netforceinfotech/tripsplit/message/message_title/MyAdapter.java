@@ -74,13 +74,15 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         myHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                itemList.get(position).seen = true;
                 Intent intent = new Intent(context, MessageDetailActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("name", myData.name);
                 bundle.putString("image_url", myData.image_url);
                 bundle.putString("id", myData.key);
                 bundle.putBoolean("seen", myData.seen);
-                bundle.putLong("count",myData.count);
+                bundle.putLong("count", myData.count);
+                bundle.putString("reg_id", myData.reg_id);
                 intent.putExtras(bundle);
                 context.startActivity(intent);
             }

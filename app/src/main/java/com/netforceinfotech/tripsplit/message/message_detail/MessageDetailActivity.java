@@ -71,11 +71,19 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
     private DatabaseReference _chat_id;
     private DatabaseReference _chat;
     String name, image_url;
-    private DatabaseReference _unseen;
     private String chat_id;
     boolean chat_id_created_flag = false, seen = false;
     private String last_message;
     long count;
+    private ValueEventListener updateSeenListner;
+    private ChildEventListener chatIdListner;
+    private ValueEventListener myChatIdIdListner;
+    private ValueEventListener theirUserIdListner;
+    private ValueEventListener theirUserId_IdListner;
+    private ValueEventListener firebaseListner;
+    DatabaseReference _unseen;
+    private DatabaseReference _notificationRequests;
+    private String reg_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,12 +95,13 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
         name = bundle.getString("name");
         id = bundle.getString("id");
         image_url = bundle.getString("image_url");
+        reg_id = bundle.getString("reg_id");
         try {
 
             seen = bundle.getBoolean("seen");
             count = bundle.getLong("count");
             if (!seen) {
-                updateSeen(count);
+                updateSeen();
             }
 
         } catch (Exception ex) {
@@ -104,14 +113,17 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
         setupFirebase();
     }
 
-    private void updateSeen(final long count1) {
-        final DatabaseReference _unseen = FirebaseDatabase.getInstance().getReference().child("unseen");
-        _unseen.addListenerForSingleValueEvent(new ValueEventListener() {
+    private void updateSeen() {
+        final DatabaseReference _chat_titleMyId_id = FirebaseDatabase.getInstance().getReference().child("chat_title").child(userSessionManager.getUserId()).child(id);
+        FirebaseDatabase.getInstance().getReference().child("chat_title").child(userSessionManager.getUserId()).child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                long count = dataSnapshot.child(userSessionManager.getUserId()).getValue(Long.class);
-                count = count - count1;
-                _unseen.child(userSessionManager.getUserId()).setValue(count);
+                if (!dataSnapshot.child("seen").exists()) {
+                    return;
+                } else {
+                    _chat_titleMyId_id.child("seen").setValue(true);
+                    _chat_titleMyId_id.child("unseen_count").setValue(0);
+                }
             }
 
             @Override
@@ -120,9 +132,6 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
             }
         });
 
-        DatabaseReference _chat_titleMyId_id = FirebaseDatabase.getInstance().getReference().child("chat_title").child(userSessionManager.getUserId()).child(id);
-        _chat_titleMyId_id.child("seen").setValue(true);
-        _chat_titleMyId_id.child("unseen_count").setValue(0);
 
     }
 
@@ -163,6 +172,7 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
         myAdapter = new MyAdapter(context, myDatas);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(myAdapter);
+        recyclerView.smoothScrollToPosition(myDatas.size());
     }
 
 
@@ -171,7 +181,13 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
         _unseen = FirebaseDatabase.getInstance().getReference().child("unseen");
         _chat = FirebaseDatabase.getInstance().getReference().child("chat");
         _chat_title = FirebaseDatabase.getInstance().getReference().child("chat_title");
-        _chat_title.addListenerForSingleValueEvent(new ValueEventListener() {
+        _notificationRequests = FirebaseDatabase.getInstance().getReference().child("notificationRequests");
+        _chat_title.addListenerForSingleValueEvent(setupFirebaseListner());
+
+    }
+
+    private ValueEventListener setupFirebaseListner() {
+        return firebaseListner = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 progressDialog.dismiss();
@@ -182,10 +198,9 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                progressDialog.dismiss();
             }
-        });
-
+        };
     }
 
     private void setupTheirUserId(DataSnapshot dataSnapshot) {
@@ -193,21 +208,25 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
             // run some code
             _their_userId = _chat_title.child(id);
             theirUserIdFlag = true;
-            _their_userId.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    setupTheirChatIdId(dataSnapshot, userSessionManager.getUserId());
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
+            _their_userId.addListenerForSingleValueEvent(setupTheirUserIdListner());
 
         } else {
             theirUserIdFlag = false;
         }
+    }
+
+    private ValueEventListener setupTheirUserIdListner() {
+        return theirUserIdListner = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                setupTheirChatIdId(dataSnapshot, userSessionManager.getUserId());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
     }
 
 
@@ -239,20 +258,24 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
         if (dataSnapshot.hasChild(id)) {
             myUserId_id_flag = true;
             _my_userId_id = _my_userId.child(id);
-            _my_userId_id.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    setupChatId(dataSnapshot);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
+            _my_userId_id.addListenerForSingleValueEvent(setupMyChatIdIdListner());
         } else {
             myUserId_id_flag = false;
         }
+    }
+
+    private ValueEventListener setupMyChatIdIdListner() {
+        return myChatIdIdListner = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                setupChatId(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
     }
 
     private void setupTheirChatIdId(DataSnapshot dataSnapshot, String userId) {
@@ -269,52 +292,74 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
         if (dataSnapshot.hasChild("chat_id")) {
             String chat_id = dataSnapshot.child("chat_id").getValue(String.class);
             _chat_id = _chat.child(chat_id);
-            _chat_id.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    appendMessage(dataSnapshot);
-                    Log.i("unseenfunction","called");
-                    updateSeen(1);
-
-                }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    showMessage("Check Internet Connection");
-                }
-            });
+            _chat_id.addChildEventListener(setupChatIdListner());
         }
+    }
+
+    private ChildEventListener setupChatIdListner() {
+        return chatIdListner = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                appendMessage(dataSnapshot);
+                Log.i("unseenfunction", "called");
+                updateSeen();
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                showMessage("Check Internet Connection");
+            }
+        };
     }
 
     @Override
     protected void onDestroy() {
-        try{
-            if(_unseen!=null){
+        try {
+            _unseen.child(userSessionManager.getUserId()).setValue(false);
+        } catch (Exception e) {
 
+        }
+        super.onPause();
+        try {
+            if (firebaseListner != null) {
+                _chat_title.removeEventListener(firebaseListner);
             }
-        }catch (Exception ex){
+
+            if (chatIdListner != null) {
+                _chat_id.removeEventListener(chatIdListner);
+            }
+            if (myChatIdIdListner != null) {
+                _my_userId_id.removeEventListener(myChatIdIdListner);
+            }
+            if (theirUserIdListner != null) {
+                _their_userId.removeEventListener(theirUserIdListner);
+            }
+            if (theirUserId_IdListner != null) {
+                _their_userId_id.removeEventListener(theirUserId_IdListner);
+            }
+        } catch (Exception ex) {
 
         }
         super.onDestroy();
     }
 
     private void appendMessage(DataSnapshot dataSnapshot) {
-
         Log.i("datasnampshot", dataSnapshot.toString());
         String id = dataSnapshot.child("user_id").getValue(String.class);
         String image_url = dataSnapshot.child("image").getValue(String.class);
@@ -338,6 +383,21 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
 
     }
 
+    private void pushNotification() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String tempKey = _notificationRequests.push().getKey();
+        _notificationRequests.updateChildren(map);
+        DatabaseReference message_root = _notificationRequests.child(tempKey);
+        Map<String, Object> map1 = new HashMap<String, Object>();
+        map1.put("reg_id", reg_id);
+        map1.put("message", last_message);
+        map1.put("name", userSessionManager.getName());
+        map1.put("user_id", userSessionManager.getUserId());
+        message_root.updateChildren(map1);
+
+
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -348,6 +408,8 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
                 }
                 last_message = et_message.getText().toString();
                 sendMessage();
+                pushNotification();
+
                 break;
         }
     }
@@ -383,72 +445,33 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
     private void upDateTheirUserId_id_DATA() {
         _their_userId_id.child("timestamp").setValue(ServerValue.TIMESTAMP);
         _their_userId_id.child("seen").setValue(false);
+        _their_userId_id.child("reg_id").setValue(userSessionManager.getRegId());
         _their_userId_id.child("you").setValue(false);
         _their_userId_id.child("last_message").setValue(last_message);
-        _their_userId_id.addListenerForSingleValueEvent(new ValueEventListener() {
+        _their_userId_id.addListenerForSingleValueEvent(setupTheirUserId_IdListner());
+        try {
+            _unseen.child(id).setValue(true);
+        } catch (Exception ex) {
+
+        }
+
+
+    }
+
+    private ValueEventListener setupTheirUserId_IdListner() {
+        return theirUserId_IdListner = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int count = dataSnapshot.child("unseen_count").getValue(Integer.class);
                 count++;
                 _their_userId_id.child("unseen_count").setValue(count);
-                updateTheirUnseenCount(count);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
-
-    }
-
-    private void updateTheirUnseenCount(final int count) {
-        _unseen.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(id).exists()) {
-                    int unseenCount = dataSnapshot.child(id).getValue(Integer.class);
-                    unseenCount = unseenCount + 1;
-                    _unseen.child(id).setValue(unseenCount);
-                } else {
-
-                    HashMap<String, Object> unseentheir_map = new HashMap<String, Object>();
-                    unseentheir_map.put(id, count);
-                    _unseen.updateChildren(unseentheir_map);
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-    }
-
-    private void updateMyUnseenCount(final int unseenCount1) {
-        _unseen.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(userSessionManager.getUserId()).exists()) {
-                    int unseenCount = dataSnapshot.child(userSessionManager.getUserId()).getValue(Integer.class);
-                    unseenCount = unseenCount - unseenCount1;
-                    _unseen.child(userSessionManager.getUserId()).setValue(unseenCount);
-                } else {
-
-                    HashMap<String, Object> unseentheir_map = new HashMap<String, Object>();
-                    unseentheir_map.put(userSessionManager.getUserId(), 0);
-                    _unseen.updateChildren(unseentheir_map);
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        };
     }
 
 
@@ -456,20 +479,8 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
         _my_userId_id.child("timestamp").setValue(ServerValue.TIMESTAMP);
         _my_userId_id.child("seen").setValue(true);
         _my_userId_id.child("you").setValue(true);
+        _my_userId_id.child("reg_id").setValue(reg_id);
         _my_userId_id.child("last_message").setValue(last_message);
-
-        _my_userId_id.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                int unseenCount = dataSnapshot.child("unseen_count").getValue(Integer.class);
-                updateMyUnseenCount(unseenCount);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
         _my_userId_id.child("unseen_count").setValue(0);
         _my_userId_id.child("last_message").setValue(et_message.getText().toString());
     }
@@ -509,6 +520,7 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
                 chat_title_userid_id_detailmap.put("image_url", image_url);
                 chat_title_userid_id_detailmap.put("timestamp", ServerValue.TIMESTAMP);
                 chat_title_userid_id_detailmap.put("seen", true);
+                chat_title_userid_id_detailmap.put("reg_id", reg_id);
                 chat_title_userid_id_detailmap.put("unseen_count", 0);
                 chat_title_userid_id_detailmap.put("last_message", et_message.getText().toString());
                 chat_title_userid_id_detailmap.put("you", true);
@@ -582,6 +594,7 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
                 chat_title_userid_id_detailmap.put("image_url", userSessionManager.getProfileImage());
                 chat_title_userid_id_detailmap.put("timestamp", ServerValue.TIMESTAMP);
                 chat_title_userid_id_detailmap.put("seen", false);
+                chat_title_userid_id_detailmap.put("reg_id", userSessionManager.getRegId());
                 chat_title_userid_id_detailmap.put("unseen_count", 0);
                 chat_title_userid_id_detailmap.put("last_message", et_message.getText().toString());
                 chat_title_userid_id_detailmap.put("you", false);

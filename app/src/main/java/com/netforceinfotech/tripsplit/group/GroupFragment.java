@@ -28,7 +28,7 @@ import com.koushikdutta.ion.Ion;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.netforceinfotech.tripsplit.dashboard.NavigationFragment;
-import com.netforceinfotech.tripsplit.Home.HomeFragment;
+import com.netforceinfotech.tripsplit.home.HomeFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.netforceinfotech.tripsplit.group.mygroup.MyAdapter;

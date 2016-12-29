@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.Review;
+package com.netforceinfotech.tripsplit.review;
 
 /**
  * Created by John on 8/26/2016.

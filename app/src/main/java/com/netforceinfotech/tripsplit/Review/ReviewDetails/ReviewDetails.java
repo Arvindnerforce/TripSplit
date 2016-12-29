@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.Review.ReviewDetails;
+package com.netforceinfotech.tripsplit.review.ReviewDetails;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

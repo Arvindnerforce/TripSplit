@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.NavigationView.Message.contactlist;
+package com.netforceinfotech.tripsplit.NavigationView.message.contactlist;
 
 import android.graphics.Bitmap;
 

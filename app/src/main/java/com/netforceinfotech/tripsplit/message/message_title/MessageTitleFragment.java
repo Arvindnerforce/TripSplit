@@ -16,12 +16,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.netforceinfotech.tripsplit.Home.HomeFragment;
+import com.netforceinfotech.tripsplit.home.HomeFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 
@@ -40,6 +41,7 @@ public class MessageTitleFragment extends Fragment {
     DatabaseReference _chatTitle, _chatTitle_id, _unseen;
     TextView textViewNoMessage, textViewTitle;
     private MaterialDialog progressDialog;
+    private ChildEventListener chatTitleIdLister;
 
     public MessageTitleFragment() {
         // Required empty public constructor
@@ -73,6 +75,11 @@ public class MessageTitleFragment extends Fragment {
         textViewNoMessage = (TextView) view.findViewById(R.id.textViewNoMessage);
         textViewTitle = (TextView) view.findViewById(R.id.textViewTitle);
         setupRecyclerView(view);
+        try {
+            FirebaseDatabase.getInstance().getReference().child("unseen").child(userSessionManager.getUserId()).setValue(false);
+        } catch (Exception ex) {
+
+        }
         return view;
     }
 
@@ -103,20 +110,29 @@ public class MessageTitleFragment extends Fragment {
 
     }
 
+
     private void setupFirebase() {
         progressDialog.show();
-        getUnseenMessage();
+
         _chatTitle = FirebaseDatabase.getInstance().getReference().child("chat_title");
         //check User History
+
         _chatTitle.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                progressDialog.dismiss();
+
                 if (dataSnapshot.child(userSessionManager.getUserId()).exists()) {
                     _chatTitle_id = _chatTitle.child(userSessionManager.getUserId());
-                    _chatTitle_id.addValueEventListener(new ValueEventListener() {
+                    _chatTitle_id.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            appendList(dataSnapshot);
+                            if (dataSnapshot.getChildrenCount() <= 0) {
+                                textViewNoMessage.setVisibility(View.VISIBLE);
+                                return;
+                            } else {
+                                textViewNoMessage.setVisibility(View.GONE);
+                            }
                         }
 
                         @Override
@@ -124,7 +140,10 @@ public class MessageTitleFragment extends Fragment {
 
                         }
                     });
+                    _chatTitle_id.addChildEventListener(setupChatTitleIdListner());
+
                 } else {
+                    progressDialog.dismiss();
                     textViewNoMessage.setVisibility(View.VISIBLE);
                 }
             }
@@ -138,52 +157,89 @@ public class MessageTitleFragment extends Fragment {
 
     }
 
-    private void getUnseenMessage() {
-        _unseen = FirebaseDatabase.getInstance().getReference().child("unseen");
-        _unseen.addListenerForSingleValueEvent(new ValueEventListener() {
+    private ChildEventListener setupChatTitleIdListner() {
+        return chatTitleIdLister = new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(userSessionManager.getUserId()).exists()) {
-                    progressDialog.dismiss();
-                    long count = dataSnapshot.child(userSessionManager.getUserId()).getValue(Long.class);
-                    textViewTitle.setText("Message (" + count + ")");
-                }
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                appendList(dataSnapshot);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                updateList(dataSnapshot);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                progressDialog.dismiss();
 
             }
-        });
+        };
     }
 
-    private void appendList(DataSnapshot dataSnapshot) {
-        long size = dataSnapshot.getChildrenCount();
-        if (size <= 0) {
-            textViewNoMessage.setVisibility(View.VISIBLE);
-            return;
+    private void updateList(DataSnapshot singleNode) {
+        Log.i("Dataset", singleNode.toString());
+        String key = singleNode.getKey();
+        String last_message = singleNode.child("last_message").getValue(String.class);
+        String chat_id = singleNode.child("chat_id").getValue(String.class);
+        String reg_id = singleNode.child("reg_id").getValue(String.class);
+        String name = singleNode.child("name").getValue(String.class);
+        String image_url = singleNode.child("image_url").getValue(String.class);
+        boolean seen = singleNode.child("seen").getValue(Boolean.class);
+        long timestamp = singleNode.child("timestamp").getValue(Long.class);
+        long unseen_count = singleNode.child("unseen_count").getValue(Long.class);
+        MyData myData = new MyData(key, chat_id, image_url, last_message, name, timestamp, seen, unseen_count, reg_id);
+        Log.i("mydata", myData.key);
+        if (myDatas.contains(myData)) {
+            myDatas.set(myDatas.indexOf(myData), myData);
         }
-        textViewNoMessage.setVisibility(View.GONE);
-        for (DataSnapshot singleNode : dataSnapshot.getChildren()) {
-            String key = singleNode.getKey();
-            String last_message = singleNode.child("last_message").getValue(String.class);
-            String chat_id = singleNode.child("chat_id").getValue(String.class);
 
-            String name = singleNode.child("name").getValue(String.class);
-            String image_url = singleNode.child("image_url").getValue(String.class);
-            boolean seen = singleNode.child("seen").getValue(Boolean.class);
-            long timestamp = singleNode.child("timestamp").getValue(Long.class);
-            long unseen_count = singleNode.child("unseen_count").getValue(Long.class);
-            MyData myData = new MyData(key, chat_id, image_url, last_message, name, timestamp, seen, unseen_count);
-            Log.i("mydata", myData.key);
-            if (!myDatas.contains(myData)) {
-                myDatas.add(myData);
-            }
+        myAdapter.notifyDataSetChanged();
+    }
 
+
+    private void appendList(DataSnapshot singleNode) {
+
+        Log.i("Dataset", singleNode.toString());
+        String key = singleNode.getKey();
+        String last_message = singleNode.child("last_message").getValue(String.class);
+        String chat_id = singleNode.child("chat_id").getValue(String.class);
+        String reg_id = singleNode.child("reg_id").getValue(String.class);
+        String name = singleNode.child("name").getValue(String.class);
+        String image_url = singleNode.child("image_url").getValue(String.class);
+        boolean seen = singleNode.child("seen").getValue(Boolean.class);
+        long timestamp = singleNode.child("timestamp").getValue(Long.class);
+        long unseen_count = singleNode.child("unseen_count").getValue(Long.class);
+        MyData myData = new MyData(key, chat_id, image_url, last_message, name, timestamp, seen, unseen_count, reg_id);
+        Log.i("mydata", myData.key);
+        if (!myDatas.contains(myData)) {
+            myDatas.add(myData);
         }
+
         myAdapter.notifyDataSetChanged();
 
+    }
+
+    @Override
+    public void onPause() {
+        if (chatTitleIdLister != null) {
+            _chatTitle_id.removeEventListener(chatTitleIdLister);
+        }
+        try {
+            _unseen.child(userSessionManager.getUserId()).setValue(false);
+        } catch (Exception e) {
+
+        }
+        super.onPause();
     }
 
     private void setupRecyclerView(View view) {

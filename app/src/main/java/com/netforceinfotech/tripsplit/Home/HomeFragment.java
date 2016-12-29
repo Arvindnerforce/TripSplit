@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.Home;
+package com.netforceinfotech.tripsplit.home;
 
 
 import android.content.Context;
@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
 import com.netforceinfotech.tripsplit.R;
-import com.netforceinfotech.tripsplit.Search.SearchSplitFragment;
+import com.netforceinfotech.tripsplit.search.SearchSplitFragment;
 import com.netforceinfotech.tripsplit.posttrip.PostTripFragment;
 
 

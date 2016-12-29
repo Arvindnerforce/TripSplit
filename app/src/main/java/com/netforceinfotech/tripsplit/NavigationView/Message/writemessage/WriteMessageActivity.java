@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.NavigationView.Message.writemessage;
+package com.netforceinfotech.tripsplit.NavigationView.message.writemessage;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;

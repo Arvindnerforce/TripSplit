@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="com.netforceinfotech.tripsplit.Search.searchfragment.SearchGlobalViewFragment">
+    tools:context="com.netforceinfotech.tripsplit.search.searchfragment.SearchGlobalViewFragment">
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"

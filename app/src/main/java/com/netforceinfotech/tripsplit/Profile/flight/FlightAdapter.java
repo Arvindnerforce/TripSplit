@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.Profile.flight;
+package com.netforceinfotech.tripsplit.profile.flight;
 
 
 import android.content.Context;

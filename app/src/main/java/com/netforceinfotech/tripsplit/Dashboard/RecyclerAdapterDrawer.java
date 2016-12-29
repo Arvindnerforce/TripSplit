@@ -3,6 +3,7 @@ package com.netforceinfotech.tripsplit.dashboard;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +28,13 @@ public class RecyclerAdapterDrawer extends RecyclerView.Adapter<RecyclerView.Vie
     private final LayoutInflater inflater;
     List<RowDataDrawer> data = Collections.emptyList();
     Context context;
+    boolean newMessage;
     public clickListner click = null;
 
-    public RecyclerAdapterDrawer(Context context, List<RowDataDrawer> data) {
+    public RecyclerAdapterDrawer(Context context, List<RowDataDrawer> data, boolean newMessage) {
         inflater = LayoutInflater.from(context);
         this.data = data;
+        this.newMessage = newMessage;
         this.context = context;
 
 
@@ -73,6 +76,7 @@ public class RecyclerAdapterDrawer extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
 
+        Log.i("testing","refresh "+newMessage);
 
         if (getItemViewType(position) == NORMAL) {
             MyViewHolder myViewHolder = (MyViewHolder) holder;
@@ -108,7 +112,12 @@ public class RecyclerAdapterDrawer extends RecyclerView.Adapter<RecyclerView.Vie
                 myViewHolder.linearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
                 myViewHolder.imageView.setImageResource(data.get(position).id);
             }
-            myViewHolder.textviewBadge.setText("14");
+            if (newMessage) {
+                myViewHolder.textviewBadge.setText("New");
+                myViewHolder.textviewBadge.setVisibility(View.VISIBLE);
+            } else {
+                myViewHolder.textviewBadge.setVisibility(View.GONE);
+            }
             myViewHolder.textView.setText(data.get(position).text);
 
         }

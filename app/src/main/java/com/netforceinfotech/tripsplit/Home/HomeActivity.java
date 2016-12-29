@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.Home;
+package com.netforceinfotech.tripsplit.home;
 
 import android.content.Intent;
 
@@ -20,7 +20,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.netforceinfotech.tripsplit.NavigationView.Message.MessageFragment;
+import com.netforceinfotech.tripsplit.NavigationView.message.MessageFragment;
 
 import com.netforceinfotech.tripsplit.R;
 

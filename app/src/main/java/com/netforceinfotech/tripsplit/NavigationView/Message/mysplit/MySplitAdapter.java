@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.NavigationView.Message.mysplit;
+package com.netforceinfotech.tripsplit.NavigationView.message.mysplit;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,8 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.netforceinfotech.tripsplit.NavigationView.Message.MessageFragmentData;
-import com.netforceinfotech.tripsplit.NavigationView.Message.writemessage.WriteMessageActivity;
+import com.netforceinfotech.tripsplit.NavigationView.message.writemessage.WriteMessageActivity;
 import com.netforceinfotech.tripsplit.R;
 
 import java.util.ArrayList;

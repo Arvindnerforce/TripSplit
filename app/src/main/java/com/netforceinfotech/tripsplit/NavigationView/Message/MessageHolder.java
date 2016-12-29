@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.NavigationView.Message;
+package com.netforceinfotech.tripsplit.NavigationView.message;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

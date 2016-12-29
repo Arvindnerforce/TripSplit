@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.Profile.editprofile;
+package com.netforceinfotech.tripsplit.profile.editprofile;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -43,7 +43,7 @@ import com.koushikdutta.ion.Ion;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.netforceinfotech.tripsplit.dashboard.DashboardActivity;
-import com.netforceinfotech.tripsplit.Home.HomeFragment;
+import com.netforceinfotech.tripsplit.home.HomeFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.netforceinfotech.tripsplit.login.CountryData;

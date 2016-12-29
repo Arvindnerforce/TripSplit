@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.Search;
+package com.netforceinfotech.tripsplit.search;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.netforceinfotech.tripsplit.dashboard.NavigationFragment;
-import com.netforceinfotech.tripsplit.Home.HomeFragment;
+import com.netforceinfotech.tripsplit.home.HomeFragment;
 import com.netforceinfotech.tripsplit.R;
 
 import xyz.santeri.wvp.WrappingViewPager;

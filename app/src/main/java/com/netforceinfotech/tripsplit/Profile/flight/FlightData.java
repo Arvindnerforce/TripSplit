@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.Profile.flight;
+package com.netforceinfotech.tripsplit.profile.flight;
 
 /**
  * Created by Gowtham Chandrasekar on 31-07-2015.

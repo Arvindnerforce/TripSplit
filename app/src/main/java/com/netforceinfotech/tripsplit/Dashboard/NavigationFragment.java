@@ -22,19 +22,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.hedgehog.ratingbar.RatingBar;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-import com.netforceinfotech.tripsplit.Home.HomeFragment;
-import com.netforceinfotech.tripsplit.NavigationView.Message.MessageFragment;
-import com.netforceinfotech.tripsplit.Profile.editprofile.EditPofileFragment;
+import com.netforceinfotech.tripsplit.home.HomeFragment;
+import com.netforceinfotech.tripsplit.profile.editprofile.EditPofileFragment;
 import com.netforceinfotech.tripsplit.R;
-import com.netforceinfotech.tripsplit.Search.SearchSplitFragment;
+import com.netforceinfotech.tripsplit.search.SearchSplitFragment;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.netforceinfotech.tripsplit.group.GroupFragment;
 import com.netforceinfotech.tripsplit.message.message_title.MessageTitleFragment;
+import com.netforceinfotech.tripsplit.mytrip.MyTripFragment;
 import com.netforceinfotech.tripsplit.posttrip.PostTripFragment;
 import com.netforceinfotech.tripsplit.preference.PreferenceFragment;
 import com.netforceinfotech.tripsplit.tutorial.DefaultIntro;
@@ -70,6 +75,9 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
     TextView textViewName, textviewCountry;
     UserSessionManager userSessionManager;
     RatingBar ratingBar;
+    private DatabaseReference _unseen;
+    private Boolean newMessage = false;
+    private ValueEventListener unseenListner;
 
 
     public NavigationFragment() {
@@ -142,7 +150,7 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
         textViewName = (TextView) view.findViewById(R.id.textviewName);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerMyGroup);
         list = setDrawer();
-        adapter = new RecyclerAdapterDrawer(context, list);
+        adapter = new RecyclerAdapterDrawer(context, list, newMessage);
         adapter.setClickListner(this);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -152,8 +160,35 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
         //sharedprefrance
         loginPreferences = getActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
-
+        getUnseenMessage();
     }
+
+    private void getUnseenMessage() {
+        _unseen = FirebaseDatabase.getInstance().getReference().child("unseen");
+        _unseen.addValueEventListener(setupUnseen());
+    }
+
+    private ValueEventListener setupUnseen() {
+        return unseenListner = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child(userSessionManager.getUserId()).exists()) {
+                    newMessage = dataSnapshot.child(userSessionManager.getUserId()).getValue(Boolean.class);
+                    Log.i("testing", newMessage + "");
+                    adapter.newMessage = newMessage;
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Log.i("testing", dataSnapshot.toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+    }
+
 
 
     private List<RowDataDrawer> setDrawer() {
@@ -312,7 +347,9 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
     }
 
     private void setupMyPost() {
-
+        MyTripFragment groupFragment = new MyTripFragment();
+        String tag = groupFragment.getClass().getName();
+        replaceFragment(groupFragment, tag);
     }
 
     private void setupMySplitz() {

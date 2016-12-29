@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.Search.searchfragment;
+package com.netforceinfotech.tripsplit.search.searchfragment;
 
 
 import android.content.Context;

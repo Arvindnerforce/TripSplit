@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.NavigationView.Message.writemessage;
+package com.netforceinfotech.tripsplit.NavigationView.message.writemessage;
 
 /**
  * Created by John on 8/22/2016.

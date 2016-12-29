@@ -1,15 +1,13 @@
-package com.netforceinfotech.tripsplit.NavigationView.Message.writemessage;
+package com.netforceinfotech.tripsplit.NavigationView.message.writemessage;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.netforceinfotech.tripsplit.NavigationView.Message.MessageFragmentData;
 import com.netforceinfotech.tripsplit.R;
 
 import java.util.ArrayList;

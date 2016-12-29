@@ -10,6 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/imageViewDp"
         android:baselineAligned="false"
         android:orientation="vertical"
@@ -26,7 +27,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:text="12/13/16"
-                android:textSize="10sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/textViewName"
@@ -36,7 +37,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:text="Abcd"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -45,18 +46,17 @@
 
             <TextView
                 android:id="@+id/textViewCount"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="6dp"
+                android:layout_marginLeft="16dp"
                 android:background="@drawable/round"
                 android:gravity="center"
                 android:text="2"
                 android:textColor="@color/white"
-                android:textSize="8sp" />
+                android:textSize="14sp" />
 
             <TextView
-                android:textColor="@color/ampm_text_color"
                 android:id="@+id/textViewLastMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -69,14 +69,15 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@string/lorem_description"
-                android:textSize="10sp" />
+                android:textColor="@color/ampm_text_color"
+                android:textSize="14sp" />
         </RelativeLayout>
     </LinearLayout>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageViewDp"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"

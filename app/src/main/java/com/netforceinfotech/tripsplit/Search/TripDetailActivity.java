@@ -1,7 +1,8 @@
-package com.netforceinfotech.tripsplit.Search;
+package com.netforceinfotech.tripsplit.search;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +16,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
@@ -41,8 +44,16 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
     private String username;
     UserSessionManager userSessionManager;
     private String profile_image;
+    private String reg_id = "";
+    private MaterialDialog progressDialog;
+    private String trip_id;
+    private String userId;
 
     private void initView() {
+        progressDialog = new MaterialDialog.Builder(context)
+                .title(R.string.progress_dialog)
+                .content(R.string.please_wait)
+                .progress(true, 0).build();
         buttonBookIt = (Button) findViewById(R.id.buttonBookIt);
         buttonBookIt.setOnClickListener(this);
         linearLayoutReturn = (LinearLayout) findViewById(R.id.linearLayoutReturn);
@@ -86,7 +97,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_trip_detail);
         context = this;
         Bundle bundle = getIntent().getExtras();
-        String trip_id = bundle.getString("trip_id");
+        trip_id = bundle.getString("trip_id");
         setupToolBar("Trip Detail");
         userSessionManager = new UserSessionManager(context);
         initView();
@@ -147,7 +158,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
     private void setupTripDetail(JsonObject my_splitz) {
         String tour_id, start_price, date_created, user_id, cartype, pax, space, trip_group, age_group_lower, age_group_upper, trip, vehical_type,
                 depart_address, country_code, etd, eta, iteinerary, image_name, currency,
-                return_eta, return_etd, dest_address, id, username, email, dob, address, country, aboutme, your_share, created_date;
+                return_eta, return_etd, dest_address, id, username, email, dob, address, country, aboutme, your_share, created_date, reg_id;
 
         user_id = my_splitz.get("user_id").getAsString();
         this.tripcreator_id = user_id;
@@ -164,7 +175,8 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
         vehical_type = my_splitz.get("vehical_type").getAsString();
         depart_address = my_splitz.get("depart_address").getAsString();
         dest_address = my_splitz.get("dest_address").getAsString();
-
+        reg_id = my_splitz.get("reg_id").getAsString();
+        this.reg_id = reg_id;
         country_code = my_splitz.get("country_code").getAsString();
         etd = my_splitz.get("etd").getAsString();
         eta = my_splitz.get("eta").getAsString();
@@ -174,6 +186,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
         return_eta = my_splitz.get("return_eta").getAsString();
         return_etd = my_splitz.get("return_etd").getAsString();
         id = my_splitz.get("id").getAsString();
+        this.userId = id;
         username = my_splitz.get("username").getAsString();
         this.username = username;
         email = my_splitz.get("email").getAsString();
@@ -251,7 +264,8 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
                     Bundle bundle = new Bundle();
                     bundle.putString("id", tripcreator_id);
                     bundle.putString("name", username);
-                    bundle.putString("image_url",profile_image);
+                    bundle.putString("image_url", profile_image);
+                    bundle.putString("reg_id", reg_id);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 } else {
@@ -259,12 +273,75 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
                 }
                 break;
             case R.id.buttonBookIt:
+                if (userId.equalsIgnoreCase(userSessionManager.getUserId())) {
+                    showMessage("Cannot book your own trip");
+                    return;
+                }
+                showConfirmationPopUp();
                 break;
             case R.id.reviewlayout:
                 break;
 
 
         }
+
+    }
+
+    private void showConfirmationPopUp() {
+
+        boolean wrapInScrollView = true;
+        new MaterialDialog.Builder(context)
+                .title("Booking confirmation!!!")
+                .content("Are you sure you want to Book it?")
+                .positiveText("Confirm")
+                .negativeText(R.string.cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        bookRide();
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+
+
+    }
+
+    private void bookRide() {
+        //http://netforce.biz/tripesplit/mobileApp/api/services.php?opt=book_trip
+        String baseUrl = getResources().getString(R.string.url);
+        String url = baseUrl + "services.php?opt=book_trip";
+
+        Log.i("result_url", url);
+
+        Ion.with(context)
+                .load("POST", url)
+                .setBodyParameter("trip_id", trip_id)
+                .setBodyParameter("user_id", userSessionManager.getUserId())
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        progressDialog.dismiss();
+                        if (result == null) {
+                            showMessage("nothing is happening");
+                        } else {
+                            Log.i("result_kunsang", result.toString());
+                            String status = result.get("status").getAsString();
+                            if (status.equalsIgnoreCase("success")) {
+                                finish();
+                                showMessage("Ride booked");
+                            } else {
+                                showMessage("something went wrong");
+                            }
+                        }
+                    }
+                });
 
     }
 

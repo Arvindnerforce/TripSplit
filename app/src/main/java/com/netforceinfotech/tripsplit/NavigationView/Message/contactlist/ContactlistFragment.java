@@ -1,21 +1,17 @@
-package com.netforceinfotech.tripsplit.NavigationView.Message.contactlist;
+package com.netforceinfotech.tripsplit.NavigationView.message.contactlist;
 
 import android.Manifest;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
-import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,16 +19,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.codinguser.android.contactpicker.ContactsPickerActivity;
 import com.netforceinfotech.tripsplit.R;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.NavigationView.Message.mysplit;
+package com.netforceinfotech.tripsplit.NavigationView.message.mysplit;
 
 import android.content.Context;
 import android.os.Bundle;

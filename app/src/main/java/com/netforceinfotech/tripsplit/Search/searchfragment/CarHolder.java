@@ -1,11 +1,10 @@
-package com.netforceinfotech.tripsplit.Search.searchfragment;
+package com.netforceinfotech.tripsplit.search.searchfragment;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.balysv.materialripple.MaterialRippleLayout;
 import com.netforceinfotech.tripsplit.R;
 
 /**

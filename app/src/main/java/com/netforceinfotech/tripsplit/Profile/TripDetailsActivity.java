@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.Profile;
+package com.netforceinfotech.tripsplit.profile;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.netforceinfotech.tripsplit.R;
-import com.netforceinfotech.tripsplit.Review.ReviewListActivity;
+import com.netforceinfotech.tripsplit.review.ReviewListActivity;
 
 public class TripDetailsActivity extends AppCompatActivity
 {

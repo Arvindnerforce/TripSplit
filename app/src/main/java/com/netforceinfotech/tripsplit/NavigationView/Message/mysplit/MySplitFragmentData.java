@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.NavigationView.Message.mysplit;
+package com.netforceinfotech.tripsplit.NavigationView.message.mysplit;
 
 /**
  * Created by John on 9/28/2016.

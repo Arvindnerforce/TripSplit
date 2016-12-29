@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.Profile.flight;
+package com.netforceinfotech.tripsplit.profile.flight;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

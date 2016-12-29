@@ -1,4 +1,4 @@
-package com.netforceinfotech.tripsplit.Search.searchfragment;
+package com.netforceinfotech.tripsplit.search.searchfragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,9 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.netforceinfotech.tripsplit.Profile.TripDetailsActivity;
 import com.netforceinfotech.tripsplit.R;
-import com.netforceinfotech.tripsplit.Search.TripDetailActivity;
+import com.netforceinfotech.tripsplit.search.TripDetailActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
