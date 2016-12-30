@@ -35,6 +35,7 @@ public class MyTripFragment extends Fragment {
     private RecyclerView recyclerView;
     UserSessionManager userSessionManager;
     Context context;
+    TextView textViewTitle,textViewNotFound;
     private MyAdapter myAdapter;
     ArrayList<MyData> myDatas = new ArrayList<>();
     private MaterialDialog progressDialog;
@@ -59,6 +60,11 @@ public class MyTripFragment extends Fragment {
     }
 
     private void initView(View view) {
+        textViewNotFound = (TextView) view.findViewById(R.id.textViewNotFound);
+        textViewNotFound.setText("No Splitz found");
+        textViewNotFound.setVisibility(View.GONE);
+        textViewTitle = (TextView) view.findViewById(R.id.textViewTitle);
+        textViewTitle.setText("My Trip");
         progressDialog = new MaterialDialog.Builder(context)
                 .title(R.string.progress_dialog)
                 .content(R.string.please_wait)
@@ -71,9 +77,8 @@ public class MyTripFragment extends Fragment {
 
         String baseUrl = getString(R.string.url);
         //http://netforce.biz/tripesplit/mobileApp/api/services.php?opt=search_trip
-        String url = baseUrl + "services.php?opt=search_trip";
+        String url = baseUrl + "services.php?opt=my_trip";
         Log.i("url", url);
-        Log.i("type1", "type");
         Ion.with(context)
                 .load("POST", url)
                 .setBodyParameter("user_id", userSessionManager.getUserId())

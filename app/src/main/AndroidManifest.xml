@@ -124,6 +124,9 @@
         <activity android:name=".group.groupchat.GroupChatActivity" />
         <activity android:name=".search.TripDetailActivity" />
         <activity android:name=".message.message_detail.MessageDetailActivity" />
+        <activity android:name=".profile.myprofile.MyProfileActivity" />
+        <activity android:name=".supports.SupportActivity" />
+        <activity android:name=".profile.sendmail.SendMailActivity"></activity>
     </application>
 
 </manifest>

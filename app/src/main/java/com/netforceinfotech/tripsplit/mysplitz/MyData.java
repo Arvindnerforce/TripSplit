@@ -4,18 +4,16 @@ package com.netforceinfotech.tripsplit.mysplitz;
  * Created by John on 8/29/2016.
  */
 public class MyData {
-    String key, id, image_url, message, name;
-    Long timestamp;
-    boolean you;
 
-    public MyData(String key, String id, String image_url, String message, String name, Long timestamp,boolean you) {
-        this.key = key;
-        this.id = id;
-        this.image_url = image_url;
-        this.message = message;
-        this.you=you;
-        this.name = name;
-        this.timestamp = timestamp;
+    String trip_id,image,source,destination,departure_date,itinerary;
+
+    public MyData(String trip_id, String image, String source, String destination, String departure_date, String itinerary) {
+        this.trip_id = trip_id;
+        this.image = image;
+        this.source = source;
+        this.destination = destination;
+        this.departure_date = departure_date;
+        this.itinerary = itinerary;
     }
 
     @Override
@@ -26,6 +24,6 @@ public class MyData {
         }
 
         MyData that = (MyData) obj;
-        return this.key.equals(that.key);
+        return this.trip_id.equals(that.trip_id);
     }
 }

@@ -82,7 +82,7 @@ or Search Splitz….
     <string name="search_spliz">Search Splitz</string>
     <string name="post_trip">Post Trip</string>
     <string name="my_splitz">My Splitz</string>
-    <string name="my_trip">My Tripz</string>
+    <string name="my_trip">My Trip</string>
     <string name="messages">Messages</string>
     <string name="dummy">dummy</string>
     <string name="lorem_description">"There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain..."</string>
@@ -102,6 +102,7 @@ or Search Splitz….
     <string name="boat_splitz">Boat Splitz</string>
     <string name="globe">Globe</string>
     <string name="list">List</string>
+    <string name="submit">Submit</string>
 
 
 </resources>

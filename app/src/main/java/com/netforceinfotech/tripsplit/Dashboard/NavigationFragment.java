@@ -33,6 +33,7 @@ import com.hedgehog.ratingbar.RatingBar;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.tripsplit.home.HomeFragment;
+import com.netforceinfotech.tripsplit.mysplitz.MySplitzFragment;
 import com.netforceinfotech.tripsplit.profile.editprofile.EditPofileFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.search.SearchSplitFragment;
@@ -188,7 +189,6 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
             }
         };
     }
-
 
 
     private List<RowDataDrawer> setDrawer() {
@@ -354,6 +354,9 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
 
     private void setupMySplitz() {
 
+        MySplitzFragment groupFragment = new MySplitzFragment();
+        String tag = groupFragment.getClass().getName();
+        replaceFragment(groupFragment, tag);
     }
 
     private void setupSupportFragment() {

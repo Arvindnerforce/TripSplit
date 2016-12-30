@@ -2,6 +2,7 @@ package com.netforceinfotech.tripsplit.search.searchfragment;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -34,6 +36,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
+import com.netforceinfotech.tripsplit.search.TripDetailActivity;
 
 import java.util.ArrayList;
 
@@ -54,6 +57,7 @@ public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCall
     private CameraUpdate cu;
     double dest_lat, dest_lon, source_lat, source_lon;
     String etd, type, sort;
+    private CameraPosition cameraPosition;
 
     public SearchGlobalViewFragment() {
         // Required empty public constructor
@@ -70,10 +74,15 @@ public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCall
         dest_lon = getArguments().getDouble("dest_lon");
         source_lat = getArguments().getDouble("source_lat");
         source_lon = getArguments().getDouble("source_lon");
+        Log.i("lat",source_lat+"   "+source_lon);
         etd = getArguments().getString("etd");
         type = getArguments().getString("type");
         sort = getArguments().getString("sort");
-
+        cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(source_lat,source_lon))      // Sets the center of the map to Mountain View
+                .zoom(16)                   // Sets the zoom
+                .tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                .build();                   // Creates a CameraPosition from the builder
         mMapView = (MapView) view.findViewById(R.id.mapView);
 
         mMapView.onCreate(savedInstanceState);
@@ -152,7 +161,7 @@ public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCall
         for (int i = 0; i < size; i++) {
             try {
                 JsonObject object = data.get(i).getAsJsonObject();
-                String tour_id = object.get("tour_id").getAsString();
+                final String tour_id = object.get("tour_id").getAsString();
                 String start_price = object.get("start_price").getAsString();
                 String date_created = object.get("date_created").getAsString();
                 String user_id = object.get("user_id").getAsString();
@@ -162,7 +171,7 @@ public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCall
                 String trip_group = object.get("trip_group").getAsString();
                 String age_group_lower = object.get("age_group_lower").getAsString();
                 String age_group_upper = object.get("age_group_upper").getAsString();
-                String trip = object.get("trip").getAsString();
+                final String trip = object.get("trip").getAsString();
                 String vehical_type = object.get("vehical_type").getAsString();
                 String depart_address = object.get("depart_address").getAsString();
                 String country_code = object.get("country_code").getAsString();
@@ -182,7 +191,19 @@ public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCall
                 if (!carDatas.contains(carData)) {
                     BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_map_source);
 
-                    sourceMarker = mMap.addMarker(new MarkerOptions().snippet(depart_address).icon(icon).title(tour_id).position(new LatLng(Double.parseDouble(depart_lat), Double.parseDouble(depart_lon))));
+                    sourceMarker = mMap.addMarker(new MarkerOptions().snippet(depart_address).icon(icon).title("Source").position(new LatLng(Double.parseDouble(depart_lat), Double.parseDouble(depart_lon))));
+                    mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                        @Override
+                        public void onInfoWindowClick(Marker marker) {
+                            if (marker.equals(sourceMarker)) {
+                                Intent intent = new Intent(context, TripDetailActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("trip_id", tour_id);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                            }
+                        }
+                    });
                     carDatas.add(carData);
                 }
             } catch (Exception ex) {
@@ -209,7 +230,7 @@ public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCall
             public void onMapLoaded() {
                 mMap.animateCamera(cu);
                 zoomlevel = mMap.getCameraPosition().zoom;
-                LatLng searchLatLng = new LatLng(55.946302847171445, -3.1891679763793945);
+                LatLng searchLatLng = new LatLng(source_lat, source_lon);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchLatLng, zoomlevel));
 
                 mMap.addCircle(new CircleOptions()
@@ -283,15 +304,9 @@ public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCall
                 zoomlevel = mMap.getCameraPosition().zoom;
             }
         });
-        if(isAdded()) {
+        if (isAdded()) {
             searchTrip();
         }
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                showMessage(marker.getTitle());
-                return false;
-            }
-        });
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 }

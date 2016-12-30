@@ -806,6 +806,10 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
 
         SimpleDateFormat outDate = new SimpleDateFormat("EEE dd MMM yyyy");
 
+        if (isDateSelectedPast(outDate.format(date2))) {
+            showMessage("Cannot post Trip on Past!!!");
+            return;
+        }
         if (etdclicked && !returnetdclicked) {
             textViewETD.setText(outDate.format(date2));
         } else if (!etdclicked && !returnetdclicked) {
@@ -822,6 +826,22 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 now.get(Calendar.MINUTE), true
         );
         tpd.show(getActivity().getFragmentManager(), "Timepickerdialog");
+    }
+
+    private boolean isDateSelectedPast(String format) {
+        //EEE dd MMM yyyy HH:mm
+        try {
+            if (new SimpleDateFormat("EEE dd MMM yyyy").parse(format).before(new Date())) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.e("Dateparse", "Failed " + format);
+            return false;
+
+        }
     }
 
     private void pickPictureIntent() {

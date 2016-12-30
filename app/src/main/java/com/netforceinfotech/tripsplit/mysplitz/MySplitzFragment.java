@@ -2,12 +2,19 @@ package com.netforceinfotech.tripsplit.mysplitz;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,8 +44,10 @@ public class MySplitzFragment extends Fragment {
     UserSessionManager userSessionManager;
     Context context;
     private MyAdapter myAdapter;
+    TextView textViewTitle, textViewNotFound;
     ArrayList<MyData> myDatas = new ArrayList<>();
     private MaterialDialog progressDialog;
+    private Paint p = new Paint();
 
     public MySplitzFragment() {
         // Required empty public constructor
@@ -60,6 +69,11 @@ public class MySplitzFragment extends Fragment {
     }
 
     private void initView(View view) {
+        textViewNotFound = (TextView) view.findViewById(R.id.textViewNotFound);
+        textViewNotFound.setText("No Splitz found");
+        textViewNotFound.setVisibility(View.GONE);
+        textViewTitle = (TextView) view.findViewById(R.id.textViewTitle);
+        textViewTitle.setText("My Splitz");
         progressDialog = new MaterialDialog.Builder(context)
                 .title(R.string.progress_dialog)
                 .content(R.string.please_wait)
@@ -72,9 +86,8 @@ public class MySplitzFragment extends Fragment {
 
         String baseUrl = getString(R.string.url);
         //http://netforce.biz/tripesplit/mobileApp/api/services.php?opt=search_trip
-        String url = baseUrl + "services.php?opt=search_trip";
+        String url = baseUrl + "services.php?opt=my_splitz";
         Log.i("url", url);
-        Log.i("type1", "type");
         Ion.with(context)
                 .load("POST", url)
                 .setBodyParameter("user_id", userSessionManager.getUserId())
@@ -100,6 +113,28 @@ public class MySplitzFragment extends Fragment {
     }
 
     private void setupData(JsonArray data) {
+        JsonObject object = data.get(0).getAsJsonObject();
+        JsonArray my_splitz = object.getAsJsonArray("my_splitz");
+        int size = my_splitz.size();
+        if (size <= 0) {
+            textViewNotFound.setVisibility(View.VISIBLE);
+            return;
+        }
+        for (int i = 0; i < size; i++) {
+
+            JsonObject jsonObject = my_splitz.get(i).getAsJsonObject();
+            String trip_id = jsonObject.get("trip_id").getAsString();
+            String image = jsonObject.get("image").getAsString();
+            String source = jsonObject.get("source").getAsString();
+            String destination = jsonObject.get("destination").getAsString();
+            String departure_date = jsonObject.get("departure_date").getAsString();
+            String itinerary = jsonObject.get("itinerary").getAsString();
+            MyData myData = new MyData(trip_id, image, source, destination, departure_date, itinerary);
+            if (!myDatas.contains(myData)) {
+                myDatas.add(myData);
+            }
+        }
+        myAdapter.notifyDataSetChanged();
 
     }
 
@@ -146,5 +181,52 @@ public class MySplitzFragment extends Fragment {
         HomeFragment dashboardFragment = new HomeFragment();
         String tagName = dashboardFragment.getClass().getName();
         replaceFragment(dashboardFragment, tagName);
+    }
+
+    private void initSwipe() {
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+
+                if (direction == ItemTouchHelper.LEFT) {
+                    myAdapter.removeItem(position);
+                } else {
+
+                }
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                Bitmap icon;
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+
+                    View itemView = viewHolder.itemView;
+                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
+                    float width = height / 3;
+
+                    if (dX > 0) {
+
+                    } else {
+                        p.setColor(Color.parseColor("#D32F2F"));
+                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
+                        c.drawRect(background, p);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete);
+                        RectF icon_dest = new RectF((float) itemView.getRight() - 2 * width, (float) itemView.getTop() + width, (float) itemView.getRight() - width, (float) itemView.getBottom() - width);
+                        c.drawBitmap(icon, null, icon_dest, p);
+                    }
+                }
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 }

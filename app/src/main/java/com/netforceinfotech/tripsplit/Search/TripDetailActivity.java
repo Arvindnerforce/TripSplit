@@ -25,6 +25,7 @@ import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.netforceinfotech.tripsplit.message.message_detail.MessageDetailActivity;
+import com.netforceinfotech.tripsplit.profile.myprofile.MyProfileActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,7 +39,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
     RelativeLayout reviewlayout;
     Button buttonBookIt;
     LinearLayout linearLayoutReturn;
-    TextView textViewETDReturn, textViewETAReturn, textViewCountryCode, textViewDateCreated, textViewName, textViewAge, textViewAddress, textViewTrip, textViewAboutMe, textViewETD, textViewETA, textViewSpace, textViewDate, textViewPax, textViewAgeGroup, textViewTripSplit, textViewItenerary, textViewTotalCost, textViewYourShare;
+    TextView textViewETDReturn, textViewETAReturn, textViewCountryCode, textViewDateCreated, textViewName, textViewAge, textViewAddress, textViewSource, textViewDestination, textViewAboutMe, textViewETD, textViewETA, textViewSpace, textViewDate, textViewPax, textViewAgeGroup, textViewTripSplit, textViewItenerary, textViewTotalCost, textViewYourShare;
     ImageView imageViewDp, imageViewStar1, imageViewStar2, imageViewStar3, imageViewStar4, imageViewStar5, imageViewEmail, imageViewMessage, imageViewType, imageViewTrip;
     private String tripcreator_id;
     private String username;
@@ -48,12 +49,16 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
     private MaterialDialog progressDialog;
     private String trip_id;
     private String userId;
+    private String etd = null;
 
     private void initView() {
+        findViewById(R.id.linearLayoutUser).setOnClickListener(this);
         progressDialog = new MaterialDialog.Builder(context)
                 .title(R.string.progress_dialog)
                 .content(R.string.please_wait)
                 .progress(true, 0).build();
+        textViewSource = (TextView) findViewById(R.id.textViewSource);
+        textViewDestination = (TextView) findViewById(R.id.textViewDestination);
         buttonBookIt = (Button) findViewById(R.id.buttonBookIt);
         buttonBookIt.setOnClickListener(this);
         linearLayoutReturn = (LinearLayout) findViewById(R.id.linearLayoutReturn);
@@ -67,7 +72,6 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
         textViewName = (TextView) findViewById(R.id.textViewName);
         textViewAge = (TextView) findViewById(R.id.textViewAge);
         textViewAddress = (TextView) findViewById(R.id.textViewAddress);
-        textViewTrip = (TextView) findViewById(R.id.textViewTrip);
         textViewAboutMe = (TextView) findViewById(R.id.textViewAboutMe);
         textViewETD = (TextView) findViewById(R.id.textViewETD);
         textViewETA = (TextView) findViewById(R.id.textViewETA);
@@ -179,6 +183,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
         this.reg_id = reg_id;
         country_code = my_splitz.get("country_code").getAsString();
         etd = my_splitz.get("etd").getAsString();
+        this.etd = etd;
         eta = my_splitz.get("eta").getAsString();
         iteinerary = my_splitz.get("iteinerary").getAsString();
         image_name = my_splitz.get("img_name").getAsString();
@@ -223,7 +228,8 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
 
                 break;
         }
-        textViewTrip.setText(depart_address + " TO " + dest_address);
+        textViewSource.setText(depart_address);
+        textViewDestination.setText(dest_address);
         textViewAboutMe.setText(aboutme);
         reviewlayout.setOnClickListener(this);
         textViewETD.setText(getFormetedTime(etd));
@@ -238,7 +244,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
         textViewTripSplit.setText(currency + " " + currencySymbol + " " + start_price);
         textViewItenerary.setText(iteinerary);
         textViewTotalCost.setText(currency + " " + currencySymbol + " " + start_price);
-        textViewYourShare.setText(your_share);
+        textViewYourShare.setText(currency + " " + currencySymbol + " " + your_share);
         if (trip.equalsIgnoreCase("1")) {
             linearLayoutReturn.setVisibility(View.VISIBLE);
             textViewETAReturn.setText(return_eta);
@@ -256,12 +262,20 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.linearLayoutUser:
+                Intent intent = new Intent(context, MyProfileActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("name", username);
+                bundle.putString("user_id", userId);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                break;
             case R.id.imageViewEmail:
                 break;
             case R.id.imageViewMessage:
                 if (!tripcreator_id.equalsIgnoreCase(userSessionManager.getUserId())) {
-                    Intent intent = new Intent(context, MessageDetailActivity.class);
-                    Bundle bundle = new Bundle();
+                     intent = new Intent(context, MessageDetailActivity.class);
+                     bundle = new Bundle();
                     bundle.putString("id", tripcreator_id);
                     bundle.putString("name", username);
                     bundle.putString("image_url", profile_image);
@@ -277,6 +291,10 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
                     showMessage("Cannot book your own trip");
                     return;
                 }
+                if (!(etd != null && validateDate(etd))) {
+                    showMessage("Cannot book it because the Trip already ended");
+                    return;
+                }
                 showConfirmationPopUp();
                 break;
             case R.id.reviewlayout:
@@ -285,6 +303,22 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
 
         }
 
+    }
+
+    private boolean validateDate(String etd) {
+        //EEE dd MMM yyyy HH:mm
+        try {
+            if (new SimpleDateFormat("EEE dd MMM yyyy HH:mm").parse(etd).before(new Date())) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.e("Dateparse", "Failed " + etd);
+            return false;
+
+        }
     }
 
     private void showConfirmationPopUp() {
