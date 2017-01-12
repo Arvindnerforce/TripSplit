@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -82,6 +83,7 @@ import java.util.Currency;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -142,6 +144,8 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     private CameraUpdate cu;
     private MaterialDialog custompopup;
     private boolean imageFlag = false;
+    private String timezone;
+    private String sourceAddress = "", destinationAddress = "";
 
     public TypeFragment() {
         // Required empty public constructor
@@ -162,6 +166,8 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
         userSessionManager = new UserSessionManager(context);
         mMapView = (MapView) view.findViewById(R.id.mapView);
         context = getActivity();
+        Calendar cal = Calendar.getInstance();
+        timezone = cal.getTimeZone().getID();
         try {
             type = this.getArguments().getString("type");
             ////aeroplane,car,bus,ship
@@ -489,13 +495,13 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                         .setMultipartParameter("depart_lon", sourceLatLng.longitude + "")
                         .setMultipartParameter("dest_lat", destinationLatLang.latitude + "")
                         .setMultipartParameter("dest_lon", destinationLatLang.longitude + "")
-                        .setMultipartParameter("etd", textViewETD.getText().toString())
-                        .setMultipartParameter("eta", textviewETA.getText().toString())
-                        .setMultipartParameter("return_etd", textViewReturnETD.getText().toString())
-                        .setMultipartParameter("return_eta", textViewReturnETA.getText().toString())
+                        .setMultipartParameter("etd", getServerFormatDate(textViewETD.getText().toString()))
+                        .setMultipartParameter("eta", getServerFormatDate(textviewETA.getText().toString()))
+                        .setMultipartParameter("return_etd", getServerFormatDate(textViewReturnETD.getText().toString()))
+                        .setMultipartParameter("return_eta", getServerFormatDate(textViewReturnETA.getText().toString()))
                         .setMultipartParameter("iteinerary", editTextItenarary.getText().toString().trim())
                         .setMultipartParameter("totalcost", editTextTotalCost.getText().toString())
-                        //currency
+                        .setMultipartParameter("timezone", timezone)
                         .setMultipartParameter("currency", currencyCode)
                         .setMultipartFile("image", new File(filePath))
                         .asJsonObject()
@@ -576,6 +582,27 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
 
         }
     }
+
+    private String getServerFormatDate(String dateString) {
+        //Fri 27 Jan 2017 12:31
+        //2017-01-16 16:43:00
+        try{
+            SimpleDateFormat fmt = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
+            Date date = null;
+            try {
+                date = fmt.parse(dateString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            SimpleDateFormat fmtOut = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            return fmtOut.format(date);
+        }catch (Exception ex){
+            return "";
+        }
+
+    }
+
 
     private void setupDialog(JsonObject jsonObject) {
         boolean wrapInScrollView = true;
@@ -659,7 +686,9 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     private String getFormattedTimeDiff(String eta, String etd) {
         Date d1 = null;
         Date d2 = null;
-        SimpleDateFormat format = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
+        //        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         try {
             d1 = format.parse(etd);
@@ -681,7 +710,8 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     }
 
     private String getFormetedTime(String etd) {
-        SimpleDateFormat fmt = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
+        //2017-01-16 16:55:00
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = null;
         try {
             date = fmt.parse(etd);
@@ -694,8 +724,8 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     }
 
     private String getFormatedDate(String etd) {
-        //Sun 06 Nov 16 17:36
-        SimpleDateFormat fmt = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
+        //2017-01-16 16:43:00
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = null;
         try {
             date = fmt.parse(etd);
@@ -829,9 +859,12 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
     }
 
     private boolean isDateSelectedPast(String format) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, -1);
+        Date oneDayBefore = cal.getTime();
         //EEE dd MMM yyyy HH:mm
         try {
-            if (new SimpleDateFormat("EEE dd MMM yyyy").parse(format).before(new Date())) {
+            if (new SimpleDateFormat("EEE dd MMM yyyy").parse(format).before(oneDayBefore)) {
                 return true;
             } else {
                 return false;
@@ -1008,10 +1041,10 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
 
         MarkerOptions options = new MarkerOptions();
         options.position(sourceLatLng);
-        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_destination));
+        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_round_black));
         mMap.addMarker(options);
         options.position(destinationLatLang);
-        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_source));
+        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_black));
         mMap.addMarker(options);
         CameraUpdate center =
                 CameraUpdateFactory.newLatLng(sourceLatLng);
@@ -1091,6 +1124,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                     double lat = data.getDoubleExtra("lat", 0);
                     double lon = data.getDoubleExtra("lon", 0);
                     String address = data.getStringExtra("address");
+                    this.destinationAddress = destinationAddress;
                     textViewDestinationAddress.setText(address);
                     destinationLatLang = new LatLng(lat, lon);
                     try {
@@ -1098,9 +1132,14 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                     } catch (Exception ex) {
 
                     }
-                    BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_map_destination);
+                    int height = 20;
+                    int width = 20;
+                    BitmapDrawable bitmapdraw = (BitmapDrawable) ContextCompat.getDrawable(context, R.drawable.ic_round_black);
+                    ;
+                    Bitmap b = bitmapdraw.getBitmap();
+                    Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
 
-                    destinationMarker = mMap.addMarker(new MarkerOptions().icon(icon).snippet(address).title(getString(R.string.destination)).position(destinationLatLang));
+                    destinationMarker = mMap.addMarker(new MarkerOptions().icon((BitmapDescriptorFactory.fromBitmap(smallMarker))).snippet(address).title(getString(R.string.destination)).position(destinationLatLang));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destinationLatLang, zoomlevel));
                     if (sourceFlag) {
                         zoomInTwoPoint();
@@ -1114,6 +1153,7 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                     double lat = data.getDoubleExtra("lat", 0);
                     double lon = data.getDoubleExtra("lon", 0);
                     String address = data.getStringExtra("address");
+                    this.sourceAddress = address;
                     textViewDepartureAddress.setText(address);
                     sourceLatLng = new LatLng(lat, lon);
                     try {
@@ -1121,11 +1161,13 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                     } catch (Exception ex) {
 
                     }
-                    BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_map_source);
+                    BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_black);
 
                     sournceMarker = mMap.addMarker(new MarkerOptions().icon(icon).snippet(address).title(getString(R.string.source)).position(sourceLatLng));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sourceLatLng, zoomlevel));
-
+                    if (destinationFlag) {
+                        zoomInTwoPoint();
+                    }
 
                 }
                 break;
@@ -1160,8 +1202,38 @@ public class TypeFragment extends Fragment implements View.OnClickListener, Time
                 mMap.animateCamera(cu);
             }
         });
+        createDashedLine(mMap, sourceLatLng, destinationLatLang, ContextCompat.getColor(context, R.color.black));
 
     }
+
+    public void createDashedLine(GoogleMap map, LatLng latLngOrig, LatLng latLngDest, int color) {
+        try {
+            map.clear();
+        } catch (Exception ex) {
+
+        }
+        BitmapDescriptor sourceIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_black);
+
+        sournceMarker = mMap.addMarker(new MarkerOptions().icon(sourceIcon).snippet(sourceAddress).title(getString(R.string.source)).position(sourceLatLng));
+        int height = 20;
+        int width = 20;
+        BitmapDrawable bitmapdraw = (BitmapDrawable) ContextCompat.getDrawable(context, R.drawable.ic_round_black);
+        ;
+
+        Bitmap b = bitmapdraw.getBitmap();
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+
+        destinationMarker = mMap.addMarker(new MarkerOptions().icon((BitmapDescriptorFactory.fromBitmap(smallMarker))).snippet(destinationAddress).title(getString(R.string.destination)).position(destinationLatLang));
+
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sourceLatLng, zoomlevel));
+
+        Polyline line = map.addPolyline(new PolylineOptions()
+                .add(sourceLatLng, destinationLatLang)
+                .width(5)
+                .color(Color.BLACK));
+    }
+
 
     private void drawPolyLine() {
         arrayPoints.clear();

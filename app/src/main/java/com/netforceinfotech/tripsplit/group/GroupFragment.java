@@ -4,6 +4,7 @@ package com.netforceinfotech.tripsplit.group;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -227,14 +229,11 @@ public class GroupFragment extends Fragment implements View.OnClickListener {
                     showMessage("Set Country");
                     return;
                 }
-                if (textViewCategory.getText().toString().equalsIgnoreCase("category")) {
-                    showMessage("Set Category");
+                if (textViewCategory.getText().toString().equalsIgnoreCase("category") && editTextCity.getText().toString().equalsIgnoreCase("")) {
+                    showMessage("Set Category or city");
                     return;
                 }
-                if (editTextCity.getText().toString().equalsIgnoreCase("city")) {
-                    showMessage("Set City");
-                    return;
-                }
+
                 searchGroup(textViewCountry.getText().toString(), editTextCity.getText().toString(), selectedCategoryId);
                 break;
             case R.id.imageViewCreateGroup:
@@ -269,7 +268,17 @@ public class GroupFragment extends Fragment implements View.OnClickListener {
         }
         new MaterialDialog.Builder(context)
                 .title(R.string.choose_category)
+                .titleColor(ContextCompat.getColor(context, R.color.colorPrimary))
                 .items(categoryNames)
+                .itemsColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                .negativeText(getString(R.string.cancel))
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        textViewCategory.setText("Category");
+                        dialog.dismiss();
+                    }
+                })
                 .itemsCallback(new MaterialDialog.ListCallback() {
                     @Override
                     public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {

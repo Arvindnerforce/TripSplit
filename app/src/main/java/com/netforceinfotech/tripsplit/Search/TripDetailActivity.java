@@ -26,6 +26,7 @@ import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.netforceinfotech.tripsplit.message.message_detail.MessageDetailActivity;
 import com.netforceinfotech.tripsplit.profile.myprofile.MyProfileActivity;
+import com.netforceinfotech.tripsplit.profile.sendmail.SendMailActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,12 +45,13 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
     private String tripcreator_id;
     private String username;
     UserSessionManager userSessionManager;
-    private String profile_image;
+    private String trip_image, profile_image;
     private String reg_id = "";
     private MaterialDialog progressDialog;
     private String trip_id;
     private String userId;
     private String etd = null;
+    private String dob = "0000-00-00";
 
     private void initView() {
         findViewById(R.id.linearLayoutUser).setOnClickListener(this);
@@ -195,8 +197,10 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
         username = my_splitz.get("username").getAsString();
         this.username = username;
         email = my_splitz.get("email").getAsString();
-        profile_image = my_splitz.get("img_name").getAsString();
+        trip_image = my_splitz.get("img_name").getAsString();
+        profile_image = my_splitz.get("profile_image").getAsString();
         dob = my_splitz.get("dob").getAsString();
+        this.dob = dob;
         address = my_splitz.get("address").getAsString();
         country = my_splitz.get("country").getAsString();
         aboutme = my_splitz.get("aboutme").getAsString();
@@ -265,20 +269,35 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
             case R.id.linearLayoutUser:
                 Intent intent = new Intent(context, MyProfileActivity.class);
                 Bundle bundle = new Bundle();
+                bundle.putString("image_url", trip_image);
+                bundle.putString("dob", dob);
                 bundle.putString("name", username);
                 bundle.putString("user_id", userId);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 break;
             case R.id.imageViewEmail:
+                if (!tripcreator_id.equalsIgnoreCase(userSessionManager.getUserId())) {
+                    intent = new Intent(context, SendMailActivity.class);
+                    bundle = new Bundle();
+                    bundle.putString("id", tripcreator_id);
+                    bundle.putString("name", username);
+                    bundle.putString("image_url", trip_image);
+                    bundle.putString("reg_id", reg_id);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } else {
+                    showMessage("Cannot Email to self");
+                }
+
                 break;
             case R.id.imageViewMessage:
                 if (!tripcreator_id.equalsIgnoreCase(userSessionManager.getUserId())) {
-                     intent = new Intent(context, MessageDetailActivity.class);
-                     bundle = new Bundle();
+                    intent = new Intent(context, MessageDetailActivity.class);
+                    bundle = new Bundle();
                     bundle.putString("id", tripcreator_id);
                     bundle.putString("name", username);
-                    bundle.putString("image_url", profile_image);
+                    bundle.putString("image_url", trip_image);
                     bundle.putString("reg_id", reg_id);
                     intent.putExtras(bundle);
                     startActivity(intent);
@@ -291,7 +310,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
                     showMessage("Cannot book your own trip");
                     return;
                 }
-                if (!(etd != null && validateDate(etd))) {
+                if (etd != null && !validateDate(etd)) {
                     showMessage("Cannot book it because the Trip already ended");
                     return;
                 }
@@ -308,7 +327,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
     private boolean validateDate(String etd) {
         //EEE dd MMM yyyy HH:mm
         try {
-            if (new SimpleDateFormat("EEE dd MMM yyyy HH:mm").parse(etd).before(new Date())) {
+            if (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(etd).before(new Date())) {
                 return false;
             } else {
                 return true;
@@ -432,7 +451,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
 
     private String getFormatedDate(String etd) {
         //Wed 21 Dec 2016 19:02
-        SimpleDateFormat fmt = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = null;
         try {
             date = fmt.parse(etd);
@@ -445,7 +464,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
     }
 
     private String getFormetedTime(String etd) {
-        SimpleDateFormat fmt = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = null;
         try {
             date = fmt.parse(etd);

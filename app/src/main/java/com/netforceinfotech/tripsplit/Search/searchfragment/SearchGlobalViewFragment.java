@@ -38,7 +38,11 @@ import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.netforceinfotech.tripsplit.search.TripDetailActivity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,6 +62,7 @@ public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCall
     double dest_lat, dest_lon, source_lat, source_lon;
     String etd, type, sort;
     private CameraPosition cameraPosition;
+    private String timezone;
 
     public SearchGlobalViewFragment() {
         // Required empty public constructor
@@ -70,6 +75,8 @@ public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCall
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search_global_view, container, false);
         userSessionManager = new UserSessionManager(getActivity());
+        Calendar cal = Calendar.getInstance();
+        timezone = cal.getTimeZone().getID();
         dest_lat = getArguments().getDouble("dest_lat");
         dest_lon = getArguments().getDouble("dest_lon");
         source_lat = getArguments().getDouble("source_lat");
@@ -127,10 +134,11 @@ public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCall
                 .setBodyParameter("dest_lon", dest_lon + "")
                 .setBodyParameter("source_lat", source_lat + "")
                 .setBodyParameter("source_lon", source_lon + "")
-                .setBodyParameter("etd", etd)
+                .setBodyParameter("etd", getDateWithTimezone(etd))
                 .setBodyParameter("range", userSessionManager.getSearchRadius() + "")
                 .setBodyParameter("sort", sort)
                 .setBodyParameter("type", type)
+                .setBodyParameter("timezone",timezone)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
@@ -150,6 +158,19 @@ public class SearchGlobalViewFragment extends Fragment implements OnMapReadyCall
                         }
                     }
                 });
+    }
+    private String getDateWithTimezone(String date1) {
+        //Mon 02 Jan 2017 16:04
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = fmt.parse(date1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat fmtOut = new SimpleDateFormat("yyyy-MM-dd");
+        return fmtOut.format(date);
     }
 
     private void setupData(JsonArray data) {

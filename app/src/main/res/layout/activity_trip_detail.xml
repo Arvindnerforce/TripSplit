@@ -16,6 +16,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonBookIt"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
@@ -207,23 +208,17 @@
                                             android:textSize="16dp"
                                             android:textStyle="bold" />
 
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="," />
-
-                                        <TextView
-                                            android:id="@+id/textViewAge"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginLeft="5dp"
-                                            android:layout_toRightOf="@+id/textviewName"
-                                            android:text="34"
-                                            android:textColor="@color/black"
-                                            android:textSize="16dp" />
 
                                     </LinearLayout>
 
+                                    <TextView
+                                        android:id="@+id/textViewAge"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_toRightOf="@+id/textviewName"
+                                        android:text="34"
+                                        android:textColor="@color/black"
+                                        android:textSize="16dp" />
                                     <TextView
                                         android:id="@+id/textViewAddress"
                                         android:layout_width="wrap_content"

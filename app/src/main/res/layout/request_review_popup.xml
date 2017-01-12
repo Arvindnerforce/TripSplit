@@ -91,6 +91,7 @@
             android:text="On :" />
 
         <TextView
+            android:id="@+id/textViewTripDate"
             android:layout_marginLeft="16dp"
             android:textSize="18sp"
             android:textColor="@color/colorPrimary"

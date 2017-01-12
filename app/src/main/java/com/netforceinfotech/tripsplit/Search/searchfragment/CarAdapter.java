@@ -118,7 +118,7 @@ public class CarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private String getFormetedTime(String etd) {
-        SimpleDateFormat fmt = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = null;
         try {
             date = fmt.parse(etd);
@@ -131,8 +131,8 @@ public class CarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private String getFormatedDate(String etd) {
-        //Sun 06 Nov 16 17:36
-        SimpleDateFormat fmt = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
+        //Fri 06, Jan 2017 17:32 +05:30
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = null;
         try {
             date = fmt.parse(etd);

@@ -1,6 +1,8 @@
 package com.netforceinfotech.tripsplit.mytrip;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,12 +13,15 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
+import com.netforceinfotech.tripsplit.search.TripDetailActivity;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,7 +32,6 @@ import java.util.List;
  * Created by John on 8/29/2016.
  */
 public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
     private static final int YOU = 0;
     private static final int THEM = 1;
     private final LayoutInflater inflater;
@@ -73,7 +77,21 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 myHolder.swipeRevealLayout.close(true);
             }
         });
-
+        myHolder.textViewDate.setText(getFormattedDate(dataObject.departure_date));
+        myHolder.textViewDestination.setText(dataObject.destination);
+        myHolder.textViewItenerary.setText(dataObject.itinerary);
+        myHolder.textViewSource.setText(dataObject.source);
+        Glide.with(context).load(dataObject.image).error(R.drawable.ic_error).into(myHolder.imageView);
+        myHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(context, TripDetailActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putString("trip_id",dataObject.trip_id);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
     }
 
     private void showConfirmationPopUp(final String trip_id, final int position) {
@@ -85,6 +103,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        Log.i("trip_id_delete", trip_id + "  " + userSessionManager.getUserId());
                         cancelTrip(trip_id, position);
                     }
                 })
@@ -98,10 +117,12 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void cancelTrip(String trip_id, final int position) {
-        //http://netforce.biz/tripesplit/mobileApp/api/services.php?opt=cancel_trip
+        //http://netforce.biz/tripesplit/mobileApp/api/services.php?opt=delete_trip
         String baseUrl = context.getResources().getString(R.string.url);
-        String url = baseUrl + "services.php?opt=cancel_trip";
+        String url = baseUrl + "services.php?opt=delete_trip";
         Log.i("result_url", url);
+        Log.i("tripid",trip_id+"  "+userSessionManager.getUserId());
+
         progressDialog.show();
         Ion.with(context)
                 .load("POST", url)
@@ -113,6 +134,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     public void onCompleted(Exception e, JsonObject result) {
                         progressDialog.dismiss();
                         if (result == null) {
+                            e.printStackTrace();
                             showMessage("nothing is happening");
                         } else {
 
@@ -127,23 +149,21 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         }
                     }
                 });
-
     }
 
 
-    public String getFormattedDate(long timestamp) {
-        Date date = new Date(timestamp);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        Calendar now = Calendar.getInstance();
-        if (now.get(Calendar.DATE) == cal.get(Calendar.DATE)) {
-            return "Today";
-        } else if (now.get(Calendar.DATE) - cal.get(Calendar.DATE) == 1) {
-            return "Yesterday ";
-        } else {
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy");
-            return sfd.format(new Date(timestamp));
+    public String getFormattedDate(String date1) {
+        //2017-01-02 00:00:00
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = fmt.parse(date1);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+
+        SimpleDateFormat fmtOut = new SimpleDateFormat("dd EEE yyyy HH:hh");
+        return fmtOut.format(date);
 
 
     }

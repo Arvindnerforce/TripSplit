@@ -20,7 +20,11 @@ import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +38,7 @@ public class SearchListViewFragment extends Fragment {
     double dest_lat, dest_lon, source_lat, source_lon;
     String etd, type, sort;
     private MaterialDialog progressDialog;
+    private String timezone;
 
     public SearchListViewFragment() {
         // Required empty public constructor
@@ -54,7 +59,8 @@ public class SearchListViewFragment extends Fragment {
         etd = getArguments().getString("etd");
         type = getArguments().getString("type");
         sort = getArguments().getString("sort");
-
+        Calendar cal = Calendar.getInstance();
+        timezone = cal.getTimeZone().getID();
         initView(view);
         setupRecyclerView(view);
         searchTrip();
@@ -67,6 +73,21 @@ public class SearchListViewFragment extends Fragment {
                 .content(R.string.please_wait)
                 .progress(true, 0).build();
     }
+
+    private String getDateWithTimezone(String date1) {
+        //Mon 02 Jan 2017 16:04
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = fmt.parse(date1);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat fmtOut = new SimpleDateFormat("yyyy-MM-dd");
+        return fmtOut.format(date);
+    }
+
 
     private void setupRecyclerView(View view) {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerMyGroup);
@@ -140,17 +161,18 @@ public class SearchListViewFragment extends Fragment {
         String url = baseUrl + "services.php?opt=search_trip";
         Log.i("url", url);
         Log.i("type1", type);
-        Log.i("parameter",dest_lat+" : "+dest_lon+" : "+source_lat+" : "+source_lon+" : "+etd+" : "+userSessionManager.getSearchRadius()+" : "+sort+" : "+type);
+        Log.i("parameter", dest_lat + " : " + dest_lon + " : " + source_lat + " : " + source_lon + " : " + etd + " : " + userSessionManager.getSearchRadius() + " : " + sort + " : " + type);
         Ion.with(context)
                 .load("POST", url)
                 .setBodyParameter("dest_lat", dest_lat + "")
                 .setBodyParameter("dest_lon", dest_lon + "")
                 .setBodyParameter("source_lat", source_lat + "")
                 .setBodyParameter("source_lon", source_lon + "")
-                .setBodyParameter("etd", etd)
+                .setBodyParameter("etd", getDateWithTimezone(etd))
                 .setBodyParameter("range", userSessionManager.getSearchRadius() + "")
                 .setBodyParameter("sort", sort)
                 .setBodyParameter("type", type)
+                .setBodyParameter("timezone", timezone)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override

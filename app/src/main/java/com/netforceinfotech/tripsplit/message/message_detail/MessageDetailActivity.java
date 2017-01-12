@@ -172,7 +172,6 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
         myAdapter = new MyAdapter(context, myDatas);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(myAdapter);
-        recyclerView.smoothScrollToPosition(myDatas.size());
     }
 
 

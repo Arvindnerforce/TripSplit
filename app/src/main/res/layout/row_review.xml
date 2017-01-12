@@ -4,10 +4,10 @@
     xmlns:hedgehog="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ripple"
     android:layout_width="match_parent"
-    android:paddingBottom="6dp"
     android:layout_height="120dp"
     android:gravity="center_vertical"
     android:orientation="horizontal"
+    android:paddingBottom="6dp"
 
     >
     <!-- <AbsoluteLayout
@@ -60,11 +60,13 @@
                     android:textColor="@color/colorPrimary" />
 
                 <com.hedgehog.ratingbar.RatingBar
+                    hedgehog:clickable="false"
                     android:id="@+id/ratingbar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
+                    android:isIndicator="true"
                     hedgehog:starCount="5"
                     hedgehog:starEmpty="@drawable/ic_star_outline"
                     hedgehog:starFill="@drawable/ic_star_full"

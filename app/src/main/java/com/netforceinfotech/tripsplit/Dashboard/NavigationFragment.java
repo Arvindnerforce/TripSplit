@@ -200,7 +200,7 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
 
         drawableId = new int[]
                 {
-                        R.drawable.ic_home_menu, R.drawable.ic_prefrence, R.drawable.ic_edit_profile, R.drawable.ic_invite_frnd, R.drawable.ic_search_custom, R.drawable.ic_create_trip, R.drawable.ic_search_custom, R.drawable.ic_create_trip, R.drawable.ic_message,
+                        R.drawable.ic_home_menu, R.drawable.ic_prefrence, R.drawable.ic_edit_profile, R.drawable.ic_invite_frnd, R.drawable.ic_search_custom, R.drawable.ic_create_trip, R.drawable.my_splitz, R.drawable.my_trip, R.drawable.ic_message,
                         R.drawable.ic_group, R.drawable.ic_group, R.drawable.ic_help, R.drawable.ic_community
                 };
 

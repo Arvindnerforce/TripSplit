@@ -39,10 +39,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".profile.TripDetailsActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".home.HomeActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
@@ -126,7 +122,8 @@
         <activity android:name=".message.message_detail.MessageDetailActivity" />
         <activity android:name=".profile.myprofile.MyProfileActivity" />
         <activity android:name=".supports.SupportActivity" />
-        <activity android:name=".profile.sendmail.SendMailActivity"></activity>
+        <activity android:name=".profile.sendmail.SendMailActivity" />
+        <activity android:name=".profile.myprofile.triplist.TripListActivity"></activity>
     </application>
 
 </manifest>

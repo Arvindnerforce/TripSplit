@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -558,7 +559,9 @@ public class CreateGroupActivity extends AppCompatActivity implements View.OnCli
         }
         new MaterialDialog.Builder(context)
                 .title(R.string.choose_category)
+                .titleColor(ContextCompat.getColor(context, R.color.colorPrimary))
                 .items(categoryNames)
+                .itemsColor(ContextCompat.getColor(context, R.color.colorPrimary))
                 .itemsCallback(new MaterialDialog.ListCallback() {
                     @Override
                     public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {

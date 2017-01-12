@@ -1,18 +1,14 @@
-package com.netforceinfotech.tripsplit.mytrip;
-
+package com.netforceinfotech.tripsplit.profile.myprofile.triplist;
 
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,58 +17,56 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-import com.netforceinfotech.tripsplit.home.HomeFragment;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class MyTripFragment extends Fragment {
+public class TripListActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
-    UserSessionManager userSessionManager;
     Context context;
-    TextView textViewTitle, textViewNotFound;
-    private MyAdapter myAdapter;
+    RecyclerView recyclerView;
+    MyAdapter myAdapter;
     ArrayList<MyData> myDatas = new ArrayList<>();
+    UserSessionManager userSessionManager;
+    TextView textViewNotFound;
+
+    String id;
     private MaterialDialog progressDialog;
 
-    public MyTripFragment() {
-        // Required empty public constructor
-    }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_trip_list);
+        Bundle bundle = getIntent().getExtras();
+        context = this;
+        userSessionManager = new UserSessionManager(context);
+        setupToolBar("Trip List");
+        id = bundle.getString("id");
+        initView();
+        getTrips(id);
+        setupRecyclerView();
 
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_my_splitz, container, false);
-        context = getActivity();
-        userSessionManager = new UserSessionManager(context);
-        setuptoolbar();
-        initView(view);
-        setupRecyclerView(view);
-        getData();
-        return view;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
-
-    private void initView(View view) {
-        textViewNotFound = (TextView) view.findViewById(R.id.textViewNotFound);
-        textViewNotFound.setText("No Trip found");
-        textViewNotFound.setVisibility(View.GONE);
-        textViewTitle = (TextView) view.findViewById(R.id.textViewTitle);
-        textViewTitle.setText("My Trip");
+    private void initView() {
+        textViewNotFound= (TextView) findViewById(R.id.textViewNoTrip);
         progressDialog = new MaterialDialog.Builder(context)
                 .title(R.string.progress_dialog)
                 .content(R.string.please_wait)
                 .progress(true, 0).build();
     }
 
-    private void getData() {
-
+    private void getTrips(String id) {
         progressDialog.show();
 
         String baseUrl = getString(R.string.url);
@@ -81,7 +75,7 @@ public class MyTripFragment extends Fragment {
         Log.i("url", url);
         Ion.with(context)
                 .load("POST", url)
-                .setBodyParameter("user_id", userSessionManager.getUserId())
+                .setBodyParameter("user_id", id)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
@@ -109,6 +103,7 @@ public class MyTripFragment extends Fragment {
             textViewNotFound.setVisibility(View.VISIBLE);
             return;
         }
+        textViewNotFound.setVisibility(View.GONE);
         for (int i = 0; i < size; i++) {
             JsonObject jsonObject = my_splitz.get(i).getAsJsonObject();
 
@@ -124,53 +119,27 @@ public class MyTripFragment extends Fragment {
             }
         }
         myAdapter.notifyDataSetChanged();
-
     }
-
 
     private void showMessage(String s) {
         Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
     }
 
-    private void setupRecyclerView(View view) {
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
+    private void setupToolBar(String app_name) {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(app_name);
+    }
+
+    private void setupRecyclerView() {
+        recyclerView = (RecyclerView) findViewById(R.id.recycler);
+        recyclerView.setNestedScrollingEnabled(false);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         myAdapter = new MyAdapter(context, myDatas);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(myAdapter);
+        recyclerView.smoothScrollToPosition(myDatas.size());
     }
-
-    private void setuptoolbar() {
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-
-        ImageView home = (ImageView) toolbar.findViewById(R.id.homeButton);
-
-        ImageView icon = (ImageView) toolbar.findViewById(R.id.image_appicon);
-        TextView textViewLogout = (TextView) toolbar.findViewById(R.id.textviewLogout);
-        textViewLogout.setVisibility(View.GONE);
-        home.setVisibility(View.VISIBLE);
-        icon.setVisibility(View.VISIBLE);
-        home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setupHomeFragment();
-            }
-        });
-
-        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-
-    }
-
-    private void replaceFragment(Fragment newFragment, String tag) {
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame, newFragment, tag);
-        transaction.commit();
-    }
-
-    public void setupHomeFragment() {
-        HomeFragment dashboardFragment = new HomeFragment();
-        String tagName = dashboardFragment.getClass().getName();
-        replaceFragment(dashboardFragment, tagName);
-    }
-
 }

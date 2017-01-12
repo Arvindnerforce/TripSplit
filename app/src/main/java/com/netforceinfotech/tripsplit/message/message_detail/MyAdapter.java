@@ -1,6 +1,8 @@
 package com.netforceinfotech.tripsplit.message.message_detail;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.netforceinfotech.tripsplit.R;
+import com.netforceinfotech.tripsplit.profile.myprofile.MyProfileActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,9 +69,21 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         myHolder.textViewTime.setText(getFormetedTime(itemList.get(position).timestamp));
         try {
             Glide.with(context).load(itemList.get(position).image_url).error(R.drawable.ic_error).into(myHolder.imageViewDp);
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
         }
+        myHolder.imageViewDp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, MyProfileActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("name", itemList.get(position).name);
+                bundle.putString("user_id", itemList.get(position).id);
+                bundle.putString("image_url", itemList.get(position).image_url);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
 
         myHolder.textViewMessage.setText(itemList.get(position).message);
         myHolder.textViewName.setText(itemList.get(position).name);

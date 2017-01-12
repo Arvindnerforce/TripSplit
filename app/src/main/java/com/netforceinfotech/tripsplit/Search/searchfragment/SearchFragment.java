@@ -2,9 +2,13 @@ package com.netforceinfotech.tripsplit.search.searchfragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -35,6 +39,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.netforceinfotech.tripsplit.posttrip.GoogleMapActivity;
@@ -98,6 +104,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Da
     private String etd = "0000-00-00";
     CheckBox checkBoxGlobe;
     TextView textViewGlobe;
+    private String sourceAddress, destinationAddress;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -137,6 +144,32 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Da
 
     }
 
+    public void createDashedLine(GoogleMap map, LatLng latLngOrig, LatLng latLngDest, int color) {
+        try {
+            map.clear();
+        } catch (Exception ex) {
+
+        }
+        BitmapDescriptor sourceIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_black);
+
+        sourceMarker = mMap.addMarker(new MarkerOptions().icon(sourceIcon).snippet(sourceAddress).title(getString(R.string.source)).position(sourceLatLng));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sourceLatLng, zoomlevel));
+        int height = 20;
+        int width = 20;
+        BitmapDrawable bitmapdraw = (BitmapDrawable) ContextCompat.getDrawable(context, R.drawable.ic_round_black);
+        ;
+
+        Bitmap b = bitmapdraw.getBitmap();
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+
+        destinationMarker = mMap.addMarker(new MarkerOptions().icon((BitmapDescriptorFactory.fromBitmap(smallMarker))).snippet(destinationAddress).title(getString(R.string.destination)).position(destinationLatLang));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sourceLatLng, zoomlevel));
+
+        Polyline line = map.addPolyline(new PolylineOptions()
+                .add(sourceLatLng, destinationLatLang)
+                .width(5)
+                .color(Color.BLACK));
+    }
 
     private void initView(View view) {
         textViewGlobe = (TextView) view.findViewById(R.id.textViewGlobe);
@@ -298,6 +331,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Da
                     dest_lat = data.getDoubleExtra("lat", 0);
                     dest_lon = data.getDoubleExtra("lon", 0);
                     String address = data.getStringExtra("address");
+                    this.destinationAddress = address;
                     textViewDestination.setText(address);
                     destinationLatLang = new LatLng(dest_lat, dest_lon);
                     try {
@@ -305,9 +339,14 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Da
                     } catch (Exception ex) {
 
                     }
-                    BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_map_destination);
+                    int height = 20;
+                    int width = 20;
+                    BitmapDrawable bitmapdraw = (BitmapDrawable) ContextCompat.getDrawable(context, R.drawable.ic_round_black);
+                    ;
+                    Bitmap b = bitmapdraw.getBitmap();
+                    Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
 
-                    destinationMarker = mMap.addMarker(new MarkerOptions().icon(icon).snippet(address).title(getString(R.string.destination)).position(destinationLatLang));
+                    destinationMarker = mMap.addMarker(new MarkerOptions().icon((BitmapDescriptorFactory.fromBitmap(smallMarker))).snippet(address).title(getString(R.string.destination)).position(destinationLatLang));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(destinationLatLang, zoomlevel));
                     if (sourceFlag) {
                         zoomInTwoPoint();
@@ -321,6 +360,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Da
                     source_lat = data.getDoubleExtra("lat", 0);
                     source_lon = data.getDoubleExtra("lon", 0);
                     String address = data.getStringExtra("address");
+                    this.sourceAddress = address;
                     textViewSource.setText(address);
                     sourceLatLng = new LatLng(source_lat, source_lon);
                     try {
@@ -328,12 +368,14 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Da
                     } catch (Exception ex) {
 
                     }
-                    BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_map_source);
+                    BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_black);
 
                     sourceMarker = mMap.addMarker(new MarkerOptions().icon(icon).snippet(address).title(getString(R.string.source)).position(sourceLatLng));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sourceLatLng, zoomlevel));
 
-
+                    if (destinationFlag) {
+                        zoomInTwoPoint();
+                    }
                 }
                 break;
             case PLACE_AUTOCOMPLETE_REQUEST_CODE:
@@ -367,6 +409,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Da
                 mMap.animateCamera(cu);
             }
         });
+        createDashedLine(mMap, sourceLatLng, destinationLatLang, ContextCompat.getColor(context, R.color.black));
 
     }
 

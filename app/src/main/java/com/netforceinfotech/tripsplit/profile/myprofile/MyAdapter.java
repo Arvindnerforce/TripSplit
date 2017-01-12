@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.netforceinfotech.tripsplit.R;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,23 +49,29 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        MyHolder myHolder = (MyHolder) holder;
+        MyData myData = itemList.get(position);
+        myHolder.textViewDate.setText(getFormattedDate(myData.date));
+        myHolder.textViewReview.setText(myData.review);
+        myHolder.textViewName.setText(myData.name);
+        myHolder.ratingbar.setStar(myData.rating);
+        Glide.with(context).load(myData.imageUrl).into(myHolder.imageViewDp);
 
     }
 
 
-    public String getFormattedDate(long timestamp) {
-        Date date = new Date(timestamp);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        Calendar now = Calendar.getInstance();
-        if (now.get(Calendar.DATE) == cal.get(Calendar.DATE)) {
-            return "Today";
-        } else if (now.get(Calendar.DATE) - cal.get(Calendar.DATE) == 1) {
-            return "Yesterday ";
-        } else {
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy");
-            return sfd.format(new Date(timestamp));
+    public String getFormattedDate(String date1) {
+        //2017-01-03 14:10:02
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = fmt.parse(date1);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+
+        SimpleDateFormat fmtOut = new SimpleDateFormat("dd EEE yyyy");
+        return fmtOut.format(date);
 
 
     }
@@ -77,7 +84,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return 5;
+        return itemList.size();
 //        return itemList.size();
     }
 

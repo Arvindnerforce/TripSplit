@@ -12,6 +12,7 @@
         layout="@layout/app_bar" />
 
     <RelativeLayout
+        android:padding="6dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -29,6 +30,10 @@
                 android:padding="6dp">
 
                 <EditText
+                    android:textColorHint="@color/colorPrimaryLight"
+                    android:hint="Write message ..."
+                    android:gravity="start"
+                    android:id="@+id/editText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/round_border"

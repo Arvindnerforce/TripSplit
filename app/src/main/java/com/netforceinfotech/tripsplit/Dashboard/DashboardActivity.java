@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -26,7 +26,6 @@ import com.bumptech.glide.load.resource.bitmap.BitmapEncoder;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
-import com.google.android.gms.vision.text.Text;
 import com.google.gson.JsonObject;
 import com.hedgehog.ratingbar.RatingBar;
 import com.koushikdutta.async.future.FutureCallback;
@@ -62,6 +61,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         setupNavigationCustom();
         getPermission();
         getReviewStatus();
+
         /*if (!hasPermissions(this, PERMISSIONS)) {
             ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
 
@@ -70,13 +70,12 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void getReviewStatus() {
+        //netforce.biz/tripesplit/mobileApp/api/services.php?opt=review_status
+        String baseUrl = getString(R.string.url);
+        String url = baseUrl + "services.php?opt=review_status";
+
         //showReviewPopUp("kunsang", "12 dec 1990", userSessionManager.getProfileImage(), "3");
 
-        showRequiestReviewPopUp("kunsang", "12 dec 1990", userSessionManager.getProfileImage(), "3");
-        //http://netforce.biz/tripesplit/mobileApp/api/services.php?opt=splitz_detail
-
-        /*String baseUrl = getString(R.string.url);
-        String url = baseUrl + "services.php?opt=splitz_detail";
         Ion.with(context)
                 .load("POST", url)
                 .setBodyParameter("user_id", userSessionManager.getUserId())
@@ -87,14 +86,37 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                         // do stuff with the result or error
                         if (result == null) {
                         } else {
+                            Log.i("result", result.toString());
                             if (result.get("status").getAsString().equalsIgnoreCase("success")) {
-                                Log.i("result", result.toString());
-                                showReviewPopUp("kunsang", "12 dec 1990", userSessionManager.getProfileImage(), "3");
+                                JsonObject data = result.getAsJsonObject("data");
+                                JsonObject request_review = data.getAsJsonObject("request_review");
+                                JsonObject fill_review = data.getAsJsonObject("fill_review");
+                                if (request_review.get("status").getAsBoolean()) {
+
+                                    JsonObject detail = request_review.getAsJsonObject("detail");
+                                    String source = detail.get("depart_address").getAsString();
+                                    String destination = detail.get("dest_address").getAsString();
+                                    String etd = detail.get("etd").getAsString();
+                                    String image = detail.get("img_name").getAsString();
+                                    String trip_id = detail.get("tour_id").getAsString();
+                                    showRequiestReviewPopUp(source, destination, etd, image, trip_id);
+                                    return;
+                                }
+                                if (fill_review.get("status").getAsBoolean()) {
+                                    String name = fill_review.get("firstname").getAsString();
+                                    String dob = fill_review.get("dob").getAsString();
+                                    String image = fill_review.get("img_name").getAsString();
+                                    String trip_id = fill_review.get("tour_id").getAsString();
+                                    showReviewPopUp(name, dob, image, trip_id);
+                                    return;
+                                }
+
+
                             }
 
                         }
                     }
-                });*/
+                });
 
     }
 
@@ -180,8 +202,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 .show();
     }
 
-    private void showRequiestReviewPopUp(String name, String dob, String imageUrl, String trip_id) {
-        final RatingBar ratingBar;
+    private void showRequiestReviewPopUp(String source, String destination, String etd, String image_url, final String trip_id) {
 
         final MaterialDialog requestReviewBox = new MaterialDialog.Builder(this)
                 .customView(R.layout.request_review_popup, false)
@@ -192,6 +213,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onClick(View view) {
                 showMessage("sending request");
+                sendReviewRequest(trip_id);
             }
         });
         requestReviewBox.findViewById(R.id.buttonLater).setOnClickListener(new View.OnClickListener() {
@@ -202,12 +224,38 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         });
         TextView textViewSource = (TextView) requestReviewBox.findViewById(R.id.textViewSource);
         TextView textViewDestination = (TextView) requestReviewBox.findViewById(R.id.textViewDestination);
+        TextView textViewTripDate = (TextView) requestReviewBox.findViewById(R.id.textViewTripDate);
         CircleImageView circleImageView = (CircleImageView) requestReviewBox.findViewById(R.id.imageViewTrip);
-        Glide.with(context).load(imageUrl).error(R.drawable.ic_error).into(circleImageView);
+        Glide.with(context).load(image_url).error(R.drawable.ic_error).into(circleImageView);
+        textViewSource.setText(source);
+        textViewDestination.setText(destination);
+        textViewTripDate.setText(etd);
+
 
     }
 
-    private void showReviewPopUp(String name, String dob, String imageUrl, String trip_id) {
+    private void sendReviewRequest(String trip_id) {
+        //http://netforce.biz/tripesplit/mobileApp/api/services.php?opt=ask_review
+        String url = getString(R.string.url) + "services.php?opt=ask_review";
+        Ion.with(context)
+                .load("POST", url)
+                .setBodyParameter("trip_id", trip_id)
+                .setBodyParameter("user_id", userSessionManager.getUserId())
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        // do stuff with the result or error
+                        if (result == null) {
+                        } else {
+
+                        }
+                    }
+                });
+
+    }
+
+    private void showReviewPopUp(String name, String dob, String imageUrl, final String trip_id) {
         final RatingBar ratingBar;
 
         final MaterialDialog reviewBox = new MaterialDialog.Builder(this)
@@ -252,9 +300,35 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 }
                 if (editText.length() <= 0) {
                     showMessage("Please write few word about trip !!!");
+                    return;
                 }
+                sendReview(trip_id, reviewRating, editText.getText().toString());
             }
         });
+    }
+
+    private void sendReview(String trip_id, float reviewRating, String review) {
+
+//http://netforce.biz/tripesplit/mobileApp/api/services.php?opt=review
+        String url = getString(R.string.url) + "services.php?opt=review";
+        Ion.with(context)
+                .load("POST", url)
+                .setBodyParameter("trip_id", trip_id)
+                .setBodyParameter("star_rating", reviewRating + "")
+                .setBodyParameter("comment", review)
+                .setBodyParameter("user_id", userSessionManager.getUserId())
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        // do stuff with the result or error
+                        if (result == null) {
+                        } else {
+                            Log.i("result", result.toString());
+                        }
+                    }
+                });
+
     }
 
     private String getFormattedDob(String dob) {

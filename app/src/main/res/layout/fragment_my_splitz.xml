@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="6dp"
     android:background="@color/background"
+    android:padding="6dp"
     tools:context="com.netforceinfotech.tripsplit.mysplitz.MySplitzFragment">
 
     <LinearLayout
@@ -13,12 +13,12 @@
         android:orientation="vertical">
 
         <TextView
-            android:padding="12dp"
-            android:textSize="24sp"
             android:id="@+id/textViewTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary" />
+            android:padding="12dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="24sp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler"
@@ -26,12 +26,13 @@
             android:layout_height="match_parent"
             android:padding="7dp"></android.support.v7.widget.RecyclerView>
     </LinearLayout>
+
     <TextView
         android:id="@+id/textViewNotFound"
-        android:textColor="@color/colorPrimary"
-        android:textSize="24sp"
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="24sp" />
 
 </FrameLayout>

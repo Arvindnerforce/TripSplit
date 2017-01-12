@@ -33,7 +33,6 @@ public class SupportActivity extends AppCompatActivity implements View.OnClickLi
     MaterialDialog dialog;
 
     private static final String IMAGE_DIRECTORY_NAME = "tripsplit";
-
     private static final int PICK_IMAGE = 1234;
     private static final int TAKE_PHOTO_CODE = 1235;
     private Uri fileUri;

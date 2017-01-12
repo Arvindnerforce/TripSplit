@@ -68,10 +68,10 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
         switchbuttonLoop = (SwitchButton) view.findViewById(R.id.switchbuttonLoop);
         switchbuttonMessage = (SwitchButton) view.findViewById(R.id.switchbuttonMessage);
         switchbuttonVibration = (SwitchButton) view.findViewById(R.id.switchbuttonVibration);
-        switchbuttonVibration.setOnCheckedChangeListener(this);
-        switchbuttonMessage.setOnCheckedChangeListener(this);
-        switchbuttonLoop.setOnCheckedChangeListener(this);
         switchbuttonEmail.setOnCheckedChangeListener(this);
+        switchbuttonLoop.setOnCheckedChangeListener(this);
+        switchbuttonMessage.setOnCheckedChangeListener(this);
+        switchbuttonVibration.setOnCheckedChangeListener(this);
         switchbuttonEmail.setChecked(userSessionManager.getEmailNotification());
         switchbuttonLoop.setChecked(userSessionManager.getKeepMeInLoop());
         switchbuttonVibration.setChecked(userSessionManager.getInAppVibration());
@@ -81,9 +81,12 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
         switchButtonLogout.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                showLogoutpopup();
+                if (b) {
+                    logout();
+                }
             }
         });
+
         progressDialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.progress_dialog)
                 .content(R.string.please_wait)
@@ -93,6 +96,8 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
         buttonDeleteAccount.setOnClickListener(this);
         textViewRange = (TextView) view.findViewById(R.id.textviewRange);
         seekBar = (SeekBar) view.findViewById(R.id.seekbar);
+        seekBar.setProgress(0); // call these two methods before setting progress.
+        seekBar.setMax(11);
         if (range == 0) {
             textViewRange.setText("Anywhere");
         } else {
@@ -148,7 +153,7 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
                 } else {
                     textViewRange.setText(range + " km");
                 }
-                userSessionManager.setSearchRaius(range);
+
             }
 
             @Override
@@ -161,6 +166,49 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
 
             }
         });
+        userSessionManager.setSearchRaius(range);
+        switch (userSessionManager.getSearchRadius()) {
+            case 0:
+                seekBar.setProgress(12);
+                break;
+            case 1:
+                seekBar.setProgress(0);
+                break;
+            case 5:
+                seekBar.setProgress(1);
+                break;
+            case 10:
+                seekBar.setProgress(2);
+                break;
+            case 20:
+                seekBar.setProgress(3);
+                break;
+            case 30:
+                seekBar.setProgress(4);
+                break;
+            case 40:
+                seekBar.setProgress(5);
+                break;
+            case 50:
+                seekBar.setProgress(6);
+                break;
+            case 100:
+                seekBar.setProgress(7);
+                break;
+            case 200:
+                seekBar.setProgress(8);
+                break;
+            case 300:
+                seekBar.setProgress(9);
+                break;
+            case 500:
+                seekBar.setProgress(10);
+                break;
+            case 1000:
+                seekBar.setProgress(11);
+                break;
+
+        }
     }
 
     private void logout() {

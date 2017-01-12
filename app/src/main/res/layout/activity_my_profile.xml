@@ -4,6 +4,7 @@
     android:id="@+id/activity_my_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
     android:orientation="vertical"
     tools:context="com.netforceinfotech.tripsplit.profile.myprofile.MyProfileActivity">
 
@@ -48,12 +49,15 @@
                             android:text="Write Review"
                             android:textColor="@color/white" />
 
+
                         <ImageView
                             android:id="@+id/imageViewTrip"
                             android:layout_width="match_parent"
                             android:layout_height="300dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
                             android:scaleType="centerCrop" />
-
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -117,7 +121,6 @@
 
                             </LinearLayout>
                         </LinearLayout>
-
                     </RelativeLayout>
 
 
@@ -291,8 +294,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+
             </android.support.v7.widget.RecyclerView>
 
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/textViewNoReview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="No Review Yet"
+                android:textColor="@color/colorPrimary"
+                android:textSize="24sp" />
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -301,6 +314,7 @@
                 android:padding="7dp">
 
                 <TextView
+                    android:id="@+id/textViewNoOfTrip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
