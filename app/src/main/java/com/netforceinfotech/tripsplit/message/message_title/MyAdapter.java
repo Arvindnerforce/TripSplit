@@ -3,6 +3,7 @@ package com.netforceinfotech.tripsplit.message.message_title;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,8 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.netforceinfotech.tripsplit.R;
+import com.netforceinfotech.tripsplit.general.UserSessionManager;
 import com.netforceinfotech.tripsplit.message.message_detail.MessageDetailActivity;
 
 import java.text.SimpleDateFormat;
@@ -32,11 +38,14 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     ArrayList<Boolean> booleanGames = new ArrayList<>();
     MyHolder viewHolder;
+    MaterialDialog dialog;
+    UserSessionManager userSessionManager;
 
 
     public MyAdapter(Context context, List<MyData> itemList) {
         this.itemList = itemList;
         this.context = context;
+        userSessionManager = new UserSessionManager(context);
         inflater = LayoutInflater.from(context);
     }
 
@@ -87,7 +96,39 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 context.startActivity(intent);
             }
         });
+       /* myHolder.view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                showDeletePopUp(myData, position);
+                return false;
+            }
+        });*/
 
+    }
+
+    private void showDeletePopUp(final MyData myData, final int position) {
+        dialog = new MaterialDialog.Builder(context)
+                .titleColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                .contentColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                .title(R.string.editpic)
+                .content("Do you want to delete chat history?")
+                .positiveText("Delete it")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        FirebaseDatabase.getInstance().getReference().child("chat_title").child(userSessionManager.getUserId()).child(myData.key).removeValue();
+                        itemList.remove(position);
+                        notifyDataSetChanged();
+                    }
+                })
+                .negativeText(R.string.cancel)
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
 

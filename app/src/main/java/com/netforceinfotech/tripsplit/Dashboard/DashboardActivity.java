@@ -103,10 +103,10 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                                     return;
                                 }
                                 if (fill_review.get("status").getAsBoolean()) {
-                                    String name = fill_review.get("firstname").getAsString();
+                                    String name = fill_review.get("username").getAsString();
                                     String dob = fill_review.get("dob").getAsString();
-                                    String image = fill_review.get("img_name").getAsString();
-                                    String trip_id = fill_review.get("tour_id").getAsString();
+                                    String image = fill_review.get("profile_image").getAsString();
+                                    String trip_id = fill_review.get("trip_id").getAsString();
                                     showReviewPopUp(name, dob, image, trip_id);
                                     return;
                                 }
