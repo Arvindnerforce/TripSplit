@@ -96,35 +96,35 @@
                                     android:orientation="vertical">
 
                                     <ImageView
-                                        android:id="@+id/imageViewStar1"
+                                        android:id="@+id/imageViewRating1"
                                         android:layout_width="30dp"
                                         android:layout_height="30dp"
                                         android:layout_marginTop="6dp"
                                         android:src="@drawable/ic_star_full" />
 
                                     <ImageView
-                                        android:id="@+id/imageViewStar2"
+                                        android:id="@+id/imageViewRating2"
                                         android:layout_width="30dp"
                                         android:layout_height="30dp"
                                         android:layout_marginTop="6dp"
                                         android:src="@drawable/ic_star_full" />
 
                                     <ImageView
-                                        android:id="@+id/imageViewStar3"
+                                        android:id="@+id/imageViewRating3"
                                         android:layout_width="30dp"
                                         android:layout_height="30dp"
                                         android:layout_marginTop="6dp"
                                         android:src="@drawable/ic_star_full" />
 
                                     <ImageView
-                                        android:id="@+id/imageViewStar4"
+                                        android:id="@+id/imageViewRating4"
                                         android:layout_width="30dp"
                                         android:layout_height="30dp"
                                         android:layout_marginTop="6dp"
                                         android:src="@drawable/ic_star_full" />
 
                                     <ImageView
-                                        android:id="@+id/imageViewStar5"
+                                        android:id="@+id/imageViewRating5"
                                         android:layout_width="30dp"
                                         android:layout_height="30dp"
                                         android:layout_marginTop="6dp"

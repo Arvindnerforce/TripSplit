@@ -33,6 +33,10 @@ import com.koushikdutta.ion.Ion;
 import com.netforceinfotech.tripsplit.R;
 import com.netforceinfotech.tripsplit.general.UserSessionManager;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
@@ -103,14 +107,17 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                                     return;
                                 }
                                 if (fill_review.get("status").getAsBoolean()) {
-                                    String name = fill_review.get("username").getAsString();
-                                    String dob = fill_review.get("dob").getAsString();
-                                    String image = fill_review.get("profile_image").getAsString();
-                                    String trip_id = fill_review.get("trip_id").getAsString();
-                                    showReviewPopUp(name, dob, image, trip_id);
+                                    JsonObject detail=fill_review.getAsJsonObject("detail");
+                                    String name = detail.get("firstname").getAsString();
+                                    String dob = detail.get("dob").getAsString();
+                                    String image = detail.get("profile_image").getAsString();
+                                    String trip_id = detail.get("tour_id").getAsString();
+                                    String etd=detail.get("etd").getAsString();
+                                    String destination=detail.get("dest_address").getAsString();
+                                    String source=detail.get("depart_address").getAsString();
+                                    showReviewPopUp(name, dob, image, trip_id,etd,destination,source);
                                     return;
                                 }
-
 
                             }
 
@@ -255,7 +262,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     }
 
-    private void showReviewPopUp(String name, String dob, String imageUrl, final String trip_id) {
+    private void showReviewPopUp(String name, String dob, String imageUrl, final String trip_id, String etd, String destination, String source) {
         final RatingBar ratingBar;
 
         final MaterialDialog reviewBox = new MaterialDialog.Builder(this)
@@ -272,9 +279,15 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         });
         final EditText editText = (EditText) reviewBox.findViewById(R.id.editText);
         CircleImageView imageViewDp = (CircleImageView) reviewBox.findViewById(R.id.imageViewDp);
-        TextView textViewName, textViewDob;
+        TextView textViewName, textViewDob,textViewDestination,textViewSource,textViewDate;
         textViewDob = (TextView) reviewBox.findViewById(R.id.textViewDob);
         textViewName = (TextView) reviewBox.findViewById(R.id.textViewName);
+        textViewDestination= (TextView) reviewBox.findViewById(R.id.textViewDestination);
+        textViewSource= (TextView) reviewBox.findViewById(R.id.textViewSource);
+        textViewDate= (TextView) reviewBox.findViewById(R.id.textViewDate);
+        textViewDate.setText(getFormattedDate(etd));
+        textViewDestination.setText(destination);
+        textViewSource.setText(source);
         ratingBar = (RatingBar) reviewBox.findViewById(R.id.ratingbar);
         Glide.with(getApplicationContext()).load(imageUrl).error(R.drawable.ic_error).into(imageViewDp);
         textViewDob.setText(getFormattedDob(dob));
@@ -302,9 +315,23 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                     showMessage("Please write few word about trip !!!");
                     return;
                 }
+                reviewBox.dismiss();
                 sendReview(trip_id, reviewRating, editText.getText().toString());
             }
         });
+    }
+
+    private String getFormattedDate(String etd) {
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = fmt.parse(etd);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat fmtOut = new SimpleDateFormat("dd MMM yyyy HH:mm");
+        return fmtOut.format(date);
     }
 
     private void sendReview(String trip_id, float reviewRating, String review) {

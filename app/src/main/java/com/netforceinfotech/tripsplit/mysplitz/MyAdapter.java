@@ -87,9 +87,10 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         myHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(context, TripDetailActivity.class);
-                Bundle bundle=new Bundle();
-                bundle.putString("trip_id",dataObject.trip_id);
+                Intent intent = new Intent(context, TripDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("trip_id", dataObject.trip_id);
+                bundle.putBoolean("mysplit", true);
                 intent.putExtras(bundle);
                 context.startActivity(intent);
             }

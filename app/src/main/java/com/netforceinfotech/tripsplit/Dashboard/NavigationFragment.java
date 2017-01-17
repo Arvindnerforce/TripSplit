@@ -127,6 +127,7 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
             userSessionManager.setName(name);
             String dob = jsonObject.get("dob").getAsString();
             String country = jsonObject.get("country").getAsString();
+            String rating = jsonObject.get("rating").getAsString();
             String country_code = jsonObject.get("country_code").getAsString();
             try {
                 Glide.with(context).load(profile_image).error(R.drawable.ic_error).into(imageViewDp);
@@ -139,6 +140,9 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
             }
 
             textViewName.setText(name);
+            float ratingDoube = Float.parseFloat(rating);
+            ratingBar.setStar(ratingDoube);
+
         }
     }
 

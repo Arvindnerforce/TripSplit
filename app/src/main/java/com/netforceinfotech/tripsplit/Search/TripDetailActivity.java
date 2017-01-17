@@ -41,7 +41,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
     Button buttonBookIt;
     LinearLayout linearLayoutReturn;
     TextView textViewETDReturn, textViewETAReturn, textViewCountryCode, textViewDateCreated, textViewName, textViewAge, textViewAddress, textViewSource, textViewDestination, textViewAboutMe, textViewETD, textViewETA, textViewSpace, textViewDate, textViewPax, textViewAgeGroup, textViewTripSplit, textViewItenerary, textViewTotalCost, textViewYourShare;
-    ImageView imageViewDp, imageViewStar1, imageViewStar2, imageViewStar3, imageViewStar4, imageViewStar5, imageViewEmail, imageViewMessage, imageViewType, imageViewTrip;
+    ImageView imageViewDp, imageViewStar1, imageViewStar2, imageViewStar3, imageViewStar4, imageViewStar5, imageViewEmail, imageViewMessage, imageViewType, imageViewTrip, imageViewRating1, imageViewRating2, imageViewRating3, imageViewRating4, imageViewRating5;
     private String tripcreator_id;
     private String username;
     UserSessionManager userSessionManager;
@@ -52,8 +52,15 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
     private String userId;
     private String etd = null;
     private String dob = "0000-00-00";
+    private boolean mysplit = false;
 
     private void initView() {
+        imageViewRating1 = (ImageView) findViewById(R.id.imageViewRating1);
+        imageViewRating2 = (ImageView) findViewById(R.id.imageViewRating2);
+        imageViewRating3 = (ImageView) findViewById(R.id.imageViewRating3);
+        imageViewRating4 = (ImageView) findViewById(R.id.imageViewRating4);
+        imageViewRating5 = (ImageView) findViewById(R.id.imageViewRating5);
+
         findViewById(R.id.linearLayoutUser).setOnClickListener(this);
         progressDialog = new MaterialDialog.Builder(context)
                 .title(R.string.progress_dialog)
@@ -62,6 +69,9 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
         textViewSource = (TextView) findViewById(R.id.textViewSource);
         textViewDestination = (TextView) findViewById(R.id.textViewDestination);
         buttonBookIt = (Button) findViewById(R.id.buttonBookIt);
+        if (mysplit) {
+            buttonBookIt.setVisibility(View.GONE);
+        }
         buttonBookIt.setOnClickListener(this);
         linearLayoutReturn = (LinearLayout) findViewById(R.id.linearLayoutReturn);
         textViewETDReturn = (TextView) findViewById(R.id.textViewETDReturn);
@@ -86,11 +96,11 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
         textViewTotalCost = (TextView) findViewById(R.id.textViewTotalCost);
         textViewYourShare = (TextView) findViewById(R.id.textViewYourShare);
         imageViewDp = (ImageView) findViewById(R.id.imageViewDp);
-        imageViewStar1 = (ImageView) findViewById(R.id.imageViewStar1);
-        imageViewStar2 = (ImageView) findViewById(R.id.imageViewStar2);
-        imageViewStar3 = (ImageView) findViewById(R.id.imageViewStar3);
-        imageViewStar4 = (ImageView) findViewById(R.id.imageViewStar4);
-        imageViewStar5 = (ImageView) findViewById(R.id.imageViewStar5);
+        imageViewStar1 = (ImageView) findViewById(R.id.imageViewRating1);
+        imageViewStar2 = (ImageView) findViewById(R.id.imageViewRating2);
+        imageViewStar3 = (ImageView) findViewById(R.id.imageViewRating3);
+        imageViewStar4 = (ImageView) findViewById(R.id.imageViewRating4);
+        imageViewStar5 = (ImageView) findViewById(R.id.imageViewRating5);
         imageViewEmail = (ImageView) findViewById(R.id.imageViewEmail);
         imageViewMessage = (ImageView) findViewById(R.id.imageViewMessage);
         imageViewType = (ImageView) findViewById(R.id.imageViewType);
@@ -104,6 +114,11 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
         context = this;
         Bundle bundle = getIntent().getExtras();
         trip_id = bundle.getString("trip_id");
+        try {
+            mysplit = bundle.getBoolean("mysplit");
+        } catch (Exception ex) {
+
+        }
         setupToolBar("Trip Detail");
         userSessionManager = new UserSessionManager(context);
         initView();
@@ -204,6 +219,15 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
         address = my_splitz.get("address").getAsString();
         country = my_splitz.get("country").getAsString();
         aboutme = my_splitz.get("aboutme").getAsString();
+        try {
+            String rating = my_splitz.get("rating").getAsString();
+            float ratingFloat = Float.parseFloat(rating);
+            setupRatingImage(ratingFloat);
+        } catch (Exception ex) {
+            setupRatingImage(4);
+
+        }
+
         your_share = my_splitz.get("your_share").getAsString();
         created_date = my_splitz.get("created_date").getAsString();
         Glide.with(context).load(image_name).error(R.drawable.ic_blank).into(imageViewTrip);
@@ -258,6 +282,66 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
 
     }
 
+    private void setupRatingImage(float ratingFloat) {
+        int ratingInt = (int) ratingFloat;
+        float ramainingFloat = ratingFloat = ratingInt;
+        switch (ratingInt) {
+            case 1:
+                imageViewRating1.setImageResource(R.drawable.ic_star_full);
+                imageViewRating2.setImageResource(R.drawable.ic_star_outline);
+                imageViewRating3.setImageResource(R.drawable.ic_star_outline);
+                imageViewRating4.setImageResource(R.drawable.ic_star_outline);
+                imageViewRating5.setImageResource(R.drawable.ic_star_outline);
+                break;
+            case 2:
+                imageViewRating1.setImageResource(R.drawable.ic_star_full);
+                imageViewRating2.setImageResource(R.drawable.ic_star_full);
+                imageViewRating3.setImageResource(R.drawable.ic_star_outline);
+                imageViewRating4.setImageResource(R.drawable.ic_star_outline);
+                imageViewRating5.setImageResource(R.drawable.ic_star_outline);
+                break;
+            case 3:
+                imageViewRating1.setImageResource(R.drawable.ic_star_full);
+                imageViewRating2.setImageResource(R.drawable.ic_star_full);
+                imageViewRating3.setImageResource(R.drawable.ic_star_full);
+                imageViewRating4.setImageResource(R.drawable.ic_star_outline);
+                imageViewRating5.setImageResource(R.drawable.ic_star_outline);
+                break;
+            case 4:
+                imageViewRating1.setImageResource(R.drawable.ic_star_full);
+                imageViewRating2.setImageResource(R.drawable.ic_star_full);
+                imageViewRating3.setImageResource(R.drawable.ic_star_full);
+                imageViewRating4.setImageResource(R.drawable.ic_star_full);
+                imageViewRating5.setImageResource(R.drawable.ic_star_outline);
+                break;
+            case 5:
+                imageViewRating1.setImageResource(R.drawable.ic_star_full);
+                imageViewRating2.setImageResource(R.drawable.ic_star_full);
+                imageViewRating3.setImageResource(R.drawable.ic_star_full);
+                imageViewRating4.setImageResource(R.drawable.ic_star_full);
+                imageViewRating5.setImageResource(R.drawable.ic_star_full);
+                break;
+        }
+        if (ramainingFloat >= 0.5) {
+            switch (ratingInt) {
+                case 1:
+                    imageViewRating2.setImageResource(R.drawable.ic_half_star);
+
+                    break;
+                case 2:
+                    imageViewRating3.setImageResource(R.drawable.ic_half_star);
+                    break;
+                case 3:
+                    imageViewRating4.setImageResource(R.drawable.ic_half_star);
+                    break;
+                case 4:
+                    imageViewRating5.setImageResource(R.drawable.ic_half_star);
+                    break;
+                case 5:
+                    break;
+            }
+        }
+    }
 
     private void showMessage(String s) {
         Toast.makeText(context, s, Toast.LENGTH_SHORT).show();

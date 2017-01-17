@@ -69,7 +69,6 @@
     </LinearLayout>
 
 
-
     <TextView
         android:id="@+id/textViewLable"
         android:layout_width="match_parent"
@@ -79,63 +78,6 @@
         android:text="Rate the trip !!!"
         android:textColor="@color/colorPrimary"
         android:textSize="18sp" />
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_marginLeft="16dp"
-            android:textSize="18sp"
-            android:textColor="@color/colorPrimary"
-            android:text="Date :"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/textViewDate"
-            android:textSize="18sp"
-            android:textColor="@color/colorPrimary"
-            android:layout_marginLeft="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_margin="12dp"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="120">
-
-        <TextView
-            android:id="@+id/textViewSource"
-            android:gravity="left"
-            android:padding="4dp"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="50" />
-
-        <TextView
-            android:gravity="center"
-            android:text="To"
-            android:padding="4dp"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="20" />
-
-        <TextView
-            android:id="@+id/textViewDestination"
-            android:gravity="right"
-            android:padding="4dp"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="50" />
-    </LinearLayout>
 
     <com.hedgehog.ratingbar.RatingBar
         android:id="@+id/ratingbar"

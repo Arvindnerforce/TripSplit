@@ -44,8 +44,8 @@ public class PostTripFragment extends Fragment {
     Context context;
     private MaterialDialog progressDialog;
     UserSessionManager userSessionManager;
-    ImageView imageViewDp;
-    TextView textViewCountryCode, textViewName, textViewAge, textViewAddress;
+    ImageView imageViewDp, imageViewRating1, imageViewRating2, imageViewRating3, imageViewRating4, imageViewRating5;
+    TextView textViewCountryCode, textViewName, textViewAge, textViewAddress, textViewDateCreated;
     private String countryCode = "";
 
 
@@ -54,7 +54,7 @@ public class PostTripFragment extends Fragment {
         View view = inflater.inflate(R.layout.activity_profile, container, false);
         context = getActivity();
         userSessionManager = new UserSessionManager(context);
-        NavigationFragment.POSITION=5;
+        NavigationFragment.POSITION = 5;
         initView(view);
         getPermission();
         setuptoolbar();
@@ -63,6 +63,7 @@ public class PostTripFragment extends Fragment {
         return view;
 
     }
+
     private void getPermission() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -90,13 +91,19 @@ public class PostTripFragment extends Fragment {
         textViewName = (TextView) view.findViewById(R.id.textviewName);
         textViewAddress = (TextView) view.findViewById(R.id.textviewAddress);
         textViewAge = (TextView) view.findViewById(R.id.textviewAge);
+        imageViewRating1 = (ImageView) view.findViewById(R.id.imageViewRating1);
+        imageViewRating2 = (ImageView) view.findViewById(R.id.imageViewRating2);
+        imageViewRating3 = (ImageView) view.findViewById(R.id.imageViewRating3);
+        imageViewRating4 = (ImageView) view.findViewById(R.id.imageViewRating4);
+        imageViewRating5 = (ImageView) view.findViewById(R.id.imageViewRating5);
+        textViewDateCreated = (TextView) view.findViewById(R.id.textViewDateCreated);
     }
 
     private void getUserInfo() {
         String baseUrl = getString(R.string.url);
         String viewProfile = "services.php?opt=viewprofile&user_id=" + userSessionManager.getUserId();
         String url = baseUrl + viewProfile;
-        Log.i("url",url);
+        Log.i("url", url);
         Ion.with(context)
                 .load(url)
                 .asJsonObject()
@@ -152,12 +159,79 @@ public class PostTripFragment extends Fragment {
                 showMessage("some error in pic");
                 ex.printStackTrace();
             }
+            String rating = jsonObject.get("rating").getAsString();
+            float ratingFloat = Float.parseFloat(rating);
+            setupRatingImage(ratingFloat);
             textViewName.setText(name);
+            String created_date = jsonObject.get("created_date").getAsString();
+
+            textViewDateCreated.setText(created_date);
             String fortmatedDate = getFormattedDate(dob);
             textViewAddress.setText(address);
             textViewCountryCode.setText(countryCode);
             setAge(dob);
 
+        }
+    }
+
+    private void setupRatingImage(float ratingFloat) {
+        int ratingInt = (int) ratingFloat;
+        float ramainingFloat = ratingFloat = ratingInt;
+        switch (ratingInt) {
+            case 1:
+                imageViewRating1.setImageResource(R.drawable.ic_star_full);
+                imageViewRating2.setImageResource(R.drawable.ic_star_outline);
+                imageViewRating3.setImageResource(R.drawable.ic_star_outline);
+                imageViewRating4.setImageResource(R.drawable.ic_star_outline);
+                imageViewRating5.setImageResource(R.drawable.ic_star_outline);
+                break;
+            case 2:
+                imageViewRating1.setImageResource(R.drawable.ic_star_full);
+                imageViewRating2.setImageResource(R.drawable.ic_star_full);
+                imageViewRating3.setImageResource(R.drawable.ic_star_outline);
+                imageViewRating4.setImageResource(R.drawable.ic_star_outline);
+                imageViewRating5.setImageResource(R.drawable.ic_star_outline);
+                break;
+            case 3:
+                imageViewRating1.setImageResource(R.drawable.ic_star_full);
+                imageViewRating2.setImageResource(R.drawable.ic_star_full);
+                imageViewRating3.setImageResource(R.drawable.ic_star_full);
+                imageViewRating4.setImageResource(R.drawable.ic_star_outline);
+                imageViewRating5.setImageResource(R.drawable.ic_star_outline);
+                break;
+            case 4:
+                imageViewRating1.setImageResource(R.drawable.ic_star_full);
+                imageViewRating2.setImageResource(R.drawable.ic_star_full);
+                imageViewRating3.setImageResource(R.drawable.ic_star_full);
+                imageViewRating4.setImageResource(R.drawable.ic_star_full);
+                imageViewRating5.setImageResource(R.drawable.ic_star_outline);
+                break;
+            case 5:
+                imageViewRating1.setImageResource(R.drawable.ic_star_full);
+                imageViewRating2.setImageResource(R.drawable.ic_star_full);
+                imageViewRating3.setImageResource(R.drawable.ic_star_full);
+                imageViewRating4.setImageResource(R.drawable.ic_star_full);
+                imageViewRating5.setImageResource(R.drawable.ic_star_full);
+                break;
+        }
+        if (ramainingFloat >= 0.5) {
+            switch (ratingInt) {
+                case 1:
+                    imageViewRating2.setImageResource(R.drawable.ic_half_star);
+
+                    break;
+                case 2:
+                    imageViewRating3.setImageResource(R.drawable.ic_half_star);
+                    break;
+                case 3:
+                    imageViewRating4.setImageResource(R.drawable.ic_half_star);
+                    break;
+                case 4:
+                    imageViewRating5.setImageResource(R.drawable.ic_half_star);
+                    break;
+                case 5:
+                    break;
+            }
         }
     }
 

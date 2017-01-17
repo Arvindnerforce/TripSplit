@@ -48,7 +48,7 @@ public class MyProfileActivity extends AppCompatActivity implements View.OnClick
     String userName, dob = "0000-00-00", image_url;
     Button buttonWriteReview, buttonSeeMore;
     private MaterialDialog progressDialog;
-    ImageView imageViewTrip, imageViewEmail, imageViewMessage;
+    ImageView imageViewTrip, imageViewEmail, imageViewMessage, imageViewRating1, imageViewRating2, imageViewRating3, imageViewRating4, imageViewRating5;
     CircleImageView imageViewDp;
     TextView textViewCountryCode, textViewName, textViewAge, textViewAddress, textViewAboutMe, textViewNoOfTrip, textViewDateCreated, textViewNoReview;
     private String writer_id = "";
@@ -155,6 +155,14 @@ public class MyProfileActivity extends AppCompatActivity implements View.OnClick
         String country_code = object.get("country_code").getAsString();
         String aboutme = object.get("aboutme").getAsString();
         String created_date = object.get("created_date").getAsString();
+        try {
+            String rating = object.get("rating").getAsString();
+            float ratingFloat = Float.parseFloat(rating);
+            setupRatingImage(ratingFloat);
+        } catch (Exception ex) {
+            setupRatingImage(4);
+
+        }
         textViewAboutMe.setText(aboutme);
         textViewAddress.setText(address);
         textViewAge.setText(setAge(dob));
@@ -165,7 +173,73 @@ public class MyProfileActivity extends AppCompatActivity implements View.OnClick
         Glide.with(context).load(image_url).into(imageViewTrip);
     }
 
+    private void setupRatingImage(float ratingFloat) {
+        int ratingInt = (int) ratingFloat;
+        float ramainingFloat = ratingFloat = ratingInt;
+        switch (ratingInt) {
+            case 1:
+                imageViewRating1.setImageResource(R.drawable.ic_star_full);
+                imageViewRating2.setImageResource(R.drawable.ic_star_outline);
+                imageViewRating3.setImageResource(R.drawable.ic_star_outline);
+                imageViewRating4.setImageResource(R.drawable.ic_star_outline);
+                imageViewRating5.setImageResource(R.drawable.ic_star_outline);
+                break;
+            case 2:
+                imageViewRating1.setImageResource(R.drawable.ic_star_full);
+                imageViewRating2.setImageResource(R.drawable.ic_star_full);
+                imageViewRating3.setImageResource(R.drawable.ic_star_outline);
+                imageViewRating4.setImageResource(R.drawable.ic_star_outline);
+                imageViewRating5.setImageResource(R.drawable.ic_star_outline);
+                break;
+            case 3:
+                imageViewRating1.setImageResource(R.drawable.ic_star_full);
+                imageViewRating2.setImageResource(R.drawable.ic_star_full);
+                imageViewRating3.setImageResource(R.drawable.ic_star_full);
+                imageViewRating4.setImageResource(R.drawable.ic_star_outline);
+                imageViewRating5.setImageResource(R.drawable.ic_star_outline);
+                break;
+            case 4:
+                imageViewRating1.setImageResource(R.drawable.ic_star_full);
+                imageViewRating2.setImageResource(R.drawable.ic_star_full);
+                imageViewRating3.setImageResource(R.drawable.ic_star_full);
+                imageViewRating4.setImageResource(R.drawable.ic_star_full);
+                imageViewRating5.setImageResource(R.drawable.ic_star_outline);
+                break;
+            case 5:
+                imageViewRating1.setImageResource(R.drawable.ic_star_full);
+                imageViewRating2.setImageResource(R.drawable.ic_star_full);
+                imageViewRating3.setImageResource(R.drawable.ic_star_full);
+                imageViewRating4.setImageResource(R.drawable.ic_star_full);
+                imageViewRating5.setImageResource(R.drawable.ic_star_full);
+                break;
+        }
+        if (ramainingFloat >= 0.5) {
+            switch (ratingInt) {
+                case 1:
+                    imageViewRating2.setImageResource(R.drawable.ic_half_star);
+
+                    break;
+                case 2:
+                    imageViewRating3.setImageResource(R.drawable.ic_half_star);
+                    break;
+                case 3:
+                    imageViewRating4.setImageResource(R.drawable.ic_half_star);
+                    break;
+                case 4:
+                    imageViewRating5.setImageResource(R.drawable.ic_half_star);
+                    break;
+                case 5:
+                    break;
+            }
+        }
+    }
+
     private void initView() {
+        imageViewRating1 = (ImageView) findViewById(R.id.imageViewRating1);
+        imageViewRating2 = (ImageView) findViewById(R.id.imageViewRating2);
+        imageViewRating3 = (ImageView) findViewById(R.id.imageViewRating3);
+        imageViewRating4 = (ImageView) findViewById(R.id.imageViewRating4);
+        imageViewRating5 = (ImageView) findViewById(R.id.imageViewRating5);
         textViewNoReview = (TextView) findViewById(R.id.textViewNoReview);
         imageViewDp = (CircleImageView) findViewById(R.id.imageViewDp);
         textViewDateCreated = (TextView) findViewById(R.id.textViewDateCreated);
@@ -291,7 +365,7 @@ public class MyProfileActivity extends AppCompatActivity implements View.OnClick
         final RatingBar ratingBar;
 
         final MaterialDialog reviewBox = new MaterialDialog.Builder(this)
-                .customView(R.layout.review_pop_up, false)
+                .customView(R.layout.review_pop_up1, false)
                 .show();
 
         reviewBox.setCanceledOnTouchOutside(false);
