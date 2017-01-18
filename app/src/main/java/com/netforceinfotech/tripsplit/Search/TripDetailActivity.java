@@ -53,6 +53,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
     private String etd = null;
     private String dob = "0000-00-00";
     private boolean mysplit = false;
+    private RelativeLayout relativeLayoutYourshare;
 
     private void initView() {
         imageViewRating1 = (ImageView) findViewById(R.id.imageViewRating1);
@@ -73,6 +74,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
             buttonBookIt.setVisibility(View.GONE);
         }
         buttonBookIt.setOnClickListener(this);
+        relativeLayoutYourshare=(RelativeLayout)findViewById(R.id.relativeLayoutYourshare);
         linearLayoutReturn = (LinearLayout) findViewById(R.id.linearLayoutReturn);
         textViewETDReturn = (TextView) findViewById(R.id.textViewETDReturn);
         textViewETAReturn = (TextView) findViewById(R.id.textViewETAReturn);
@@ -209,6 +211,16 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
         return_etd = my_splitz.get("return_etd").getAsString();
         id = my_splitz.get("id").getAsString();
         this.userId = id;
+        if(!mysplit){
+
+        if(id.equalsIgnoreCase(userSessionManager.getUserId())){
+            relativeLayoutYourshare.setVisibility(View.GONE);
+            buttonBookIt.setVisibility(View.GONE);
+        }else {
+            buttonBookIt.setVisibility(View.VISIBLE);
+            relativeLayoutYourshare.setVisibility(View.VISIBLE);
+        }
+        }
         username = my_splitz.get("username").getAsString();
         this.username = username;
         email = my_splitz.get("email").getAsString();
