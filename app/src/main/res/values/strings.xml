@@ -103,6 +103,8 @@ or Search Splitz….
     <string name="globe">Globe</string>
     <string name="list">List</string>
     <string name="submit">Submit</string>
+    <string name="deleteconversation">Delete Conversation</string>
+    <string name="deletechat">Are you sure you want to delete the conversation?</string>
 
 
 </resources>

@@ -157,6 +157,7 @@ public class MessageTitleFragment extends Fragment {
 
     }
 
+
     private ChildEventListener setupChatTitleIdListner() {
         return chatTitleIdLister = new ChildEventListener() {
             @Override
@@ -209,23 +210,31 @@ public class MessageTitleFragment extends Fragment {
 
     private void appendList(DataSnapshot singleNode) {
 
-        Log.i("Dataset", singleNode.toString());
-        String key = singleNode.getKey();
-        String last_message = singleNode.child("last_message").getValue(String.class);
-        String chat_id = singleNode.child("chat_id").getValue(String.class);
-        String reg_id = singleNode.child("reg_id").getValue(String.class);
-        String name = singleNode.child("name").getValue(String.class);
-        String image_url = singleNode.child("image_url").getValue(String.class);
-        boolean seen = singleNode.child("seen").getValue(Boolean.class);
-        long timestamp = singleNode.child("timestamp").getValue(Long.class);
-        long unseen_count = singleNode.child("unseen_count").getValue(Long.class);
-        MyData myData = new MyData(key, chat_id, image_url, last_message, name, timestamp, seen, unseen_count, reg_id);
-        Log.i("mydata", myData.key);
-        if (!myDatas.contains(myData)) {
-            myDatas.add(myData);
-        }
+        try {
+            Log.i("Dataset", singleNode.toString());
+            String key = singleNode.getKey();
+            String last_message = singleNode.child("last_message").getValue(String.class);
+            String chat_id = singleNode.child("chat_id").getValue(String.class);
+            String reg_id = singleNode.child("reg_id").getValue(String.class);
+            String name = singleNode.child("name").getValue(String.class);
+            String image_url = singleNode.child("image_url").getValue(String.class);
+            boolean active = singleNode.child("active").getValue(Boolean.class);
+            boolean seen = singleNode.child("seen").getValue(Boolean.class);
+            long timestamp = singleNode.child("timestamp").getValue(Long.class);
+            long unseen_count = singleNode.child("unseen_count").getValue(Long.class);
+            MyData myData = new MyData(key, chat_id, image_url, last_message, name, timestamp, seen, unseen_count, reg_id);
+            Log.i("mydata", myData.key);
+            if (active) {
+                if (!myDatas.contains(myData)) {
+                    myDatas.add(myData);
+                }
+            }
 
-        myAdapter.notifyDataSetChanged();
+            myAdapter.notifyDataSetChanged();
+
+        } catch (Exception ex) {
+
+        }
 
     }
 

@@ -127,7 +127,13 @@ public class NavigationFragment extends Fragment implements RecyclerAdapterDrawe
             userSessionManager.setName(name);
             String dob = jsonObject.get("dob").getAsString();
             String country = jsonObject.get("country").getAsString();
-            String rating = jsonObject.get("rating").getAsString();
+            String rating;
+            try{
+                rating = jsonObject.get("rating").getAsString();
+            }catch (Exception ex){
+                rating="3";
+            }
+
             String country_code = jsonObject.get("country_code").getAsString();
             try {
                 Glide.with(context).load(profile_image).error(R.drawable.ic_error).into(imageViewDp);

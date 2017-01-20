@@ -1,18 +1,22 @@
 package com.netforceinfotech.tripsplit.message.message_detail;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -84,6 +88,7 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
     DatabaseReference _unseen;
     private DatabaseReference _notificationRequests;
     private String reg_id;
+    private MaterialDialog custompopup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,8 +147,34 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
             case android.R.id.home:
                 finish();
                 break;
+            case R.id.action_delete:
+                showRemoveGroupPopup();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showRemoveGroupPopup() {
+        custompopup = new MaterialDialog.Builder(context)
+                .title(R.string.deleteconversation)
+                .content(R.string.deletechat)
+                .positiveText(R.string.ok)
+                .negativeText(getString(R.string.cancel))
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        removeGroup();
+                        custompopup.dismiss();
+                    }
+                })
+                .show();
+
+    }
+
+    private void removeGroup() {
+        _my_userId_id.child("active").setValue(false);
+        finish();
+
     }
 
     private void initView() {
@@ -446,6 +477,7 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
         _their_userId_id.child("seen").setValue(false);
         _their_userId_id.child("reg_id").setValue(userSessionManager.getRegId());
         _their_userId_id.child("you").setValue(false);
+        _their_userId_id.child("active").setValue(true);
         _their_userId_id.child("last_message").setValue(last_message);
         _their_userId_id.addListenerForSingleValueEvent(setupTheirUserId_IdListner());
         try {
@@ -519,6 +551,7 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
                 chat_title_userid_id_detailmap.put("image_url", image_url);
                 chat_title_userid_id_detailmap.put("timestamp", ServerValue.TIMESTAMP);
                 chat_title_userid_id_detailmap.put("seen", true);
+                chat_title_userid_id_detailmap.put("active", true);
                 chat_title_userid_id_detailmap.put("reg_id", reg_id);
                 chat_title_userid_id_detailmap.put("unseen_count", 0);
                 chat_title_userid_id_detailmap.put("last_message", et_message.getText().toString());
@@ -631,6 +664,13 @@ public class MessageDetailActivity extends AppCompatActivity implements View.OnC
             }
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.mainchat, menu);
+        return true;
     }
 
     private void pushMessage() {

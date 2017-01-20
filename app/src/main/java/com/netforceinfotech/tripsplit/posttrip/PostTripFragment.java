@@ -2,6 +2,7 @@ package com.netforceinfotech.tripsplit.posttrip;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -56,7 +57,6 @@ public class PostTripFragment extends Fragment {
         userSessionManager = new UserSessionManager(context);
         NavigationFragment.POSITION = 5;
         initView(view);
-        getPermission();
         setuptoolbar();
         setupTab(view);
         getUserInfo();
@@ -64,22 +64,7 @@ public class PostTripFragment extends Fragment {
 
     }
 
-    private void getPermission() {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-            String[] permission = {
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-            };
-
-            ActivityCompat.requestPermissions(getActivity(),
-                    permission, 1);
-
-
-        }
-    }
 
     private void initView(View view) {
         progressDialog = new MaterialDialog.Builder(context)
@@ -159,9 +144,14 @@ public class PostTripFragment extends Fragment {
                 showMessage("some error in pic");
                 ex.printStackTrace();
             }
-            String rating = jsonObject.get("rating").getAsString();
-            float ratingFloat = Float.parseFloat(rating);
-            setupRatingImage(ratingFloat);
+            try {
+                String rating = jsonObject.get("rating").getAsString();
+                float ratingFloat = Float.parseFloat(rating);
+                setupRatingImage(ratingFloat);
+            } catch (Exception ex) {
+                setupRatingImage(3);
+
+            }
             textViewName.setText(name);
             String created_date = jsonObject.get("created_date").getAsString();
 

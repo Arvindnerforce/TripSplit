@@ -74,7 +74,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
             buttonBookIt.setVisibility(View.GONE);
         }
         buttonBookIt.setOnClickListener(this);
-        relativeLayoutYourshare=(RelativeLayout)findViewById(R.id.relativeLayoutYourshare);
+        relativeLayoutYourshare = (RelativeLayout) findViewById(R.id.relativeLayoutYourshare);
         linearLayoutReturn = (LinearLayout) findViewById(R.id.linearLayoutReturn);
         textViewETDReturn = (TextView) findViewById(R.id.textViewETDReturn);
         textViewETAReturn = (TextView) findViewById(R.id.textViewETAReturn);
@@ -150,6 +150,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void getTripDetail(String trip_id) {
+        progressDialog.show();
         //http://netforce.biz/tripesplit/mobileApp/api/services.php?opt=splitz_detail
         String baseUrl = getString(R.string.url);
         String url = baseUrl + "services.php?opt=splitz_detail";
@@ -160,6 +161,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
+                        progressDialog.dismiss();
                         // do stuff with the result or error
                         if (result == null) {
                             showMessage("something wrong");
@@ -211,15 +213,15 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
         return_etd = my_splitz.get("return_etd").getAsString();
         id = my_splitz.get("id").getAsString();
         this.userId = id;
-        if(!mysplit){
+        if (!mysplit) {
 
-        if(id.equalsIgnoreCase(userSessionManager.getUserId())){
-            relativeLayoutYourshare.setVisibility(View.GONE);
-            buttonBookIt.setVisibility(View.GONE);
-        }else {
-            buttonBookIt.setVisibility(View.VISIBLE);
-            relativeLayoutYourshare.setVisibility(View.VISIBLE);
-        }
+            if (id.equalsIgnoreCase(userSessionManager.getUserId())) {
+                relativeLayoutYourshare.setVisibility(View.GONE);
+                buttonBookIt.setVisibility(View.GONE);
+            } else {
+                buttonBookIt.setVisibility(View.VISIBLE);
+                relativeLayoutYourshare.setVisibility(View.VISIBLE);
+            }
         }
         username = my_splitz.get("username").getAsString();
         this.username = username;
@@ -236,7 +238,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
             float ratingFloat = Float.parseFloat(rating);
             setupRatingImage(ratingFloat);
         } catch (Exception ex) {
-            setupRatingImage(4);
+            setupRatingImage(3);
 
         }
 
@@ -365,7 +367,7 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
             case R.id.linearLayoutUser:
                 Intent intent = new Intent(context, MyProfileActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("image_url", trip_image);
+                bundle.putString("image_url", profile_image);
                 bundle.putString("dob", dob);
                 bundle.putString("name", username);
                 bundle.putString("user_id", userId);
@@ -486,7 +488,12 @@ public class TripDetailActivity extends AppCompatActivity implements View.OnClic
                                 finish();
                                 showMessage("Ride booked");
                             } else {
-                                showMessage("something went wrong");
+                                if (status.equalsIgnoreCase("Already Booked")) {
+                                    showMessage("Trip already booked");
+
+                                } else {
+                                    showMessage("something went wrong");
+                                }
                             }
                         }
                     }

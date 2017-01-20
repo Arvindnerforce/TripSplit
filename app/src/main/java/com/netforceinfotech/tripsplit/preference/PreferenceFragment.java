@@ -81,8 +81,8 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
         switchButtonLogout.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    logout();
+                if (!b) {
+                    showLogoutpopup();
                 }
             }
         });
@@ -153,6 +153,7 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
                 } else {
                     textViewRange.setText(range + " km");
                 }
+                userSessionManager.setSearchRaius(range);
 
             }
 

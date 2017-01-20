@@ -85,7 +85,6 @@
                                     android:layout_height="40dp"
                                     android:background="@drawable/circular_bg_fill"
                                     android:gravity="center"
-                                    android:text="NZ"
                                     android:textColor="@color/white" />
 
                                 <LinearLayout
@@ -100,35 +99,35 @@
                                         android:layout_width="30dp"
                                         android:layout_height="30dp"
                                         android:layout_marginTop="6dp"
-                                        android:src="@drawable/ic_star_full" />
+                                         />
 
                                     <ImageView
                                         android:id="@+id/imageViewRating2"
                                         android:layout_width="30dp"
                                         android:layout_height="30dp"
                                         android:layout_marginTop="6dp"
-                                        android:src="@drawable/ic_star_full" />
+                                         />
 
                                     <ImageView
                                         android:id="@+id/imageViewRating3"
                                         android:layout_width="30dp"
                                         android:layout_height="30dp"
                                         android:layout_marginTop="6dp"
-                                        android:src="@drawable/ic_star_full" />
+                                         />
 
                                     <ImageView
                                         android:id="@+id/imageViewRating4"
                                         android:layout_width="30dp"
                                         android:layout_height="30dp"
                                         android:layout_marginTop="6dp"
-                                        android:src="@drawable/ic_star_full" />
+                                         />
 
                                     <ImageView
                                         android:id="@+id/imageViewRating5"
                                         android:layout_width="30dp"
                                         android:layout_height="30dp"
                                         android:layout_marginTop="6dp"
-                                        android:src="@drawable/ic_star_outline" />
+                                        />
 
                                 </LinearLayout>
                             </LinearLayout>
@@ -144,7 +143,6 @@
                             android:layout_alignParentRight="true"
                             android:layout_marginBottom="16dp"
                             android:layout_marginRight="16dp"
-                            android:text="8 July 2016"
                             android:textColor="@color/red" />
 
 
@@ -186,7 +184,7 @@
                                     android:id="@+id/imageViewDp"
                                     android:layout_width="60dp"
                                     android:layout_height="60dp"
-                                    android:src="@drawable/car_bg" />
+                                 />
 
                                 <LinearLayout
                                     android:layout_marginLeft="4dp"
@@ -204,7 +202,6 @@
                                             android:id="@+id/textViewName"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="Name"
                                             android:textColor="@color/black"
                                             android:textSize="16dp"
                                             android:textStyle="bold" />
@@ -217,7 +214,6 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_toRightOf="@+id/textviewName"
-                                        android:text="34"
                                         android:textColor="@color/black"
                                         android:textSize="16dp" />
                                     <TextView
@@ -226,7 +222,6 @@
                                         android:layout_height="wrap_content"
                                         android:ellipsize="end"
                                         android:maxLines="2"
-                                        android:text="Safdarjang ,Delhi"
                                         android:textColor="@color/black"
                                         android:textSize="14dp" />
                                 </LinearLayout>
@@ -277,7 +272,7 @@
                                 android:id="@+id/imageViewType"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:src="@drawable/ic_redplane" />
+                                />
 
 
                             <RelativeLayout
@@ -286,22 +281,6 @@
                                 android:layout_marginLeft="5dp"
                                 android:layout_toRightOf="@+id/imageViewType"
                                 android:orientation="horizontal">
-
-                                <TextView
-                                    android:id="@+id/textViewSource"
-                                    android:layout_width="120dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentLeft="true"
-                                    android:layout_centerVertical="true"
-                                    android:layout_toLeftOf="@+id/to"
-                                    android:ellipsize="end"
-                                    android:gravity="center"
-                                    android:maxLines="2"
-                                    android:padding="3dp"
-                                    android:text="aljkdsflkjlkjlkjasdfl"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold" />
 
                                 <TextView
                                     android:id="@+id/to"
@@ -326,10 +305,24 @@
                                     android:gravity="center"
                                     android:maxLines="2"
                                     android:padding="3dp"
-                                    android:text="@string/source_dest_text"
                                     android:textColor="@color/black"
                                     android:textSize="18sp"
                                     android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/textViewSource"
+                                    android:layout_width="120dp"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="end"
+                                    android:gravity="center"
+                                    android:maxLines="2"
+                                    android:padding="3dp"
+                                    android:textColor="@color/black"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_alignParentStart="true" />
                             </RelativeLayout>
 
                         </RelativeLayout>
@@ -355,7 +348,6 @@
                             android:paddingBottom="10dp"
                             android:paddingLeft="15dp"
                             android:paddingRight="10dp"
-                            android:text="@string/about_me_txt"
                             android:textColor="@color/black" />
 
                         <View
@@ -422,7 +414,6 @@
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="25"
-                                        android:text="3.00 am"
                                         android:textColor="@color/colorPrimary" />
 
 
@@ -451,7 +442,6 @@
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="25"
-                                        android:text="3.00 am"
                                         android:textColor="@color/colorPrimary" />
 
 
@@ -491,7 +481,6 @@
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="25"
-                                        android:text="3.00 am"
                                         android:textColor="@color/colorPrimary" />
 
 
@@ -521,7 +510,6 @@
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="25"
-                                        android:text="3.00 am"
                                         android:textColor="@color/colorPrimary" />
 
 
@@ -564,7 +552,6 @@
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="25"
-                                        android:text="3.00 am"
                                         android:textColor="@color/colorPrimary" />
 
 
@@ -592,7 +579,6 @@
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="25"
-                                        android:text="3.00 am"
                                         android:textColor="@color/colorPrimary" />
 
 
@@ -642,7 +628,6 @@
                                             android:id="@+id/textViewPax"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="3"
                                             android:textColor="@color/colorPrimary" />
 
                                         <ImageView
@@ -676,7 +661,6 @@
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="25"
-                                        android:text="25-50"
                                         android:textColor="@color/colorPrimary" />
 
 
@@ -706,7 +690,6 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentRight="true"
-                                    android:text="US$125.00"
                                     android:textColor="@color/white" />
 
                             </RelativeLayout>
@@ -736,7 +719,6 @@
                                     android:layout_alignParentLeft="true"
                                     android:layout_marginTop="5dp"
                                     android:lines="5"
-                                    android:text="@string/about_me_txt"
                                     android:textColor="@color/black"
                                     android:textSize="12dp" />
 
@@ -764,7 +746,6 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentRight="true"
-                                    android:text="US$125.00"
                                     android:textColor="@color/black" />
 
                             </RelativeLayout>
@@ -797,7 +778,6 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentRight="true"
-                                    android:text="US$125.00"
                                     android:textColor="@color/black" />
 
                             </RelativeLayout>

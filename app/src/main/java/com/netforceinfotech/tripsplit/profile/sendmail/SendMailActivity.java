@@ -298,7 +298,7 @@ public class SendMailActivity extends AppCompatActivity implements View.OnClickL
 
     private void sendEmail() {
         String baseUrl = getString(R.string.url);
-        String url = baseUrl + "services.php?opt=sendEmail";
+        String url = baseUrl + "services.php?opt=send_mail";
         Log.i("kurl", url);
         if (filePath != null) {
             file = savebitmap(filePath);
